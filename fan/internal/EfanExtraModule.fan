@@ -22,11 +22,6 @@ class EfanExtraModule {
 		binder.bindImpl(TemplateConverters#)
 	}
 
-	@Contribute { serviceType=DependencyProviderSource# }
-	internal static Void contributeDependencyProviderSource(OrderedConfig config, ComponentsProvider componentsProvider) {
-		config.add(componentsProvider)
-	}	
-	
 	@Contribute { serviceType=TemplateConverters# }
 	internal static Void contributeTemplateConverters(MappedConfig config) {
 		config["efan"] = |File file -> Str| {
@@ -34,9 +29,9 @@ class EfanExtraModule {
 		}
 	}	
 	
-//	@Contribute { serviceType=EfanLibraries# }
-//	internal static Void contributeEfanLibraries(MappedConfig config) {
-//		// TODO: grab from some BedSheetMeta service or somefin
-//		config["app"] = AppModule#.pod
-//	}
+	@Contribute { serviceType=DependencyProviderSource# }
+	internal static Void contributeDependencyProviderSource(OrderedConfig config, ComponentsProvider componentsProvider) {
+		config.add(componentsProvider)
+	}	
+	
 }
