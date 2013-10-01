@@ -5,11 +5,20 @@ using afEfan::EfanRenderer
 
 const class ComponentCompiler {
 
-	@Inject	private const EfanLibraries			efanLibraries
-	@Inject	private const EfanCompiler 			efanCompiler
-	@Inject	private const TemplateConverters	templateConverters
+	** When generating code snippets to report compilation Errs, this is the number of lines of src 
+	** code the erroneous line will be padded with.  
+	public const  Int 				srcCodePadding		:= 5 
 	
-	new make(|This|in) { in(this) }
+	@Inject	private const EfanLibraries			efanLibraries
+	@Inject	private const TemplateConverters	templateConverters
+			private const EfanCompiler 			efanCompiler
+	
+	new make(|This|in) { 
+		in(this) 
+		efanCompiler = EfanCompiler() {
+			it.srcCodePadding = this.srcCodePadding
+		}
+	}
 	
 	Type compile(Type comType, File efanFile) {
 		
