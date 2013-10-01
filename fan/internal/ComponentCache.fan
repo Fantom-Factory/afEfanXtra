@@ -4,9 +4,9 @@ using afIoc::Registry
 using afIoc::NotFoundErr
 using afPlastic::PlasticClassModel
 
+@NoDoc
 const mixin ComponentCache {
 
-	** Called from compiled library methods
 	abstract Component createInstance(Type componentType)
 
 }

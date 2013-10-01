@@ -9,8 +9,7 @@ const mixin ComponentCompiler {
 	abstract Type compile(Type comType, File efanFile)
 }
 
-@NoDoc
-const class ComponentCompilerImpl : ComponentCompiler {
+internal const class ComponentCompilerImpl : ComponentCompiler {
 
 	@Inject	private const EfanLibraries			efanLibraries
 	@Inject	private const TemplateConverters	templateConverters

@@ -13,15 +13,15 @@ const class EfanExtraModule {
 
 	static Void bind(ServiceBinder binder) {
 		
-		binder.bindImpl(ComponentCache#)
-
 		binder.bindImpl(LibraryCompiler#)
 		binder.bindImpl(ComponentCompiler#)
+		binder.bindImpl(ComponentCache#)
 		binder.bindImpl(ComponentsProvider#)
 		binder.bindImpl(ComponentHelper#).withScope(ServiceScope.perInjection)
-
 		binder.bindImpl(EfanExtraConfig#)
 		binder.bindImpl(EfanLibraries#)
+		
+		binder.bindImpl(EfanExtra#)
 		binder.bindImpl(TemplateConverters#)
 	}
 

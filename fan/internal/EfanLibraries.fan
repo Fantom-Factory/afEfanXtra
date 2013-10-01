@@ -2,21 +2,17 @@ using afIoc::Inject
 using afIoc::Registry
 using afIoc::NotFoundErr
 
-
-// TODO: maybe rename to EfanExtra
-// TODO: have helper methods to iterate over pods and components
+@NoDoc
 const mixin EfanLibraries {
 
-	abstract Str:Obj 	libraries()
+	abstract Str:Obj	libraries()
 	
-	abstract Type[] getComponentTypes(Str prefix)
+	abstract Type[]		componentTypes(Str prefix)
 	
-	abstract Type[] libraryTypes()
-	
+	abstract Type[]		libraryTypes()
 }
 
 internal const class EfanLibrariesImpl : EfanLibraries {
-	private const static Log log := Utils.getLog(EfanLibraries#)
 	
 	private const Str:Pod 	prefixToPod
 	private const Pod:Obj 	podToLibrary
@@ -42,7 +38,7 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	}
 	
 	** TODO: Fudge for now / PagePipeline in afPillow
-	override Type[] getComponentTypes(Str prefix) {
+	override Type[] componentTypes(Str prefix) {
 		findComponentTypes(prefixToPod[prefix])
 	}
 	

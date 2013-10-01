@@ -7,11 +7,12 @@ using afEfan::EfanRenderCtx
 @NoDoc
 const mixin LibraryCompiler {
 	abstract Type compileLibrary(Str prefix, Pod pod)
+	abstract Type[] findComponentTypes(Pod pod)
 }
 
-@NoDoc
-const class LibraryCompilerImpl : LibraryCompiler {
-
+internal const class LibraryCompilerImpl : LibraryCompiler {
+	private const static Log log := Utils.getLog(EfanLibraries#)
+	
 	private	const PlasticCompiler	plasticCompiler
 	
 	new make(|This| in, EfanExtraConfig efanConfig) { 
@@ -20,14 +21,16 @@ const class LibraryCompilerImpl : LibraryCompiler {
 	}
 
 	override Type compileLibrary(Str prefix, Pod pod) {
-		// TODO: log stuff
+		log.debug("Compiling Component Library '${prefix}' for ${pod.name}")
 		model := PlasticClassModel("${prefix.capitalize}EfanLibrary", true)
-		
+
 		model.usingType(EfanRenderer#)
 		model.usingType(EfanRenderCtx#)
 		model.addField(ComponentCache#, "componentCache", null, null, [Inject#])
-		
+
 		findComponentTypes(pod).each |com| {			
+			log.debug("  - adding component ${com.name}")
+			
 			method	:= com.methods.find { it.name == "initialise" }
 			
 			initSig := (method?.params?.map { "${it.type.signature} ${it.name}" } ?: Str[,]).add("|EfanRenderer obj| bodyFunc")
@@ -37,6 +40,7 @@ const class LibraryCompilerImpl : LibraryCompiler {
 			// TODO: make more robust
 			if (com.method("initialise", false) != null)
 				body += "component.initialise(" + (method?.params?.join(", ") { it.name } ?: "") + ")\n"
+
 			body += "EfanRenderCtx.render.efan(component, null, bodyFunc)\n"
 			body += "return component"
 			
@@ -46,7 +50,7 @@ const class LibraryCompilerImpl : LibraryCompiler {
 //		Env.cur.err.printLine(model.toFantomCode)
 		return plasticCompiler.compileModel(model)
 	}
-	
+
 // the rendered method
 //	Layout renderLayout(Str pageTitle, |EfanRenderer obj| bodyFunc) {
 //		component := (Layout) efanLibraries.create(Layout#)
@@ -55,7 +59,7 @@ const class LibraryCompilerImpl : LibraryCompiler {
 //		return component
 //	}	
 	
-	private Type[] findComponentTypes(Pod pod) {
+	override Type[] findComponentTypes(Pod pod) {
 		pod.types.findAll { it.fits(Component#) && it.isMixin && it != Component# }		
 	}
 }

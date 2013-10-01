@@ -4,7 +4,7 @@ class Build : BuildPod {
 
 	new make() {
 		podName = "afEfanExtra"
-		summary = "A library for producing reusable components, based on Embedded Fantom (efan) templates."
+		summary = "A library for creating reusable Embedded Fantom (efan) components."
 		version = Version([0,0,1])
 
 		meta	= [	"org.name"		: "Alien-Factory",
@@ -20,7 +20,7 @@ class Build : BuildPod {
 
 		index	= [	"afIoc.module"	: "afEfanExtra::EfanExtraModule"
 				]
-
+ 
 
 		depends = ["sys 1.0", "concurrent 1.0",
 					"afIoc 1.4+", "afEfan 1.0+", "afPlastic 1+"]

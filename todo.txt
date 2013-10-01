@@ -1,8 +1,27 @@
 
+For 0.0.2
+=========
+
+What's with the Component mixin? 
+ - what of initialise()?
+ - what of beforeRender()?
+ - what of afterRender()?
+ 
+
+Fandocs
+ with overview
+ readme.md
+ 
+ MailShotExample - could become the test app
+
 For 1.0.0
 =========
 
+Class names...?
+ - EfanComponentLibraries
+ - EfanComponentCache
 
+Make Component a facet?
 
 For Future
 ==========
