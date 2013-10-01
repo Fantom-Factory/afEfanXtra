@@ -22,22 +22,6 @@ class EfanExtraModule {
 		binder.bindImpl(TemplateConverters#)
 	}
 
-//	@Build { serviceId="EfanCompiler" }
-//	static EfanCompiler buildEfanCompiler(ConfigSource configSrc) {
-//		EfanCompiler() {
-//			it.ctxVarName		= configSrc.getCoerced(EfanConfigIds.ctxVarName, Str#)
-//			it.srcCodePadding	= configSrc.getCoerced(ConfigIds.srcCodeErrPadding, Int#)
-//		}
-//	}
-	
-	@Build { serviceId="EfanCompiler" }
-	static EfanCompiler buildEfanCompiler() {
-		EfanCompiler() {
-			// TODO: How to override this with afBedSheet config values
-			it.srcCodePadding	= 5
-		}
-	}
-
 	@Contribute { serviceType=DependencyProviderSource# }
 	internal static Void contributeDependencyProviderSource(OrderedConfig config, ComponentsProvider componentsProvider) {
 		config.add(componentsProvider)

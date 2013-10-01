@@ -14,7 +14,6 @@ const mixin EfanLibraries {
 	
 	abstract Type[] libraryTypes()
 	
-//	abstract Obj library(Type libraryType)
 }
 
 const class EfanLibrariesImpl : EfanLibraries {
@@ -42,7 +41,6 @@ const class EfanLibrariesImpl : EfanLibraries {
 		this.librariesF = libs.toImmutable
 		
 		componentsProvider.libs.val = librariesF.vals.toImmutable
-//		componentsProvider.types.val = librariesF.vals.map { it.typeof }
 	}
 	
 	** Fudge for now
