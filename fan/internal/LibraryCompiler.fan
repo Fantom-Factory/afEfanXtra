@@ -4,7 +4,13 @@ using afPlastic::PlasticClassModel
 using afEfan::EfanRenderer
 using afEfan::EfanRenderCtx
 
-internal const class LibraryCompiler {
+@NoDoc
+const mixin LibraryCompiler {
+	abstract Type compileLibrary(Str prefix, Pod pod)
+}
+
+@NoDoc
+const class LibraryCompilerImpl : LibraryCompiler {
 
 	private	const PlasticCompiler	plasticCompiler
 	
@@ -13,7 +19,7 @@ internal const class LibraryCompiler {
 		plasticCompiler = efanConfig.plasticCompiler
 	}
 
-	Type compileLibrary(Str prefix, Pod pod) {
+	override Type compileLibrary(Str prefix, Pod pod) {
 		// TODO: log stuff
 		model := PlasticClassModel("${prefix.capitalize}EfanLibrary", true)
 		

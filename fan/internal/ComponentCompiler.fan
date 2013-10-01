@@ -3,7 +3,14 @@ using afPlastic
 using afEfan::EfanCompiler
 using afEfan::EfanRenderer
 
-internal const class ComponentCompiler {
+@NoDoc
+const mixin ComponentCompiler {
+	
+	abstract Type compile(Type comType, File efanFile)
+}
+
+@NoDoc
+const class ComponentCompilerImpl : ComponentCompiler {
 
 	@Inject	private const EfanLibraries			efanLibraries
 	@Inject	private const TemplateConverters	templateConverters
@@ -14,7 +21,7 @@ internal const class ComponentCompiler {
 		efanCompiler = efanConfig.efanCompiler
 	}
 	
-	Type compile(Type comType, File efanFile) {
+	override Type compile(Type comType, File efanFile) {
 		model := PlasticClassModel("${comType.name}Impl", true)
 		model.extendMixin(comType)
 
