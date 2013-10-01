@@ -25,11 +25,14 @@ const class EfanLibrariesImpl : EfanLibraries {
 		override Str:Obj 	libraries() { librariesF }
 	
 	@Inject	private	const Registry			registry
-	@Inject	private	const PlasticCompiler	plasticCompiler
+			private	const PlasticCompiler	plasticCompiler
 	
 	new make(Str:Pod libraries, ComponentsProvider componentsProvider, |This|in) {
 		in(this)
 
+		// TODO: have a config obj that has the sreCodePadding
+		plasticCompiler = PlasticCompiler()
+		
 		libs := Utils.makeMap(Str#, Obj#)
 		this.prefixToPod	= libraries
 		this.podToLibrary 	= libraries.map |pod, prefix| { 
@@ -40,10 +43,10 @@ const class EfanLibrariesImpl : EfanLibraries {
 		}
 		this.librariesF = libs.toImmutable
 		
-		componentsProvider.libs.val = librariesF.vals.toImmutable
+		componentsProvider.libs.val = librariesF.vals.toImmutable		
 	}
 	
-	** Fudge for now
+	** TODO: Fudge for now / PagePipeline in afPillow
 	override Type[] getComponentTypes(Str prefix) {
 		findComponentTypes(prefixToPod[prefix])
 	}

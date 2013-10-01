@@ -24,12 +24,14 @@ class Build : BuildPod {
 
 		depends = ["sys 1.0", "concurrent 1.0",
 					"afIoc 1.4+", "afEfan 1.0+", "afPlastic 1+"]
-		srcDirs = [`test/unit-tests/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
-		resDirs = [`doc/`]
+		srcDirs = [`test/unit-tests/`, `test/test-app/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
+		resDirs = [`doc/`, `test/test-app/`]
 
 		docApi = true
 		docSrc = true
 
+		// TODO: remove test files
+		
 		// exclude test code when building the pod
 		srcDirs = srcDirs.exclude { it.toStr.startsWith("test/") }
 	}

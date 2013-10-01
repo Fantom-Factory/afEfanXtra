@@ -14,7 +14,6 @@ const class ComponentCache {
 	new make(|This|in) { in(this) }
 	
 	** Called from compiled library methods
-	@NoDoc
 	Component createInstance(Type componentType) {
 		
 		if (!efanTypeCache.containsKey(componentType)) {
