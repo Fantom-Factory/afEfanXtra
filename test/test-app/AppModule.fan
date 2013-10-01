@@ -1,6 +1,6 @@
 using afIoc
 
-class AppModule {
+internal class AppModule {
 	
 	static Void bind(ServiceBinder binder) {
 		binder.bindImpl(AfVersion#)

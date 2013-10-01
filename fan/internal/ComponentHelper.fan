@@ -2,6 +2,7 @@ using afIoc::Inject
 using afIoc::Registry
 using afIoc::ConcurrentCache
 
+@NoDoc
 const class ComponentHelper {
 	
 //	@Inject

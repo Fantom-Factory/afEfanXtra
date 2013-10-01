@@ -4,7 +4,7 @@ class Build : BuildPod {
 
 	new make() {
 		podName = "afEfanExtra"
-		summary = "A library to ..."
+		summary = "A library for producing reusable components, based on Embedded Fantom (efan) templates."
 		version = Version([0,0,1])
 
 		meta	= [	"org.name"		: "Alien-Factory",
@@ -13,7 +13,7 @@ class Build : BuildPod {
 					"proj.name"		: "EfanExtra",
 					"license.name"	: "BSD 2-Clause License",
 					"repo.private"	: "true"
-
+					// remove test res dirs!!!
 					,"afIoc.module"	: "afEfanExtra::EfanExtraModule"
 				]
 
@@ -24,15 +24,14 @@ class Build : BuildPod {
 
 		depends = ["sys 1.0", "concurrent 1.0",
 					"afIoc 1.4+", "afEfan 1.0+", "afPlastic 1+"]
-		srcDirs = [`test/unit-tests/`, `test/test-app/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
+		srcDirs = [`test/unit-tests/`, `test/test-app/`, `test/example/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
 		resDirs = [`doc/`, `test/test-app/`]
 
 		docApi = true
 		docSrc = true
-
-		// TODO: remove test files
-		
+ 
 		// exclude test code when building the pod
 		srcDirs = srcDirs.exclude { it.toStr.startsWith("test/") }
+//		resDirs = resDirs.exclude { it.toStr.startsWith("test/") }
 	}
 }

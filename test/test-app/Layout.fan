@@ -1,4 +1,5 @@
 
+@NoDoc
 const mixin Layout : Component {
 
 	abstract Str? pageTitle

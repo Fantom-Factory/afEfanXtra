@@ -3,25 +3,18 @@ using afPlastic
 using afEfan::EfanCompiler
 using afEfan::EfanRenderer
 
-const class ComponentCompiler {
+internal const class ComponentCompiler {
 
-	** When generating code snippets to report compilation Errs, this is the number of lines of src 
-	** code the erroneous line will be padded with.  
-	public const  Int 				srcCodePadding		:= 5 
-	
 	@Inject	private const EfanLibraries			efanLibraries
 	@Inject	private const TemplateConverters	templateConverters
 			private const EfanCompiler 			efanCompiler
 	
-	new make(|This|in) { 
-		in(this) 
-		efanCompiler = EfanCompiler() {
-			it.srcCodePadding = this.srcCodePadding
-		}
+	new make(EfanExtraConfig efanConfig, |This|in) { 
+		in(this)
+		efanCompiler = efanConfig.efanCompiler
 	}
 	
 	Type compile(Type comType, File efanFile) {
-		
 		model := PlasticClassModel("${comType.name}Impl", true)
 		model.extendMixin(comType)
 
