@@ -8,7 +8,9 @@ const class EfanExtraConfig {
 	
 	** When generating code snippets to report compilation Errs, this is the number of lines of src 
 	** code the erroneous line will be padded with.  
-	public const  Int 				srcCodePadding		:= 5 
+	public const  Int 			srcCodePadding		:= 5 
+
+	public const  Duration		templateTimeout		:= 10sec 
 
 	internal EfanCompiler efanCompiler() {
 		EfanCompiler() {
