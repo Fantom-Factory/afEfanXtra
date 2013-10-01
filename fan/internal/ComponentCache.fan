@@ -12,25 +12,30 @@ const mixin ComponentCache {
 }
 
 internal const class ComponentCacheImpl : ComponentCache {
-	private const ConcurrentCache efanTypeCache	:= ConcurrentCache() 
+//	private const ConcurrentCache efanTypeCache	:= ConcurrentCache() 
+	private const ConcurrentCache typeToFileCache	:= ConcurrentCache() 
 
+			private const FileCache 			fileCache
 	@Inject	private const TemplateConverters	templateConverters
 	@Inject	private const ComponentCompiler		compiler
 	@Inject	private const Registry 				registry
 
-	new make(|This|in) { in(this) }
+	new make(EfanExtraConfig config, |This|in) { 
+		in(this) 
+		fileCache = FileCache(config.templateTimeout)
+	}
 	
 	override Component createInstance(Type componentType) {
-		
-		if (!efanTypeCache.containsKey(componentType)) {
-			templateFile	:= findTemplate(componentType) 
-			compiledType	:= compiler.compile(componentType, templateFile)
-			efanTypeCache[componentType] = compiledType
+		templateFile := (File) typeToFileCache.getOrAdd(componentType) |->File| {
+			findTemplate(componentType) 
 		}
 		
-		type 	:= efanTypeCache[componentType]
-		com		:= registry.autobuild(type)
-		return com		
+		efanType := (Type) fileCache.getOrAddOrUpdate(templateFile) |->Obj| {
+			compiler.compile(componentType, templateFile)
+		}
+		
+		component := registry.autobuild(efanType)
+		return component
 	}
 	
 	private File findTemplate(Type componentType) {
