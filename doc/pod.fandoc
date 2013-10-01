@@ -1,6 +1,6 @@
 Overview [#overview]
 ********************
-A library to ...
+A library for creating reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview` components.
 
 
 
@@ -17,4 +17,5 @@ Release Notes [#releaseNotes]
 
 v0.0.2 [#v0.0.2]
 ----------------
- - New: Preview Release 
+ - New: Preview Release
+
