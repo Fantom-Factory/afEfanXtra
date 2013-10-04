@@ -19,7 +19,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		in(this)
 		efanCompiler = efanConfig.efanCompiler
 	}
-	
+
 	override Type compile(Type comType, File efanFile) {
 		model := PlasticClassModel("${comType.name}Impl", true)
 		model.extendMixin(comType)

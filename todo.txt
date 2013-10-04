@@ -13,6 +13,7 @@ Fandocs
  readme.md
  
  MailShotExample - could become the test app
+ test non-nested components
 
 For 1.0.0
 =========

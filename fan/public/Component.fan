@@ -1,13 +1,13 @@
 using afEfan::EfanRenderer
 
-** Components are all about *rendering* the  
-const mixin Component : EfanRenderer {
-	
-	virtual Void beforeRender() { }
-	virtual Void afterRender() { }
 
+facet class Component {
 	
-	override This with(|This| f) {
-		return this
-	}
 }
+
+//const mixin Component : EfanRenderer {
+//	
+//	virtual Void beforeRender() { }
+//	virtual Void afterRender() { }
+//	
+//}
