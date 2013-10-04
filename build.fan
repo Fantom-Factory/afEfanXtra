@@ -23,7 +23,7 @@ class Build : BuildPod {
  
 
 		depends = ["sys 1.0", "concurrent 1.0",
-					"afIoc 1.4+", "afEfan 1.0+", "afPlastic 1+"]
+					"afIoc 1.4.5+", "afEfan 1.0+", "afPlastic 1+"]
 		srcDirs = [`test/unit-tests/`, `test/test-app/`, `test/example/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
 		resDirs = [`doc/`, `test/test-app/`]
 

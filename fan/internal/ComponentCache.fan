@@ -3,11 +3,13 @@ using afIoc::Inject
 using afIoc::Registry
 using afIoc::NotFoundErr
 using afPlastic::PlasticClassModel
+using afEfan::EfanRenderer
 
 @NoDoc
 const mixin ComponentCache {
 
-	abstract Component createInstance(Type componentType)
+	abstract Type instanceType(Type componentType)
+	abstract EfanRenderer createInstance(Type componentType)
 
 }
 
@@ -25,7 +27,7 @@ internal const class ComponentCacheImpl : ComponentCache {
 		fileCache = FileCache(config.templateTimeout)
 	}
 	
-	override Component createInstance(Type componentType) {
+	override Type instanceType(Type componentType) {
 		templateFile := (File) typeToFileCache.getOrAdd(componentType) |->File| {
 			findTemplate(componentType) 
 		}
@@ -33,8 +35,13 @@ internal const class ComponentCacheImpl : ComponentCache {
 		efanType := (Type) fileCache.getOrAddOrUpdate(templateFile) |->Obj| {
 			compiler.compile(componentType, templateFile)
 		}
-		
-		component := registry.autobuild(efanType)
+
+		return efanType
+	}
+	
+	override EfanRenderer createInstance(Type componentType) {
+		efanType	:= instanceType(componentType)
+		component 	:= registry.autobuild(efanType)
 		return component
 	}
 	

@@ -27,6 +27,10 @@ const mixin TemplateConverters {
 	
 	abstract Str convertTemplate(File templateFile)
 	
+	** Return a list of (lowercase) file extensions that denote which files can be converted to 
+	** efan templates.
+	** 
+	** Note the extensions are *not* prefixed with a dot, e.g. '["efan", "slim"]' 
 	abstract Str[] extensions()
 }
 
@@ -44,10 +48,6 @@ internal const class TemplateConvertersImpl : TemplateConverters {
 		throw EfanErr(ErrMsgs.templateConverterNotFound(templateFile))
 	}
 	
-	** Return a list of (lowercase) file extensions that denote which files can be converted to 
-	** efan templates.
-	** 
-	** Note the extensions are *not* prefixed with a dot, e.g. '["efan", "slim"]' 
 	override Str[] extensions() {
 		converters.keys.map { it.lower }
 	}

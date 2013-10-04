@@ -14,6 +14,7 @@ const class EfanExtraModule {
 	static Void bind(ServiceBinder binder) {
 		
 		binder.bindImpl(LibraryCompiler#)
+		binder.bindImpl(ComponentFinder#)
 		binder.bindImpl(ComponentCompiler#)
 		binder.bindImpl(ComponentCache#)
 		binder.bindImpl(ComponentsProvider#)

@@ -1,12 +1,13 @@
 using afIoc::Inject
+using afEfan::EfanRenderer
 
 const mixin EfanExtra {
 	
-	abstract Str[]		libraries()
+	abstract Str[]			libraries()
 	
-	abstract Type[]		componentTypes(Str prefix)
+	abstract Type[]			componentTypes(Str prefix)
 
-	abstract Component	createComponent(Type componentType)
+	abstract EfanRenderer	createComponent(Type componentType)
 }
 
 internal const class EfanExtraImpl : EfanExtra {
@@ -24,7 +25,7 @@ internal const class EfanExtraImpl : EfanExtra {
 		efanLibraries.componentTypes(prefix).sort
 	}
 	
-	override Component createComponent(Type componentType) {
+	override EfanRenderer createComponent(Type componentType) {
 		componentCache.createInstance(componentType)
 	}
 

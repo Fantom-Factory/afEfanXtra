@@ -1,7 +1,9 @@
 using afIoc::Inject
+using afEfan
 
 @NoDoc
-const mixin Page : Component {
+@Component
+const mixin Page {
 	
 	@Inject abstract AfVersion version
 	
