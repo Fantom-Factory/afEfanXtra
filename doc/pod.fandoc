@@ -2,6 +2,7 @@ Overview [#overview]
 ********************
 A library for creating reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview` components.
 
+EfanExtra pairs up Fantom classes and efan templates to create re-usable libraries of renderable components.
 
 
 Quick Start [#quickStart]
@@ -10,6 +11,17 @@ pre>
   Example here
 <pre
 
+
+Component
+
+
+An efan component consists of a Fantom const mixin and a corresponding efan template file.
+
+
+Setup / Rendering
+
+
+Layout
 
 
 Release Notes [#releaseNotes]
