@@ -2,12 +2,6 @@
 For 0.0.2
 =========
 
-What's with the Component mixin? 
- - what of initialise()?
- - what of beforeRender()?
- - what of afterRender()?
- 
-
 Fandocs
  with overview
  readme.md
@@ -18,11 +12,17 @@ Fandocs
 For 1.0.0
 =========
 
-Class names...?
+Add @Component templateUri
+
+Change the class names...?
  - EfanComponentLibraries
  - EfanComponentCache
 
-Make Component a facet?
+What's with the Component mixin? 
+ - what of initialise()?
+ - what of beforeRender()?
+ - what of afterRender()?
+
 
 For Future
 ==========

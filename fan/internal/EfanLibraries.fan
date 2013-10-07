@@ -7,18 +7,18 @@ const mixin EfanLibraries {
 
 	abstract Str:Obj	libraries()
 	
-	abstract Type[]		componentTypes(Str prefix)
+	abstract Type[]		componentTypes(Str library)
 	
 	abstract Type[]		libraryTypes()
 }
 
 internal const class EfanLibrariesImpl : EfanLibraries {
 	
-	private const Str:Pod 	prefixToPod
+	private const Str:Pod 	libraryToPod
 	private const Pod:Obj 	podToLibrary
 	private const Str:Obj 	librariesF
 		override Str:Obj 	libraries() { librariesF }
-	
+
 	@Inject	private	const Registry			registry
 	@Inject	private	const ComponentFinder	componentFinder
 
@@ -26,7 +26,7 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 		in(this)
 
 		libs := Utils.makeMap(Str#, Obj#)
-		this.prefixToPod	= libraries
+		this.libraryToPod	= verifyLibNames(libraries)
 		this.podToLibrary 	= libraries.map |pod, prefix| { 
 			type 	:= libraryCompiler.compileLibrary(prefix, pod)
 			lib		:= registry.autobuild(type)
@@ -35,14 +35,16 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 		}
 		this.librariesF = libs.toImmutable
 	}
-	
-	** TODO: Fudge for now / PagePipeline in afPillow
-	override Type[] componentTypes(Str prefix) {
-		componentFinder.findComponentTypes(prefixToPod[prefix])
+
+	override Type[] componentTypes(Str library) {
+		componentFinder.findComponentTypes(libraryToPod[library])
 	}
 	
-	@NoDoc
 	override Type[] libraryTypes() {
 		podToLibrary.vals.map { it.typeof }
+	}
+	
+	static Str:Pod verifyLibNames(Str:Pod libraries) {
+		libraries
 	}
 }

@@ -1,13 +1,5 @@
 using afEfan::EfanRenderer
 
-
-facet class Component {
-	
+** Annotate your efan Components with '@Component'. 
+facet class Component {	
 }
-
-//const mixin Component : EfanRenderer {
-//	
-//	virtual Void beforeRender() { }
-//	virtual Void afterRender() { }
-//	
-//}

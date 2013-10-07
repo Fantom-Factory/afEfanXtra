@@ -9,8 +9,12 @@ using afIoc::DependencyProviderSource
 using afEfan::EfanCompiler
 
 
+** The [afIoc]`http://repo.status302.com/doc/afIoc/#overview` module class.
+** 
+** This class is public so it may be referenced explicitly in tests.
 const class EfanExtraModule {
 
+	@NoDoc
 	static Void bind(ServiceBinder binder) {
 		
 		binder.bindImpl(LibraryCompiler#)
