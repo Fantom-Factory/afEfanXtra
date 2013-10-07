@@ -1,6 +1,6 @@
 using afIoc::Inject
 using afIoc::Registry
-using afIoc::NotFoundErr
+using afEfan::EfanErr
 
 @NoDoc
 const mixin EfanLibraries {
@@ -45,6 +45,12 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	}
 	
 	static Str:Pod verifyLibNames(Str:Pod libraries) {
-		libraries
+		libraries.each |pod, libName| { if (!isFieldName(libName)) throw EfanErr(ErrMsgs.libraryNameNotValid(libName)) }
+		return libraries
 	}
+	
+	private static Bool isFieldName(Str s) {
+		// @see http://fantom.org/sidewalk/topic/2193#c14128
+		!s.isEmpty && (s[0].isAlpha || s[0] == '_') && s.all |c| { c.isAlphaNum || c == '_' }
+	}	
 }
