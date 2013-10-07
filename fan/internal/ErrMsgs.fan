@@ -8,5 +8,17 @@ internal const class ErrMsgs {
 	static Str templateConverterNotFound(File file) {
 		"Could not find an efan converter for file extension '${file.ext}': ${file.normalize}"
 	}
+
+	static Str componentNotMixin(Type type) {
+		"EfanExtra component ${type.qname} is NOT a mixin"
+	}
+
+	static Str componentNotConst(Type type) {
+		"EfanExtra component ${type.qname} is NOT const"
+	}
+
+	static Str libraryNameNotValid(Str libName) {
+		"Efan Library name is not valid. It must be a legal Fantom name : ${libName}"
+	}
 	
 }
