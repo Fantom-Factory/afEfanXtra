@@ -1,18 +1,21 @@
 using afIoc::Inject
+using afIoc::Registry
 using afPlastic
 using afEfan::EfanCompiler
 using afEfan::EfanRenderer
+using afEfan::EfanMetaData
 
 @NoDoc
 const mixin ComponentCompiler {
 	
-	abstract Type compile(Type comType, File efanFile)
+	abstract EfanRenderer compile(Type comType, File efanFile)
 }
 
 internal const class ComponentCompilerImpl : ComponentCompiler {
 
 	@Inject	private const EfanLibraries			efanLibraries
 	@Inject	private const TemplateConverters	templateConverters
+	@Inject	private const Registry				registry
 			private const EfanCompiler 			efanCompiler
 	
 	new make(EfanExtraConfig efanConfig, |This|in) { 
@@ -20,10 +23,12 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		efanCompiler = efanConfig.efanCompiler
 	}
 
-	override Type compile(Type comType, File efanFile) {
+	override EfanRenderer compile(Type comType, File efanFile) {
 		model := PlasticClassModel("${comType.name}Impl", true)
 		model.extendMixin(comType)
 
+		model.addCtor("makeWithIoc", "${EfanMetaData#.qname} efanMeta, |This|in", "in(this)\nthis._af_efanMetaData = efanMeta")
+		
 		// add 3rd party component libraries
 		efanLibraries.libraries.each |type, name| {
 			model.addField(type.typeof, name, null, null, [Inject#])
@@ -55,9 +60,11 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 
 		efanSrc 	:= templateConverters.convertTemplate(efanFile)
 		
-		implType	:= efanCompiler.compileWithModel(efanFile.normalize.uri, efanSrc, null, model)
+		renderer	:= efanCompiler.compileWithModel(efanFile.normalize.uri, efanSrc, null, model) |Type efanType, EfanMetaData efanMeta -> EfanRenderer| {
+			registry.autobuild(efanType, [efanMeta])
+		}
 		
-		return implType
+		return renderer
 	}
 	
 }
