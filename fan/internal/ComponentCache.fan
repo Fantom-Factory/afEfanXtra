@@ -8,40 +8,31 @@ using afEfan::EfanRenderer
 @NoDoc
 const mixin ComponentCache {
 
-	abstract Type instanceType(Type componentType)
 	abstract EfanRenderer createInstance(Type componentType)
 
 }
 
 internal const class ComponentCacheImpl : ComponentCache {
-//	private const ConcurrentCache efanTypeCache	:= ConcurrentCache() 
 	private const ConcurrentCache typeToFileCache	:= ConcurrentCache() 
 
 			private const FileCache 			fileCache
 	@Inject	private const TemplateConverters	templateConverters
 	@Inject	private const ComponentCompiler		compiler
-	@Inject	private const Registry 				registry
 
 	new make(EfanExtraConfig config, |This|in) { 
 		in(this) 
 		fileCache = FileCache(config.templateTimeout)
 	}
 	
-	override Type instanceType(Type componentType) {
+	override EfanRenderer createInstance(Type componentType) {
 		templateFile := (File) typeToFileCache.getOrAdd(componentType) |->File| {
 			findTemplate(componentType) 
 		}
 		
-		efanType := (Type) fileCache.getOrAddOrUpdate(templateFile) |->Obj| {
+		component := (EfanRenderer) fileCache.getOrAddOrUpdate(templateFile) |->Obj| {
 			compiler.compile(componentType, templateFile)
 		}
 
-		return efanType
-	}
-	
-	override EfanRenderer createInstance(Type componentType) {
-		efanType	:= instanceType(componentType)
-		component 	:= registry.autobuild(efanType)
 		return component
 	}
 	
