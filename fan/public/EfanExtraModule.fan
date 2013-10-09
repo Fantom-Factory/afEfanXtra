@@ -6,6 +6,9 @@ using afIoc::ServiceBinder
 using afIoc::ServiceScope
 using afIoc::DependencyProvider
 using afIoc::DependencyProviderSource
+using afPlastic::PlasticCompiler
+using afIocConfig::IocConfigSource
+using afIocConfig::FactoryDefaults
 using afEfan::EfanCompiler
 
 
@@ -23,7 +26,6 @@ const class EfanExtraModule {
 		binder.bindImpl(ComponentCache#)
 		binder.bindImpl(ComponentsProvider#)
 		binder.bindImpl(ComponentHelper#).withScope(ServiceScope.perInjection)
-		binder.bindImpl(EfanExtraConfig#)
 		binder.bindImpl(EfanLibraries#)
 		
 		binder.bindImpl(EfanExtra#)
@@ -44,4 +46,21 @@ const class EfanExtraModule {
 		config.add(componentsProvider)
 	}	
 	
+	@NoDoc
+	@Build { serviceId="EfanCompiler" }
+	static EfanCompiler buildEfanCompiler(IocConfigSource configSrc, PlasticCompiler plasticCompiler) {
+		// rely on afBedSheet to set srcCodePadding in PlasticCompiler (to be picked up by EfanCompiler) 
+		EfanCompiler(plasticCompiler) {
+			it.ctxVarName 			= configSrc.getCoerced(EfanConfigIds.ctxVarName, Str#)
+			it.rendererClassName	= configSrc.getCoerced(EfanConfigIds.rendererClassName, Str#)
+		}
+	}
+
+	@NoDoc
+	@Contribute { serviceType=FactoryDefaults# }
+	static Void contributeFactoryDefaults(MappedConfig config) {
+		config[EfanConfigIds.templateTimeout]	= 10sec
+		config[EfanConfigIds.ctxVarName]		= "ctx"
+		config[EfanConfigIds.rendererClassName]	= "EfanRendererImpl"
+	}
 }

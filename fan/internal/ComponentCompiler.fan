@@ -16,12 +16,9 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 	@Inject	private const EfanLibraries			efanLibraries
 	@Inject	private const TemplateConverters	templateConverters
 	@Inject	private const Registry				registry
-			private const EfanCompiler 			efanCompiler
+	@Inject private const EfanCompiler 			efanCompiler
 	
-	new make(EfanExtraConfig efanConfig, |This|in) { 
-		in(this)
-		efanCompiler = efanConfig.efanCompiler
-	}
+	new make(|This|in) { in(this) }
 
 	override EfanRenderer compile(Type comType, File efanFile) {
 		model := PlasticClassModel("${comType.name}Impl", true)

@@ -12,13 +12,10 @@ const mixin LibraryCompiler {
 internal const class LibraryCompilerImpl : LibraryCompiler {
 	private const static Log log := Utils.getLog(EfanLibraries#)
 	
-			private	const PlasticCompiler	plasticCompiler
+	@Inject private	const PlasticCompiler	plasticCompiler
 	@Inject private	const ComponentFinder	componentFinder
 	
-	new make(EfanExtraConfig efanConfig, |This| in) { 
-		in(this) 
-		plasticCompiler = efanConfig.plasticCompiler
-	}
+	new make(|This| in) { in(this) }
 
 	override Type compileLibrary(Str prefix, Pod pod) {
 		log.debug("Compiling Component Library '${prefix}' for ${pod.name}")

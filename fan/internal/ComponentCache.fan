@@ -4,6 +4,7 @@ using afIoc::Registry
 using afIoc::NotFoundErr
 using afPlastic::PlasticClassModel
 using afEfan::EfanRenderer
+using afIocConfig::Config
 
 @NoDoc
 const mixin ComponentCache {
@@ -15,15 +16,18 @@ const mixin ComponentCache {
 internal const class ComponentCacheImpl : ComponentCache {
 	private const ConcurrentCache typeToFileCache	:= ConcurrentCache() 
 
+	@Inject @Config { id="afEfan.templateTimeout" }
+	private const Duration templateTimeout
+
 			private const FileCache 			fileCache
 	@Inject	private const TemplateConverters	templateConverters
 	@Inject	private const ComponentCompiler		compiler
 
-	new make(EfanExtraConfig config, |This|in) { 
+	new make(|This|in) { 
 		in(this) 
-		fileCache = FileCache(config.templateTimeout)
+		fileCache = FileCache(templateTimeout)
 	}
-	
+
 	override EfanRenderer createInstance(Type componentType) {
 		templateFile := (File) typeToFileCache.getOrAdd(componentType) |->File| {
 			findTemplate(componentType) 
