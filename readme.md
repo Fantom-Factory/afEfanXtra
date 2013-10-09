@@ -23,3 +23,6 @@ Or install via fanr:
 
     $ fanr install -r http://repo.status302.com/fanr/ afEfanExtra
 
+To use in a project, add a dependency in your `build.fan`:
+
+    depends = ["sys 1.0", ..., "afEfanExtra 0+"]

@@ -1,4 +1,5 @@
 using afIoc
+using afIocConfig::IocConfigModule
 using afEfan::EfanErr
 
 internal class EfanTest : Test {
@@ -25,7 +26,7 @@ internal class EfanTest : Test {
 	
 	
 	override Void setup() {
-		reg 	= RegistryBuilder().addModules([AppModule#, EfanExtraModule#]).build.startup
+		reg 	= RegistryBuilder().addModules([AppModule#, EfanExtraModule#, IocConfigModule#]).build.startup
 		cache	= reg.dependencyByType(ComponentCache#)
 	}
 
