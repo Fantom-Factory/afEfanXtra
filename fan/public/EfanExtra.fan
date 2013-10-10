@@ -9,12 +9,15 @@ const mixin EfanExtra {
 	
 	** Returns the types of all components in the given library. A component type is a 'const mixin'
 	** annotated with the '@Component' facet.
+	** 
+	** TODO: return lazy component proxies instead of types. 
 	abstract Type[]			componentTypes(Str library)
 
-	** Creates an instance of the given component type. Call 'render()':  
+	** Returns an instance of the given component type. Once created, the smae instance is always 
+	** returned. Call 'render()':  
 	** 
 	**   Str render(Obj? ctx) 
-	abstract EfanRenderer	createComponent(Type componentType)
+	abstract EfanRenderer	component(Type componentType)
 }
 
 internal const class EfanExtraImpl : EfanExtra {
@@ -32,7 +35,7 @@ internal const class EfanExtraImpl : EfanExtra {
 		efanLibraries.componentTypes(library).sort
 	}
 
-	override EfanRenderer createComponent(Type componentType) {
-		componentCache.createInstance(componentType)
+	override EfanRenderer component(Type componentType) {
+		componentCache.getOrMake(componentType)
 	}
 }

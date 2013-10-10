@@ -24,6 +24,8 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		model := PlasticClassModel("${comType.name}Impl", true)
 		model.extendMixin(comType)
 
+		// create ctor for afIoc to instantiate	
+		// TODO: add @Inject to make sure
 		model.addCtor("makeWithIoc", "${EfanMetaData#.qname} efanMeta, |This|in", "in(this)\nthis._af_efanMetaData = efanMeta")
 		
 		// add 3rd party component libraries
@@ -41,7 +43,8 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 
 			if (field.parent == EfanRenderer#)
 				return
-			
+
+			// TODO: copy values for all other facets
 			if (field.hasFacet(Inject#)) {
 				injectFieldName := "_af_inject${field.name.capitalize}"
 				// @see http://fantom.org/sidewalk/topic/2186#c14112
@@ -51,6 +54,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 				return
 			}
 
+			// TODO: copy all facets
 			// normal render variables
 			model.overrideField(field, """_af_componentHelper.getVariable("${field.name}")""", """_af_componentHelper.setVariable("${field.name}", it)""")
 		}

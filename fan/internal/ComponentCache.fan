@@ -9,7 +9,7 @@ using afIocConfig::Config
 @NoDoc
 const mixin ComponentCache {
 
-	abstract EfanRenderer createInstance(Type componentType)
+	abstract EfanRenderer getOrMake(Type componentType)
 
 }
 
@@ -28,7 +28,7 @@ internal const class ComponentCacheImpl : ComponentCache {
 		fileCache = FileCache(templateTimeout)
 	}
 
-	override EfanRenderer createInstance(Type componentType) {
+	override EfanRenderer getOrMake(Type componentType) {
 		templateFile := (File) typeToFileCache.getOrAdd(componentType) |->File| {
 			findTemplate(componentType) 
 		}

@@ -1,27 +1,37 @@
-using afIoc::Inject
-using afIoc::Registry
-using afIoc::ConcurrentCache
+using afIoc::ThreadStash
 
-@NoDoc
+//const class ComponentMeta {
+//	
+//	const Str library
+//	
+//	const Type component
+//	
+//	new make(|This|in) { in(this) }
+//}
+
+@NoDoc	// TODO: rename to ComponentVariables or ComponentStash
 const class ComponentHelper {
 	
-//	@Inject
-//	private const Registry registry
-	
-	// FIXME: make threaded
-	private const ConcurrentCache vals	:= ConcurrentCache()
-	
-	new make(|This|in) { in(this) }
-	
-//	Obj service(Type serviceType) {
-//		registry.dependencyByType(serviceType)
-//	}
-	
 	Void setVariable(Str name, Obj value) {
-		vals.set(name, value)
+		stash.set(name, value)
 	}
 	
 	Obj getVariable(Str name) {
-		vals.get(name)
+		stash.get(name)
+	}
+	
+	Void scopeVariables(|->| func) {
+		// TODO: we need to uniquely ID each component in a render stack and hold the variables in 
+		// ONE thread-stash. Then components can be passed into other components. Take from MetaData???
+		stash := ThreadStash("efanExtra.componentVariables")
+		try {
+			CallStack.call("efanExtra.renderCtx", stash, func)
+		} finally {
+			stash.clear
+		}
+	}
+	
+	private ThreadStash stash() {
+		CallStack.stackable("efanExtra.renderCtx")
 	}
 }
