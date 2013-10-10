@@ -17,7 +17,6 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	private const Str:Pod 	libraryToPod
 	private const Pod:Obj 	podToLibrary
 	private const Str:Obj 	librariesF
-		override Str:Obj 	libraries() { librariesF }
 
 	@Inject	private	const Registry			registry
 	@Inject	private	const ComponentFinder	componentFinder
@@ -36,6 +35,8 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 		this.librariesF = libs.toImmutable
 	}
 
+	override Str:Obj libraries() { librariesF }
+	
 	override Type[] componentTypes(Str library) {
 		componentFinder.findComponentTypes(libraryToPod[library])
 	}

@@ -7,6 +7,7 @@ using afEfan::EfanRenderCtx
 @NoDoc
 const mixin LibraryCompiler {
 	abstract Type compileLibrary(Str prefix, Pod pod)
+	abstract Str initMethodSig(Type component)
 }
 
 internal const class LibraryCompilerImpl : LibraryCompiler {
@@ -25,20 +26,22 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 		model.usingType(EfanRenderCtx#)
 		model.addField(ComponentCache#, "componentCache", null, null, [Inject#])
 
+		// add render methods
 		componentFinder.findComponentTypes(pod).each |com| {	
-			log.info("  - adding component ${com.name}")
-			
-			method	:= com.methods.find { it.name == "initialise" }
-			
-			initSig := (method?.params?.map { "${it.type.signature} ${it.name}" } ?: Str[,]).add("|EfanRenderer obj|? bodyFunc := null")
-			
-			body := "component := (${com.qname}) componentCache.createInstance(${com.qname}#)\n"
-			
-			// TODO: make more robust
-			if (com.method("initialise", false) != null)
-				body += "component.initialise(" + (method?.params?.join(", ") { it.name } ?: "") + ")\n"
+			log.debug("  - found component ${com.name}")
+						
+			initMethod	:= com.methods.find { it.name == "initialise" }
+			initSig 	:= (initMethod?.params?.map { "${it.type.signature} ${it.name}" } ?: Str[,]).add("|EfanRenderer obj|? bodyFunc := null")
 
-			body += "EfanRenderCtx.render.efan((EfanRenderer) component, null, bodyFunc)\n"
+			body 	:= "component := (${com.qname}) componentCache.getOrMake(${com.qname}#)\n"
+			body 	+= "component->_af_componentHelper->scopeVariables() |->| {\n"
+
+			// TODO: make init more robust
+			if (initMethod != null)
+				body += "  component.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"
+
+			body += "  EfanRenderCtx.render.efan((EfanRenderer) component, null, bodyFunc)\n"
+			body += "}\n"
 			body += "return component"
 			
 			model.addMethod(com, "render" + com.name.capitalize, initSig.join(", "), body)
@@ -46,5 +49,11 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 
 //		Env.cur.err.printLine(model.toFantomCode)
 		return plasticCompiler.compileModel(model)
+	}
+	
+	override Str initMethodSig(Type component) {
+		initMethod	:= component.methods.find { it.name == "initialise" }
+		initSig 	:= (initMethod?.params?.map { "${it.type.signature} ${it.name}" } ?: Str[,])
+		return ("render${component.name.capitalize}(" + initSig.join(", ") + ")").replace("sys::", "") 
 	}
 }
