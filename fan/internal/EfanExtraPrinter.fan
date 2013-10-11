@@ -5,6 +5,7 @@ internal const class EfanExtraPrinter {
 
 	@Inject private	const EfanExtra 		efanExtra
 	@Inject private	const LibraryCompiler	libraryCompiler
+	@Inject private	const ComponentMeta		componentMeta
 	
 	new make(|This| in) { in(this) }
 
@@ -17,8 +18,8 @@ internal const class EfanExtraPrinter {
 			maxName	 := (Int) comTypes.reduce(0) |size, component| { ((Int) size).max(component.name.toDisplayName.size) }
 			buf.add("\nEfan Library: '${library}' has ${comTypes.size} components:\n")
 
-			comTypes.each |component| {
-				line := component.name.toDisplayName.padl(maxName) + " : " + "${library}." + libraryCompiler.initMethodSig(component)
+			comTypes.each |comType| {
+				line := comType.name.toDisplayName.padl(maxName) + " : " + "${library}." + componentMeta.renderMethodDec(comType)
 				buf.add("  ${line}\n")
 			}
 		}

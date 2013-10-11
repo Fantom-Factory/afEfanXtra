@@ -3,7 +3,7 @@ using afIoc::ProviderCtx
 using concurrent::AtomicRef
 using afIoc::Inject
 
-internal const class ComponentsProvider : DependencyProvider {
+internal const class LibraryProvider : DependencyProvider {
 
 	@Inject private const EfanLibraries efanLibraries
 	

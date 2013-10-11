@@ -23,12 +23,12 @@ const class EfanExtraModule {
 		binder.bindImpl(ComponentFinder#)
 		binder.bindImpl(ComponentCompiler#)
 		binder.bindImpl(ComponentCache#)
-		binder.bindImpl(ComponentsProvider#)
+		binder.bindImpl(ComponentMeta#)
 		binder.bindImpl(ComponentHelper#).withScope(ServiceScope.perInjection)
 		binder.bindImpl(EfanLibraries#)
 		binder.bindImpl(EfanExtraPrinter#)
 		
-		binder.bindImpl(EfanExtra#)
+		binder.bindImpl(EfanExtra#).withoutProxy
 		binder.bindImpl(TemplateConverters#)
 	}
 
@@ -40,8 +40,8 @@ const class EfanExtraModule {
 	}	
 	
 	@Contribute { serviceType=DependencyProviderSource# }
-	internal static Void contributeDependencyProviderSource(OrderedConfig config, ComponentsProvider componentsProvider) {
-		config.add(componentsProvider)
+	internal static Void contributeDependencyProviderSource(OrderedConfig config) {
+		config.add(config.autobuild(LibraryProvider#))
 	}	
 	
 	@Build { serviceId="EfanCompiler" }
