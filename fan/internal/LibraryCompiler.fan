@@ -7,7 +7,6 @@ using afEfan::EfanRenderCtx
 @NoDoc
 const mixin LibraryCompiler {
 	abstract Type compileLibrary(Str prefix, Pod pod)
-	abstract Str initMethodSig(Type component)
 }
 
 internal const class LibraryCompilerImpl : LibraryCompiler {
@@ -15,6 +14,7 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 	
 	@Inject private	const PlasticCompiler	plasticCompiler
 	@Inject private	const ComponentFinder	componentFinder
+	@Inject private	const ComponentMeta		componentMeta
 	
 	new make(|This| in) { in(this) }
 
@@ -24,16 +24,24 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 
 		model.usingType(EfanRenderer#)
 		model.usingType(EfanRenderCtx#)
-		model.addField(ComponentCache#, "componentCache", null, null, [Inject#])
+		model.extendMixin(EfanLibrary#)
+		
+		// TODO: stick in plastic?
+//		model.overrideField(EfanLibrary#componentCache, null, null, [Inject#])
+		// @see http://fantom.org/sidewalk/topic/2186#c14112
+		injectFieldName := "_af_injectComponentCache"
+		model.addField(ComponentCache#, injectFieldName, null, null, [Inject#])
+		model.overrideField(EfanLibrary#componentCache, injectFieldName, """throw Err("You can not set @Inject'ed fields: ${EfanLibrary#componentCache.qname}")""")
 
 		// add render methods
-		componentFinder.findComponentTypes(pod).each |com| {	
-			log.debug("  - found component ${com.name}")
-						
-			initMethod	:= com.methods.find { it.name == "initialise" }
-			initSig 	:= (initMethod?.params?.map { "${it.type.signature} ${it.name}" } ?: Str[,]).add("|EfanRenderer obj|? bodyFunc := null")
+		componentFinder.findComponentTypes(pod).each |comType| {	
+			log.debug("  - found component ${comType.name}")
+			
+			// FIXME: why do we not just return void?
+			initMethod	:= componentMeta.initMethod(comType)
+			initSig 	:= componentMeta.initMethodSig(comType, "|EfanRenderer obj|? bodyFunc := null")
 
-			body 	:= "component := (${com.qname}) componentCache.getOrMake(${com.qname}#)\n"
+			body 	:= "component := (${comType.qname}) componentCache.getOrMake(${comType.qname}#)\n"
 			body 	+= "component->_af_componentHelper->scopeVariables() |->| {\n"
 
 			// TODO: make init more robust
@@ -44,16 +52,10 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 			body += "}\n"
 			body += "return component"
 			
-			model.addMethod(com, "render" + com.name.capitalize, initSig.join(", "), body)
+			model.addMethod(comType, "render" + comType.name.capitalize, initSig, body)
 		}
 
 //		Env.cur.err.printLine(model.toFantomCode)
 		return plasticCompiler.compileModel(model)
-	}
-	
-	override Str initMethodSig(Type component) {
-		initMethod	:= component.methods.find { it.name == "initialise" }
-		initSig 	:= (initMethod?.params?.map { "${it.type.signature} ${it.name}" } ?: Str[,])
-		return ("render${component.name.capitalize}(" + initSig.join(", ") + ")").replace("sys::", "") 
 	}
 }

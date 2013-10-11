@@ -1,10 +1,11 @@
 using afIoc
 using afIocConfig::IocConfigModule
 using afEfan::EfanErr
+using afPlastic
 
 internal class EfanTest : Test {
 	Registry? reg
-	ComponentCache? cache
+	EfanExtra?	efanExtra
 	
 	Void verifyEfanErrMsg(Str errMsg, |Obj| func) {
 		verifyErrTypeMsg(EfanErr#, errMsg, func)
@@ -26,8 +27,14 @@ internal class EfanTest : Test {
 	
 	
 	override Void setup() {
-		reg 	= RegistryBuilder().addModules([AppModule#, EfanExtraModule#, IocConfigModule#]).build.startup
-		cache	= reg.dependencyByType(ComponentCache#)
+		try {
+		reg 		= RegistryBuilder().addModules([AppModule#, EfanExtraModule#, IocConfigModule#]).build.startup
+		efanExtra	= reg.dependencyByType(EfanExtra#)
+			
+		} catch (PlasticCompilationErr pe) {
+			err:=pe.print("Ooops", 50)
+		Env.cur.err.printLine(err)
+		}
 	}
 
 	override Void teardown() {

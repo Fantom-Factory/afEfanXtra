@@ -5,19 +5,17 @@ using afEfan::EfanRenderer
 const mixin EfanExtra {
 
 	** Returns the names of all contributed efan component libraries.
-	abstract Str[]			libraries()
+	abstract Str[]	libraries()
 	
 	** Returns the types of all components in the given library. A component type is a 'const mixin'
 	** annotated with the '@Component' facet.
 	** 
 	** TODO: return lazy component proxies instead of types. 
-	abstract Type[]			componentTypes(Str library)
+	abstract Type[]	componentTypes(Str library)
 
-	** Returns an instance of the given component type. Once created, the smae instance is always 
-	** returned. Call 'render()':  
-	** 
-	**   Str render(Obj? ctx) 
-	abstract EfanRenderer	component(Type componentType)
+	** Renders the given component. The component's 'initialise()' method is called with the given
+	** 'initParams'.
+	abstract Str	render(Type componentType, Obj[]? initParams := null)
 }
 
 internal const class EfanExtraImpl : EfanExtra {
@@ -35,7 +33,7 @@ internal const class EfanExtraImpl : EfanExtra {
 		efanLibraries.componentTypes(library).sort
 	}
 
-	override EfanRenderer component(Type componentType) {
-		componentCache.getOrMake(componentType)
+	override Str render(Type componentType, Obj[]? initParams := null) {
+		efanLibraries.library(componentType).render(componentType, initParams ?: Obj#.emptyList)
 	}
 }

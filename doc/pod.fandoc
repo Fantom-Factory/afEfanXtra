@@ -1,8 +1,13 @@
 Overview [#overview]
 ********************
-A library for creating reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview` components.
+'afEfanExtra' is a library for creating reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview`
+components. It pairs up Fantom classes and efan templates to encapsulate model / view behaviour.
 
-EfanExtra pairs up Fantom classes and efan templates to create re-usable libraries of renderable components.
+More than that, components also have access to all your afIoc services!
+
+EfanExtra is most useful when rendering pages and components with BedSheet. It has been purposely de-coupled from the web tier so
+it may be used for generating emails, text files, and other off-line content.
+
 
 
 Quick Start [#quickStart]
@@ -12,16 +17,54 @@ pre>
 <pre
 
 
-Component
+An efan component consists of a Fantom 'const mixin' and a corresponding efan template file. All fields and methods of the mixin
+are directly accessible in the template. Use can also use afIoc's @Inject just as you would on a service implementation.
+
+@Component
+
+ - Fields annotated with '@Inject' are populated from 'afIoc'
+ - Plain fields are granted storage.
+
+This means your component has access to services and can store variables!
 
 
-An efan component consists of a Fantom const mixin and a corresponding efan template file.
+Rendering
 
+When rendering an 'afEfan' template, you use the 'ctx' variable to pass state into the template. The 'ctx' variable is not used
+in efan components, instead you use an 'initialise()' method.
 
+A component may only have one 'initialise' method. It may take any number of parameters and must annotated with `@Initialse`.
+
+Values passed into 'initialise()' may be stored in fields and accessed via the template. Example:
+
+Layout.fan:
+pre>
+@Component
+const mixin Layout {
+
+  abstract Str? pageTitle
+
+   Void initialise(Str pageTitle) {
+     this.pageTitle = pageTitle
+   }
+}
+<pre
+
+Layout.efan:
+pre>
+<html>
+<head>
+  <title><%= pageTitle %></title>
+</head>
+...
+<pre
 Setup / Rendering
 
 
-Layout
+To render a component, call
+
+
+Creating 3rd Party sLibraries
 
 
 Release Notes [#releaseNotes]

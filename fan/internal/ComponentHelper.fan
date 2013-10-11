@@ -9,7 +9,7 @@ using afIoc::ThreadStash
 //	new make(|This|in) { in(this) }
 //}
 
-@NoDoc	// TODO: rename to ComponentVariables or ComponentStash
+@NoDoc	// TODO: rename to ComponentVariables or ComponentStash / turn into a mixin
 const class ComponentHelper {
 	
 	Void setVariable(Str name, Obj value) {
