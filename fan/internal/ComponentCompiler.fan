@@ -25,7 +25,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		model.extendMixin(comType)
 
 		// create ctor for afIoc to instantiate	
-		// TODO: add @Inject to make sure
+		// todo: add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
 		model.addCtor("makeWithIoc", "${EfanMetaData#.qname} efanMeta, |This|in", "in(this)\nthis._af_efanMetaData = efanMeta")
 		
 		// add 3rd party component libraries

@@ -1,14 +1,5 @@
 using afIoc::ThreadStash
 
-//const class ComponentMeta {
-//	
-//	const Str library
-//	
-//	const Type component
-//	
-//	new make(|This|in) { in(this) }
-//}
-
 @NoDoc	// TODO: rename to ComponentVariables or ComponentStash / turn into a mixin
 const class ComponentHelper {
 	
