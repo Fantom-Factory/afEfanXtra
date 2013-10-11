@@ -1,6 +1,6 @@
 using concurrent::Actor
 
-class CallStack {
+internal class CallStack {
 	private const 	Str 	stackName
 	private 		Obj[] 	stack := [,]
 	

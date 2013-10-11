@@ -37,22 +37,19 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 		componentFinder.findComponentTypes(pod).each |comType| {	
 			log.debug("  - found component ${comType.name}")
 			
-			// FIXME: why do we not just return void?
 			initMethod	:= componentMeta.initMethod(comType)
 			initSig 	:= componentMeta.initMethodSig(comType, "|EfanRenderer obj|? bodyFunc := null")
 
 			body 	:= "component := (${comType.qname}) componentCache.getOrMake(${comType.qname}#)\n"
 			body 	+= "component->_af_componentHelper->scopeVariables() |->| {\n"
 
-			// TODO: make init more robust
 			if (initMethod != null)
 				body += "  component.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"
 
 			body += "  EfanRenderCtx.render.efan((EfanRenderer) component, null, bodyFunc)\n"
 			body += "}\n"
-			body += "return component"
 			
-			model.addMethod(comType, "render" + comType.name.capitalize, initSig, body)
+			model.addMethod(Void#, "render" + comType.name.capitalize, initSig, body)
 		}
 
 //		Env.cur.err.printLine(model.toFantomCode)
