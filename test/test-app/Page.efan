@@ -1,6 +1,0 @@
-<% app.renderLayout("My Meat") { %>
-	<div class="hero-unit">
-		<h1>Alien-Factory <%= version.major %></h1>
-		<p>My Page</p>
-	</div>
-<% } %>

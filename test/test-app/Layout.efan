@@ -1,8 +1,0 @@
-<html>
-<head>
-	<title><%= pageTitle %></title>
-</head>
-<body>
-	<% renderBody %>
-</body>
-</html>

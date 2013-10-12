@@ -1,0 +1,9 @@
+Dear <%= userName %>,
+
+It appears the following rented DVDs are overdue:
+
+    <%= dvds.join(", ") %>
+
+Please return them at your convenience.
+
+<% app.renderSignOff("The Management") %>

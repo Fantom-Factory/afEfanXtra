@@ -8,11 +8,11 @@ internal class CallStack {
 		this.stackName = stackName
 	}
 	
-	private Void _call(Obj stackable, |->| func) {
+	private Obj? _call(Obj stackable, |->Obj?| func) {
 		stack.push(stackable)
 
 		try {
-			func()
+			return func()
 
 		} finally {
 			stack.pop
@@ -21,7 +21,7 @@ internal class CallStack {
 		}
 	}
 
-	static Void call(Str stackName, Obj stackable, |->| func) {
+	static Obj? call(Str stackName, Obj stackable, |->Obj?| func) {
 		get(stackName, true)._call(stackable, func)
 	}
 	

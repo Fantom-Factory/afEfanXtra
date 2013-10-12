@@ -3,61 +3,100 @@ Overview [#overview]
 'afEfanExtra' is a library for creating reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview`
 components. It pairs up Fantom classes and efan templates to encapsulate model / view behaviour.
 
-More than that, components also have access to all your afIoc services!
-
-EfanExtra is most useful when rendering pages and components with BedSheet. It has been purposely de-coupled from the web tier so
-it may be used for generating emails, text files, and other off-line content.
+'afEfanExtra' uses [afIoc]`http://repo.status302.com/doc/afIoc/#overview` and extends
+[afEfan]`http://repo.status302.com/doc/afEfan/#overview` to generate html, json, emails and other text content.
 
 
 
 Quick Start [#quickStart]
 *************************
+Overdue.efan:
 pre>
-  Example here
+Dear <%= userName %>,
+
+It appears the following rented DVDs are overdue:
+
+    <%= dvds.join(", ") %>
+
+Please return them at your convenience.
+
+<% app.renderSignOff("The Management") %>
 <pre
 
-
-An efan component consists of a Fantom 'const mixin' and a corresponding efan template file. All fields and methods of the mixin
-are directly accessible in the template. Use can also use afIoc's @Inject just as you would on a service implementation.
-
-@Component
-
- - Fields annotated with '@Inject' are populated from 'afIoc'
- - Plain fields are granted storage.
-
-This means your component has access to services and can store variables!
-
-
-Rendering
-
-When rendering an 'afEfan' template, you use the 'ctx' variable to pass state into the template. The 'ctx' variable is not used
-in efan components, instead you use an 'initialise()' method.
-
-A component may only have one 'initialise' method. It may take any number of parameters and must annotated with `@Initialse`.
-
-Values passed into 'initialise()' may be stored in fields and accessed via the template. Example:
-
-Layout.fan:
+Overdue.fan:
 pre>
+using afIoc
+using afEfanExtra
+
 @Component
-const mixin Layout {
+const mixin Overdue {
 
-  abstract Str? pageTitle
+  // use afIoc services!
+  @Inject abstract DvdService? dvdService
 
-   Void initialise(Str pageTitle) {
-     this.pageTitle = pageTitle
-   }
+  // access fields from the template
+  abstract Str? userName
+
+  // called before the component is rendered
+  Void initialise(Str userName) {
+    this.userName = userName
+  }
+
+  // methods may be called from the template
+  Str[] dvds() {
+    dvdService.findByName(userName)
+  }
 }
 <pre
 
-Layout.efan:
+AppModule.fan:
 pre>
-<html>
-<head>
-  <title><%= pageTitle %></title>
-</head>
-...
+using afIoc
+
+@SubModule { modules=[EfanExtraModule#]}
+class AppModule {
+
+  static Void bind(ServiceBinder binder) {
+    binder.bindImpl(DvdService#)
+  }
+
+  @Contribute { serviceType=EfanLibraries# }
+  static Void contributeEfanLibraries(MappedConfig config) {
+
+    // contribute all components in our pod as a library named 'app'
+    config["app"] = AppModule#.pod
+  }
+}
 <pre
+
+Then to render a component:
+
+  efanExtra.render(Overdue#, "Mr Smith")
+
+
+
+Components
+==========
+An efan component consists of a Fantom 'const mixin' class and a corresponding efan template file.
+
+Component classes must be annotated with the '@Component' facet. By default, the template file has the same name as the
+component and must live in a pod resource dir.
+
+All fields and methods of the mixin are directly accessible in the template. You can even use afIoc's '@Inject' facet to
+inject services just as you would in a service class.
+
+Rendering
+=========
+In efan you use the 'ctx' variable to pass state into the template. In efan components you use an 'initialise()' method.
+efan components do not use the 'ctx' variable, instead you use an 'initialise()' method to pass custom state. The 'initialise'
+method may then save state in fields to be used by the template.
+
+A component may only have one 'initialise' method. It may take any number of parameters and must annotated with '@Initialse'.
+
+Example:
+
+Overdue.efan:
+
 Setup / Rendering
 
 

@@ -41,12 +41,13 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 			initSig 	:= componentMeta.initMethodSig(comType, "|EfanRenderer obj|? bodyFunc := null")
 
 			body 	:= "component := (${comType.qname}) componentCache.getOrMake(${comType.qname}#)\n"
-			body 	+= "component->_af_componentHelper->scopeVariables() |->| {\n"
+			body 	+= "component->_af_componentHelper->scopeVariables() |->Obj?| {\n"
 
 			if (initMethod != null)
 				body += "  component.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"
 
 			body += "  EfanRenderCtx.render.efan((EfanRenderer) component, null, bodyFunc)\n"
+			body += "  return null\n"
 			body += "}\n"
 			
 			model.addMethod(Void#, "render" + comType.name.capitalize, initSig, body)
