@@ -7,7 +7,9 @@ using afIoc::ServiceScope
 using afIoc::DependencyProvider
 using afIoc::DependencyProviderSource
 using afIoc::RegistryStartup
+using afIoc::SubModule
 using afPlastic::PlasticCompiler
+using afIocConfig::IocConfigModule
 using afIocConfig::IocConfigSource
 using afIocConfig::FactoryDefaults
 using afEfan::EfanCompiler
@@ -16,6 +18,7 @@ using afEfan::EfanCompiler
 ** The [afIoc]`http://repo.status302.com/doc/afIoc/#overview` module class.
 ** 
 ** This class is public so it may be referenced explicitly in tests.
+@SubModule { modules=[IocConfigModule#]} 
 const class EfanExtraModule {
 
 	internal static Void bind(ServiceBinder binder) {

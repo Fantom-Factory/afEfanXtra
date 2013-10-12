@@ -1,6 +1,7 @@
 using afIoc
 
-internal class AppModule {
+@SubModule { modules=[EfanExtraModule#]} 
+internal class TestModule {
 	
 	static Void bind(ServiceBinder binder) {
 		binder.bindImpl(AfVersion#)

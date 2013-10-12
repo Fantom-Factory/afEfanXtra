@@ -12,15 +12,17 @@ const mixin EfanLibrary {
 		component	:= componentCache.getOrMake(componentType)
 		initMethod	:= componentMeta.initMethod(componentType)
 		
-		if (initMethod != null) {
-			paramTypes	:= initParams.map { it.typeof }
-			if (!ReflectUtils.paramTypesFitMethodSignature(paramTypes, initMethod))
-				throw Err("404 baby!")	// TODO: Err msg
-			
-			initMethod.callOn(component, initParams)
-		}
+		return component->_af_componentHelper->scopeVariables() |->Obj?| {
+			if (initMethod != null) {
+				paramTypes	:= initParams.map { it.typeof }
+				if (!ReflectUtils.paramTypesFitMethodSignature(paramTypes, initMethod))
+					throw Err("404 baby!")	// TODO: Err msg
+				
+				initMethod.callOn(component, initParams)
+			}
 		
-		return component.render(null)
+			return component.render(null)
+		}
 	}
 	
 }

@@ -5,8 +5,10 @@ internal const class ComponentMeta {
 		componentType.methods.find { it.name == "initialise" }
 	}
 	
-	Str initMethodSig(Type componentType, Str extraParams := "") {
-		initSig := (initMethod(componentType)?.params?.map { "${it.type.signature} ${it.name}" } ?: Str[,]).add(extraParams)
+	Str initMethodSig(Type componentType, Str extraParams := Str.defVal) {
+		initSig := initMethod(componentType)?.params?.map { "${it.type.signature} ${it.name}" } ?: Str[,]
+		if (!extraParams.isEmpty)
+			initSig.add(extraParams)
 		return initSig.join(", ").replace("sys::", "") 
 	}
 
