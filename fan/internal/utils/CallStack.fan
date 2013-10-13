@@ -21,12 +21,12 @@ internal class CallStack {
 		}
 	}
 
-	static Obj? call(Str stackName, Obj stackable, |->Obj?| func) {
+	static Str pushAndRun(Str stackName, Obj stackable, |->Str| func) {
 		get(stackName, true)._call(stackable, func)
 	}
 	
-	static Obj stackable(Str stackName) {
-		get(stackName, false).stack.peek
+	static Obj peek(Str stackName, Int i := -1) {
+		get(stackName, false).stack[i]
 	}	
 
 	private static CallStack get(Str stackName, Bool make := false) {
