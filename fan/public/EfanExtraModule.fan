@@ -27,7 +27,6 @@ const class EfanExtraModule {
 		binder.bindImpl(ComponentCompiler#)
 		binder.bindImpl(ComponentCache#)
 		binder.bindImpl(ComponentMeta#)
-		binder.bindImpl(ComponentHelper#).withScope(ServiceScope.perInjection)
 		binder.bindImpl(EfanLibraries#)
 		binder.bindImpl(EfanExtraPrinter#)
 		

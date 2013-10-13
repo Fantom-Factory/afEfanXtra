@@ -1,28 +1,31 @@
 using afIoc::ThreadStash
 
-@NoDoc	// TODO: rename to ComponentVariables or ComponentStash / turn into a mixin
-const class ComponentHelper {
+@NoDoc
+class ComponentCtx {
+	private [Str:Obj?] stash	:= Utils.makeMap(Str#, Obj?#)
 	
-	Void setVariable(Str name, Obj value) {
+	Void setVariable(Str name, Obj? value) {
 		stash.set(name, value)
 	}
 	
-	Obj getVariable(Str name) {
+	Obj? getVariable(Str name) {
 		stash.get(name)
 	}
 	
-	Str scopeVariables(|->Str| func) {
+	// ---- static methods ----
+	
+	static Str renderComponent(|->Str| func) {
 		// TODO: we need to uniquely ID each component in a render stack and hold the variables in 
 		// ONE thread-stash. Then components can be passed into other components. Take from MetaData???
 		stash := ThreadStash("efanExtra.componentVariables")
 		try {
-			return CallStack.call("efanExtra.renderCtx", stash, func)
+			return CallStack.pushAndRun("efanExtra.renderCtx", stash, func)
 		} finally {
 			stash.clear
 		}
 	}
-	
-	private ThreadStash stash() {
-		CallStack.stackable("efanExtra.renderCtx")
+
+	static ComponentCtx peek() {
+		CallStack.peek("efanExtra.componentCtx")
 	}
 }

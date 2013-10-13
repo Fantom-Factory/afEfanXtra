@@ -18,9 +18,9 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 	
 	new make(|This| in) { in(this) }
 
-	override Type compileLibrary(Str prefix, Pod pod) {
-		log.debug("Compiling Component Library '${prefix}' for ${pod.name}")
-		model := PlasticClassModel("${prefix.capitalize}EfanLibrary", true)
+	override Type compileLibrary(Str libName, Pod pod) {
+		log.debug("Compiling Component Library '${libName}' for ${pod.name}")
+		model := PlasticClassModel("${libName.capitalize}EfanLibrary", true)
 
 		model.usingType(EfanRenderer#)
 		model.usingType(EfanRenderCtx#)
@@ -35,8 +35,8 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 			initMethod	:= componentMeta.initMethod(comType)
 			initSig 	:= componentMeta.initMethodSig(comType, "|EfanRenderer obj|? bodyFunc := null")
 
-			body 	:= "component := (${comType.qname}) componentCache.getOrMake(${comType.qname}#)\n"
-			body 	+= "return component->_af_componentHelper->scopeVariables() |->Str| {\n"
+			body 	:= "return afEfanExtra::ComponentCtx.setVarScope() |->Str| {\n"
+			body 	+= "\tcomponent := (${comType.qname}) componentCache.getOrMake(\"${libName}\", ${comType.qname}#)\n"
 
 			if (initMethod != null)
 				body += "\tcomponent.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"

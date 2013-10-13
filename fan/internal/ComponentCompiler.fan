@@ -8,7 +8,7 @@ using afEfan::EfanMetaData
 @NoDoc
 const mixin ComponentCompiler {
 	
-	abstract EfanRenderer compile(Type comType, File efanFile)
+	abstract EfanRenderer compile(Str libName, Type comType, File efanFile)
 }
 
 internal const class ComponentCompilerImpl : ComponentCompiler {
@@ -20,20 +20,22 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 	
 	new make(|This|in) { in(this) }
 
-	override EfanRenderer compile(Type comType, File efanFile) {
+	override EfanRenderer compile(Str libName, Type comType, File efanFile) {
 		model := PlasticClassModel("${comType.name}Impl", true)
 		model.extendMixin(comType)
 
 		// create ctor for afIoc to instantiate	
 		// todo: add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
 		model.addCtor("makeWithIoc", "${EfanMetaData#.qname} efanMeta, |This|in", "in(this)\nthis._af_efanMetaData = efanMeta")
+
+		// give a more human ID - helpful for debugging
+		model.extendMixin(EfanRenderer#)
+		model.overrideMethod(EfanRenderer#id, "\"${libName}::${comType.name}\"")
 		
 		// add 3rd party component libraries
 		efanLibraries.libraries.each |type, name| {
 			model.addField(type.typeof, name, null, null, [Inject#])
 		}
-
-		model.addField(ComponentHelper#, "_af_componentHelper", null, null, [Inject#])
 
 		// implement abstract fields
 		comType.fields.each |field| {
@@ -56,7 +58,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 
 			// TODO: copy all facets
 			// normal render variables
-			model.overrideField(field, """_af_componentHelper.getVariable("${field.name}")""", """_af_componentHelper.setVariable("${field.name}", it)""")
+			model.overrideField(field, """afEfanExtra::ComponentCtx.peek.getVariable("${field.name}")""", """afEfanExtra::ComponentCtx.peek.setVariable("${field.name}", it)""")
 		}
 
 		efanSrc 	:= templateConverters.convertTemplate(efanFile)
