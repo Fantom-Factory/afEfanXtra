@@ -11,7 +11,7 @@ const class ComponentHelper {
 		stash.get(name)
 	}
 	
-	Obj? scopeVariables(|->Obj?| func) {
+	Str scopeVariables(|->Str| func) {
 		// TODO: we need to uniquely ID each component in a render stack and hold the variables in 
 		// ONE thread-stash. Then components can be passed into other components. Take from MetaData???
 		stash := ThreadStash("efanExtra.componentVariables")

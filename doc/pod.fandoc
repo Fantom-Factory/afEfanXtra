@@ -1,10 +1,14 @@
 Overview [#overview]
 ********************
-'afEfanExtra' is a library for creating reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview`
-components. It pairs up Fantom classes and efan templates to encapsulate model / view behaviour.
+'afEfanExtra' is a library for creating managed libraries of reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview`
+components. Influenced by Java's [Tapestry 5]`http://tapestry.apache.org/index.html`, it pairs up Fantom classes and efan templates
+to encapsulate model / view behaviour.
 
-'afEfanExtra' uses [afIoc]`http://repo.status302.com/doc/afIoc/#overview` and extends
-[afEfan]`http://repo.status302.com/doc/afEfan/#overview` to generate html, json, emails and other text content.
+'afEfanExtra' is very much in its infancy, with ideas still being fleshed out. It works great in a web / afBedSheet environment,
+with URLs being automatically mapped to components (coming soon...!), but it is presented here context free.
+
+'afEfanExtra' extends [afEfan]`http://repo.status302.com/doc/afEfan/#overview`, is powered by
+[afIoc]`http://repo.status302.com/doc/afIoc/#overview` and works great with [afSlim]`http://repo.status302.com/browse/afSlim`.
 
 
 
@@ -69,41 +73,46 @@ class AppModule {
 }
 <pre
 
+Full example source code available on [BitBucket]`https://bitbucket.org/AlienFactory/afefanextra/src/default/test/example/`.
+
 Then to render a component:
 
   efanExtra.render(Overdue#, "Mr Smith")
 
 
 
-Components
-==========
+Components [#components]
+************************
 An efan component consists of a Fantom 'const mixin' class and a corresponding efan template file.
 
 Component classes must be annotated with the '@Component' facet. By default, the template file has the same name as the
-component and must live in a pod resource dir.
+component and lives in a pod resource dir.
 
 All fields and methods of the mixin are directly accessible in the template. You can even use afIoc's '@Inject' facet to
 inject services just as you would in a service class.
 
-Rendering
-=========
-In efan you use the 'ctx' variable to pass state into the template. In efan components you use an 'initialise()' method.
-efan components do not use the 'ctx' variable, instead you use an 'initialise()' method to pass custom state. The 'initialise'
-method may then save state in fields to be used by the template.
+Use an 'initialise()' method to pass state into an efan component (the 'ctx' variable is not used). Only one 'initialise()'
+is allowed. It must be named 'initialise' but may take any number of parameters.
 
-A component may only have one 'initialise' method. It may take any number of parameters and must annotated with '@Initialse'.
+Libraries [#libraries]
+**********************
+Components are managed in libraries. To package up your components, add to the following to your app module:
 
-Example:
+  @Contribute { serviceType=EfanLibraries# }
+  static Void contributeEfanLibraries(MappedConfig config) {
 
-Overdue.efan:
+    // contribute all components in the pod as a library named 'app'
+    config["app"] = AppModule#.pod
+  }
 
-Setup / Rendering
+Library classes are automatically added as fields in your components. Library classes contain component render methods.
+In the example above, the library 'app' has 2 render methods, available to your templates:
 
+   app.renderOverdue(Str userName)
+   app.renderSignOff(Str who)
 
-To render a component, call
+> **ALIEN-AID:** Library render methods are logged at registry startup so you don't have to remember them!
 
-
-Creating 3rd Party sLibraries
 
 
 Release Notes [#releaseNotes]
