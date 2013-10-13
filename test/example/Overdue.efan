@@ -6,4 +6,4 @@ It appears the following rented DVDs are overdue:
 
 Please return them at your convenience.
 
-<% app.renderSignOff("The Management") %>
+<%= app.renderSignOff("The Management") %>

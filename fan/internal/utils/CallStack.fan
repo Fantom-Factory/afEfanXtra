@@ -8,7 +8,7 @@ internal class CallStack {
 		this.stackName = stackName
 	}
 	
-	private Obj? _call(Obj stackable, |->Obj?| func) {
+	private Obj? _call(Obj stackable, |->Str| func) {
 		stack.push(stackable)
 
 		try {

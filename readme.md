@@ -8,6 +8,7 @@ to encapsulate model / view behaviour.
 ## Quick Start
 
 Overdue.efan:
+
     Dear <%= userName %>,
 
     It appears the following rented DVDs are overdue:
@@ -19,6 +20,7 @@ Overdue.efan:
     <% app.renderSignOff("The Management") %>
 
 Overdue.fan:
+
     using afIoc
     using afEfanExtra
 
@@ -43,6 +45,7 @@ Overdue.fan:
     }
 
 AppModule.fan:
+
     using afIoc
 
     @SubModule { modules=[EfanExtraModule#]}

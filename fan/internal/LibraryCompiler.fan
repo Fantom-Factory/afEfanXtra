@@ -26,12 +26,7 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 		model.usingType(EfanRenderCtx#)
 		model.extendMixin(EfanLibrary#)
 		
-		// TODO: stick in plastic?
-//		model.overrideField(EfanLibrary#componentCache, null, null, [Inject#])
-		// @see http://fantom.org/sidewalk/topic/2186#c14112
-		injectFieldName := "_af_injectComponentCache"
-		model.addField(ComponentCache#, injectFieldName, null, null, [Inject#])
-		model.overrideField(EfanLibrary#componentCache, injectFieldName, """throw Err("You can not set @Inject'ed fields: ${EfanLibrary#componentCache.qname}")""")
+		model.addField(ComponentCache#, "componentCache", null, null, [Inject#])
 
 		// add render methods
 		componentFinder.findComponentTypes(pod).each |comType| {	
@@ -41,16 +36,15 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 			initSig 	:= componentMeta.initMethodSig(comType, "|EfanRenderer obj|? bodyFunc := null")
 
 			body 	:= "component := (${comType.qname}) componentCache.getOrMake(${comType.qname}#)\n"
-			body 	+= "component->_af_componentHelper->scopeVariables() |->Obj?| {\n"
+			body 	+= "return component->_af_componentHelper->scopeVariables() |->Str| {\n"
 
 			if (initMethod != null)
-				body += "  component.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"
+				body += "\tcomponent.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"
 
-			body += "  EfanRenderCtx.render.efan((EfanRenderer) component, null, bodyFunc)\n"
-			body += "  return null\n"
+			body += "\treturn ((EfanRenderer) component).render(null, bodyFunc)\n"
 			body += "}\n"
 			
-			model.addMethod(Void#, "render" + comType.name.capitalize, initSig, body)
+			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)
 		}
 
 //		Env.cur.err.printLine(model.toFantomCode)
