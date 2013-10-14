@@ -35,15 +35,15 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 			initMethod	:= componentMeta.initMethod(comType)
 			initSig 	:= componentMeta.initMethodSig(comType, "|EfanRenderer obj|? bodyFunc := null")
 
-			body 	:= "return afEfanExtra::ComponentCtx.setVarScope() |->Str| {\n"
-			body 	+= "\tcomponent := (${comType.qname}) componentCache.getOrMake(\"${libName}\", ${comType.qname}#)\n"
+			body 	:= "component := (${comType.qname}) componentCache.getOrMake(\"${libName}\", ${comType.qname}#)\n"
+			body 	+= "afEfanExtra::ComponentCtx.withScope((EfanRenderer) component) |->| {\n"
 
-			if (initMethod != null)
-				body += "\tcomponent.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"
-
-			body += "\treturn ((EfanRenderer) component).render(null, bodyFunc)\n"
+				if (initMethod != null)
+					body += "\tcomponent.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"
 			body += "}\n"
-			
+
+			body += "return ((EfanRenderer) component).render(null, bodyFunc)\n"
+
 			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)
 		}
 
