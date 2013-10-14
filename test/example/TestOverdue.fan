@@ -1,4 +1,5 @@
 using afIoc
+using concurrent::Actor
 
 class TestOverdue : Test {
 	
@@ -10,6 +11,19 @@ class TestOverdue : Test {
 		
 		echo("[${overdue}]")
 		verifyEq(overdue, `test/example/letter.txt`.toFile.readAllStr)
+		
+		
+		tsm := (ThreadStashManager) registry.dependencyByType(ThreadStashManager#)
+//		tsm.cleanUpThread
+		
+
+		if (Actor.locals[ComponentCtx.localsKey] != null) {
+			afIoc::IocHelper.locals.each |val, key| {
+				Env.cur.err.printLine("$key = $val")
+			}
+			Actor.sleep(20ms)
+			fail("ComponentCtx did not clean up after itself")
+		}
 		
 		registry.shutdown
 	}
