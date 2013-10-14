@@ -5,8 +5,10 @@ using concurrent::Actor
 
 @NoDoc
 class ComponentCtx {
+	internal static const Str localsKey	:= "efanExtra.componentCtx"
+	
 	private [Str:[Str:Obj?]] stash	:= Utils.makeMap(Str#, [Str:Obj?]#)
-	Str? tempId
+	private Str? tempId
 	
 	Void setVariable(Str name, Obj? value) {
 		map[name] = value
@@ -21,6 +23,10 @@ class ComponentCtx {
 		return stash.getOrAdd(key) { [Str:Obj?][:] }
 	}
 
+	override Str toStr() {
+		stash.toStr
+	}
+	
 	// ---- static methods ----
 
 	static Void withScope(EfanRenderer component, |->| func) {
@@ -34,9 +40,14 @@ class ComponentCtx {
 		}
 	}
 
+	static Void cleanUp() {
+		if (EfanRenderCtx.currentNestedId.isEmpty)
+			Actor.locals.remove(localsKey)
+	}
+	
 	static ComponentCtx get(Bool make := false) {
-		Actor.locals.getOrAdd("efanExtra.componentCtx") {
-			make ? ComponentCtx() : throw Err("Could not find a ComponentCtx instance for 'efanExtra.componentCtx' on thread.")
+		Actor.locals.getOrAdd(localsKey) {
+			make ? ComponentCtx() : throw Err("Could not find a ComponentCtx instance for '${localsKey}' on thread.")
 		}
 	}
 }
