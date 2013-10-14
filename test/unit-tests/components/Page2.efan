@@ -1,5 +1,5 @@
 page-start<% judge = "Dredd" %>
-<%= app.renderLayout2(null) { %>
+<%= app.renderLayout2() { %>
 'Judge <%= judge %>'
 <% } %>
 page-end
