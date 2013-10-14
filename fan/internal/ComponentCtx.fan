@@ -3,6 +3,14 @@ using afEfan::EfanRenderer
 using afEfan::EfanRenderCtx
 using concurrent::Actor
 
+** This class stores all the component variables. Note this is trickier than you may first think!
+** 
+**  - We can't use the EfanRenderCtx because we need to be 'in the component ctx' during the 
+** 'initialise()' method, which is called *before* we call efan.render().  
+** 
+**  - We can't use a simple map keyed off the component type because we may nest the same component,
+**  resulting in an overwrite of values. e.g. MenuItem -> MenuItem
+** 
 @NoDoc
 class ComponentCtx {
 	internal static const Str localsKey	:= "efanExtra.componentCtx"

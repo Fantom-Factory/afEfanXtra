@@ -5,7 +5,7 @@ components. Influenced by Java's [Tapestry 5]`http://tapestry.apache.org/index.h
 to encapsulate model / view behaviour.
 
 'afEfanExtra' is very much in its infancy, with ideas still being fleshed out. It works great in a web / afBedSheet environment,
-with URLs being automatically mapped to components (coming soon...!), but it is presented here context free.
+with URLs being automatically mapped to components (coming soon...!), but is presented here context free.
 
 'afEfanExtra' extends [afEfan]`http://repo.status302.com/doc/afEfan/#overview`, is powered by
 [afIoc]`http://repo.status302.com/doc/afIoc/#overview` and works great with [afSlim]`http://repo.status302.com/browse/afSlim`.
@@ -38,7 +38,7 @@ const mixin Overdue {
   // use afIoc services!
   @Inject abstract DvdService? dvdService
 
-  // access fields from the template
+  // template can access mixin fields
   abstract Str? userName
 
   // called before the component is rendered
@@ -85,14 +85,33 @@ Components [#components]
 ************************
 An efan component consists of a Fantom 'const mixin' class and a corresponding efan template file.
 
-Component classes must be annotated with the '@Component' facet. By default, the template file has the same name as the
-component and lives in a pod resource dir.
+Mixins [#mixins]
+================
+
+Component mixins must be annotated with the '@Component' facet.
 
 All fields and methods of the mixin are directly accessible in the template. You can even use afIoc's '@Inject' facet to
 inject services just as you would in a service class.
 
 Use an 'initialise()' method to pass state into an efan component (the 'ctx' variable is not used). Only one 'initialise()'
 is allowed. It must be named 'initialise' but may take any number of parameters.
+
+Templates [#templates]
+======================
+By default, the template file has the same name as the component (with a '.efan' extension) and lives anywhere in a pod
+resource dir. Example component files:
+
+  /fan/components/Layout.fan
+  /fan/components/Layout.efan
+
+Ensure '/fan/components/' is listed in your 'build.fan' as a resDir.
+
+> **ALIEN-AID:** Note resource directories in your 'build.fan' are NOT nested. Adding 'res/' will NOT add
+> '/res/components/' - '/res/components/' would need to be added seperately. Example:
+
+  resDirs = [`doc/`, `res/`, `res/components/`]
+
+
 
 Libraries [#libraries]
 **********************
@@ -106,12 +125,40 @@ Components are managed in libraries. To package up your components, add to the f
   }
 
 Library classes are automatically added as fields in your components. Library classes contain component render methods.
-In the example above, the library 'app' has 2 render methods, available to your templates:
+In the example above, the library (in a field named 'app') has 2 render methods, available to your templates:
 
    app.renderOverdue(Str userName)
    app.renderSignOff(Str who)
 
 > **ALIEN-AID:** Library render methods are logged at registry startup so you don't have to remember them!
+
+
+
+Using afSlim [#usingSlim]
+*************************
+'afEfanExtra' works great with [afSlim]`http://repo.status302.com/browse/afSlim`! Just add the following to your 'AppModule'
+and 'afEfanExtra' will automatically pick up component templates with the extenstion '.slim':
+
+pre>
+using afIoc
+using afSlim
+using afEfanExtra
+
+class AppModule {
+
+  static Void bind(ServiceBinder binder) {
+    binder.bindImpl(SlimCompiler#)
+  }
+
+  @Contribute { serviceType=TemplateConverters# }
+  internal static Void contributeTemplateConverters(MappedConfig config, SlimCompiler slimCompiler) {
+    config["slim"] = |File file -> Str| {
+      slimCompiler.compileFromFile(file)
+    }
+  }
+}
+<pre
+
 
 
 
