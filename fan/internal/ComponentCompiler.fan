@@ -58,7 +58,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 
 			// TODO: copy all facets
 			// normal render variables
-			model.overrideField(field, """afEfanExtra::ComponentCtx.peek.getVariable("${field.name}")""", """afEfanExtra::ComponentCtx.peek.setVariable("${field.name}", it)""")
+			model.overrideField(field, """afEfanExtra::ComponentCtx.get.getVariable("${field.name}")""", """afEfanExtra::ComponentCtx.get.setVariable("${field.name}", it)""")
 		}
 
 		efanSrc 	:= templateConverters.convertTemplate(efanFile)

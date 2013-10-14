@@ -1,31 +1,42 @@
 using afIoc::ThreadStash
+using afEfan::EfanRenderer
+using afEfan::EfanRenderCtx
+using concurrent::Actor
 
 @NoDoc
 class ComponentCtx {
-	private [Str:Obj?] stash	:= Utils.makeMap(Str#, Obj?#)
+	private [Str:[Str:Obj?]] stash	:= Utils.makeMap(Str#, [Str:Obj?]#)
+	Str? tempId
 	
 	Void setVariable(Str name, Obj? value) {
-		stash.set(name, value)
+		map[name] = value
 	}
 	
 	Obj? getVariable(Str name) {
-		stash.get(name)
+		map[name]
 	}
-	
+
+	private Str:Obj? map() {
+		key :=(tempId != null) ? tempId : EfanRenderCtx.currentNestedId 
+		return stash.getOrAdd(key) { [Str:Obj?][:] }
+	}
+
 	// ---- static methods ----
-	
-	static Str renderComponent(|->Str| func) {
+
+	static Void withScope(EfanRenderer component, |->| func) {
+
 		// TODO: we need to uniquely ID each component in a render stack and hold the variables in 
-		// ONE thread-stash. Then components can be passed into other components. Take from MetaData???
-		stash := ThreadStash("efanExtra.componentVariables")
+		get(true).tempId = EfanRenderCtx.deeperNestedId(component) 
 		try {
-			return CallStack.pushAndRun("efanExtra.renderCtx", stash, func)
+			func.call
 		} finally {
-			stash.clear
+			get.tempId = null
 		}
 	}
 
-	static ComponentCtx peek() {
-		CallStack.peek("efanExtra.componentCtx")
+	static ComponentCtx get(Bool make := false) {
+		Actor.locals.getOrAdd("efanExtra.componentCtx") {
+			make ? ComponentCtx() : throw Err("Could not find a ComponentCtx instance for 'efanExtra.componentCtx' on thread.")
+		}
 	}
 }
