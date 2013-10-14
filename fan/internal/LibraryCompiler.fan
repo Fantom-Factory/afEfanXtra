@@ -24,6 +24,7 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 
 		model.usingType(EfanRenderer#)
 		model.usingType(EfanRenderCtx#)
+		model.usingType(ComponentCtx#)
 		model.extendMixin(EfanLibrary#)
 		
 		model.addField(ComponentCache#, "componentCache", null, null, [Inject#])
@@ -33,20 +34,21 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 			log.debug("  - found component ${comType.name}")
 			
 			initMethod	:= componentMeta.initMethod(comType)
-			initSig 	:= componentMeta.initMethodSig(comType, "|EfanRenderer obj|? bodyFunc := null")
-			
+			initSig 	:= componentMeta.initMethodSig(comType, "|Obj?|? bodyFunc := null")
+
 			body := "component := (${comType.qname}) componentCache.getOrMake(\"${libName}\", ${comType.qname}#)\n"
-			body += "return afEfanExtra::ComponentCtx.withCtx((EfanRenderer) component) |->Str| {\n"
+			body += "return EfanRenderCtx.renderEfan((EfanRenderer) component, (|->|?) bodyFunc) |->| {\n"
+			body += "\tComponentCtx.push\n"
 			if (initMethod != null) 
 				body += "\tcomponent.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"
 
-			body += "\treturn ((EfanRenderer) component).render(null, bodyFunc)\n"
+			body += "\t((EfanRenderer) component)._af_render(null)\n"
 			body += "}\n"
 
 			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)
 		}
 
-//		Env.cur.err.printLine(model.toFantomCode)
+		Env.cur.err.printLine(model.toFantomCode)
 		return plasticCompiler.compileModel(model)
 	}
 }

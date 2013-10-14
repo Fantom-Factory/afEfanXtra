@@ -29,11 +29,11 @@ class ComponentCtx {
 	
 	// ---- static methods ----
 
-	static Str withCtx(EfanRenderer rendering, |->| func) {
-		EfanCtxStack.withCtx("efanExtra.componentCtx", rendering, ComponentCtx(), func)
+	static ComponentCtx peek() {
+		EfanCtxStack.peek.ctx["efanExtra.componentCtx"]
 	}
-
-	static ComponentCtx get() {
-		EfanCtxStack.peek("efanExtra.componentCtx").ctx
+	
+	static Void push() {
+		EfanCtxStack.peek.ctx["efanExtra.componentCtx"] = ComponentCtx()
 	}
 }
