@@ -1,6 +1,8 @@
 
 internal class TestEfanLibraries : EfanTest {
 
+	override Void setup() { }
+	
   Void testLibNamesMustBeValid() {
 
     verifyEfanErrMsg(ErrMsgs.libraryNameNotValid("Wot Ever")) {
