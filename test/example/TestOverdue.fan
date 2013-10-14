@@ -17,7 +17,7 @@ class TestOverdue : Test {
 //		tsm.cleanUpThread
 		
 
-		if (Actor.locals[ComponentCtx.localsKey] != null) {
+		if (Actor.locals["efanExtra.componentCtx"] != null) {
 			afIoc::IocHelper.locals.each |val, key| {
 				Env.cur.err.printLine("$key = $val")
 			}
