@@ -1,0 +1,10 @@
+<% text = "$n little piggy" %>
+start-<%= n %>
+<%= renderBody %>
+<% if (n > 1) { %>
+	<%= app.renderNested(n-1) { %>
+		body-<%= n %>
+		<%= text // print in body%>
+	<% } %>
+<% } %>
+end-<%= n %>
