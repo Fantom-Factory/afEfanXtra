@@ -12,11 +12,6 @@ class TestOverdue : Test {
 		echo("[${overdue}]")
 		verifyEq(overdue, `test/example/letter.txt`.toFile.readAllStr)
 		
-		
-		tsm := (ThreadStashManager) registry.dependencyByType(ThreadStashManager#)
-//		tsm.cleanUpThread
-		
-
 		if (Actor.locals["efanExtra.componentCtx"] != null) {
 			afIoc::IocHelper.locals.each |val, key| {
 				Env.cur.err.printLine("$key = $val")
