@@ -1,5 +1,6 @@
 using afIoc::Inject
 
+@NoDoc
 const mixin EfanLibrary {
 
 	Str render(Type componentType, Obj[] initParams) {

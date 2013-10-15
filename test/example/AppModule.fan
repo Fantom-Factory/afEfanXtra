@@ -1,5 +1,6 @@
 using afIoc
 
+@NoDoc
 @SubModule { modules=[EfanExtraModule#]} 
 class AppModule {
 	

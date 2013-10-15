@@ -48,7 +48,7 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)
 		}
 
-		Env.cur.err.printLine(model.toFantomCode)
+//		Env.cur.err.printLine(model.toFantomCode)
 		return plasticCompiler.compileModel(model)
 	}
 }

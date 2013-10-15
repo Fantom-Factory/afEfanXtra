@@ -1,6 +1,6 @@
 # EfanExtra
 
-EfanExtra is a [Fantom](http://fantom.org/) library for creating reusable [Embedded Fantom (efan)](https://bitbucket.org/AlienFactory/afefan) components. It pairs up Fantom classes and efan templates 
+`afEfanExtra` is a [Fantom](http://fantom.org/) library for creating reusable [Embedded Fantom (efan)](https://bitbucket.org/AlienFactory/afefan) components. It pairs up Fantom classes and efan templates 
 to encapsulate model / view behaviour.
 
 

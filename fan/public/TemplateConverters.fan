@@ -11,15 +11,15 @@ using afEfan::EfanErr
 ** following to your 'AppModule':
 ** 
 ** pre>
-** using afSlim::SlimCompiler
+** using afSlim::Slim
 ** using afEfanExtra::TemplateConverters
 ** 
 ** ...
 ** 
 ** @Contribute { serviceType=TemplateConverters# }
-** internal static Void contributeTemplateConverters(MappedConfig config, SlimCompiler slimCompiler) {
+** internal static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
 **   config["slim"] = |File file -> Str| {
-**     slimCompiler.compileFromFile(file)
+**     slim.compileFromFile(file)
 **   }
 ** }
 ** <pre

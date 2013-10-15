@@ -134,9 +134,9 @@ In the example above, the library (in a field named 'app') has 2 render methods,
 
 
 
-Using afSlim [#usingSlim]
-*************************
-'afEfanExtra' works great with [afSlim]`http://repo.status302.com/browse/afSlim`! Just add the following to your 'AppModule'
+Use with Slim [#useSlim]
+**************************
+'afEfanExtra' works great with [afSlim]`http://repo.status302.com/browse/afSlim`! Add the following to your 'AppModule'
 and 'afEfanExtra' will automatically pick up component templates with the extenstion '.slim':
 
 pre>
@@ -147,13 +147,13 @@ using afEfanExtra
 class AppModule {
 
   static Void bind(ServiceBinder binder) {
-    binder.bindImpl(SlimCompiler#)
+    binder.bindImpl(Slim#)
   }
 
   @Contribute { serviceType=TemplateConverters# }
-  internal static Void contributeTemplateConverters(MappedConfig config, SlimCompiler slimCompiler) {
+  internal static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
     config["slim"] = |File file -> Str| {
-      slimCompiler.compileFromFile(file)
+      slim.compileFromFile(file)
     }
   }
 }
