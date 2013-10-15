@@ -1,4 +1,5 @@
 
+@NoDoc
 @Component
 const mixin SignOff {
 

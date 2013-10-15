@@ -1,4 +1,5 @@
 
+@NoDoc
 const class DvdService {
 	
 	new make(|This|in) { in(this) }

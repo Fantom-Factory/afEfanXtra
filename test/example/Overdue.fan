@@ -1,5 +1,6 @@
 using afIoc
 
+@NoDoc
 @Component
 const mixin Overdue {
 
