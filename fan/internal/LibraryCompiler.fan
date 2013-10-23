@@ -29,10 +29,12 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 		
 		model.addField(ComponentCache#, "componentCache", null, null, [Inject#])
 
+		model.overrideField(EfanLibrary#name, "\"${libName}\"", "throw Err(\"'name' is read only.\")", Type#.emptyList)
+
 		// add render methods
 		componentFinder.findComponentTypes(pod).each |comType| {	
 			log.debug("  - found component ${comType.name}")
-			
+
 			initMethod	:= componentMeta.initMethod(comType)
 			initSig 	:= componentMeta.initMethodSig(comType, "|Obj?|? bodyFunc := null")
 

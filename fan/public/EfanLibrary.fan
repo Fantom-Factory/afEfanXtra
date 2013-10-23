@@ -3,6 +3,8 @@ using afIoc::Inject
 @NoDoc
 const mixin EfanLibrary {
 
+	abstract Str name
+	
 	Str render(Type componentType, Obj[] initParams) {
 
 		methodName	:= "render${componentType.name.capitalize}"

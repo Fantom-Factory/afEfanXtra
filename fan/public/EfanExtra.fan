@@ -1,7 +1,7 @@
 using afIoc::Inject
 using afEfan::EfanRenderer
 
-** Service methods for discovering and rendering efan components.
+** @Inject - Service methods for discovering and rendering efan components.
 const mixin EfanExtra {
 
 	** Returns the names of all contributed efan component libraries.
@@ -13,7 +13,10 @@ const mixin EfanExtra {
 
 	** Renders the given component. The component's 'initialise(...)' method is called with the 
 	** given 'initParams'.
-	abstract Str	render(Type componentType, Obj[]? initParams := null)
+	abstract Str render(Type componentType, Obj[]? initParams := null)
+	
+	** Returns an instance of the component, cast to an 'EfanRenderer'.
+	abstract EfanRenderer component(Type componentType)
 }
 
 internal const class EfanExtraImpl : EfanExtra {
@@ -33,5 +36,10 @@ internal const class EfanExtraImpl : EfanExtra {
 
 	override Str render(Type componentType, Obj[]? initParams := null) {
 		efanLibraries.library(componentType).render(componentType, initParams ?: Obj#.emptyList)
+	}
+
+	override EfanRenderer component(Type componentType) {
+		library := efanLibraries.library(componentType) 
+		return componentCache.getOrMake(library.name, componentType)
 	}
 }

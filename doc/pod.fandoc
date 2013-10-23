@@ -73,11 +73,11 @@ class AppModule {
 }
 <pre
 
-Full example source code available on [BitBucket]`https://bitbucket.org/AlienFactory/afefanextra/src/default/test/example/`.
-
 Then to render a component:
 
   efanExtra.render(Overdue#, "Mr Smith")
+
+Full example source code available on [BitBucket]`https://bitbucket.org/AlienFactory/afefanextra/src/default/test/example/`.
 
 
 
@@ -153,12 +153,11 @@ class AppModule {
   @Contribute { serviceType=TemplateConverters# }
   internal static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
     config["slim"] = |File file -> Str| {
-      slim.compileFromFile(file)
+      slim.parseFromFile(file)
     }
   }
 }
 <pre
-
 
 
 

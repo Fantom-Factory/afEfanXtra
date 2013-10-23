@@ -1,6 +1,6 @@
 using afEfan::EfanErr
 
-** Contribute to convert files to efan templates. 
+** @Inject - Contribute to convert files to efan templates. 
 ** 
 ** Some templates, such as [afSlim]`http://repo.status302.com/doc/afSlim/#overview`, need to be 
 ** pre-processed / converted to efan notation before they can be compiled into components. Do this
@@ -19,7 +19,7 @@ using afEfan::EfanErr
 ** @Contribute { serviceType=TemplateConverters# }
 ** internal static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
 **   config["slim"] = |File file -> Str| {
-**     slim.compileFromFile(file)
+**     slim.parseFromFile(file)
 **   }
 ** }
 ** <pre

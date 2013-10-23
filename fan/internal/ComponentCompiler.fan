@@ -5,6 +5,7 @@ using afEfan::EfanCompiler
 using afEfan::EfanRenderer
 using afEfan::EfanMetaData
 
+** @Inject -  
 @NoDoc
 const mixin ComponentCompiler {
 	
@@ -17,8 +18,12 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 	@Inject	private const TemplateConverters	templateConverters
 	@Inject	private const Registry				registry
 	@Inject private const EfanCompiler 			efanCompiler
+			private const |PlasticClassModel|[]	compilerCallbacks
 	
-	new make(|This|in) { in(this) }
+	new make(|PlasticClassModel|[] compilerCallbacks, |This|in) { 
+		in(this) 
+		this.compilerCallbacks = compilerCallbacks
+	}
 
 	override EfanRenderer compile(Str libName, Type comType, File efanFile) {
 		model := PlasticClassModel("${comType.name}Impl", true)
@@ -37,6 +42,9 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			model.addField(type.typeof, name, null, null, [Inject#])
 		}
 
+		// give callbacks a chance to add to our model
+		compilerCallbacks.each { it.call(model) }
+		
 		// implement abstract fields
 		comType.fields.each |field| {
 			
@@ -58,7 +66,8 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 
 			// TODO: copy all facets
 			// normal render variables
-			model.overrideField(field, """afEfanExtra::ComponentCtx.peek.getVariable("${field.name}")""", """afEfanExtra::ComponentCtx.peek.setVariable("${field.name}", it)""")
+			if (!model.hasField(field.name))
+				model.overrideField(field, """afEfanExtra::ComponentCtx.peek.getVariable("${field.name}")""", """afEfanExtra::ComponentCtx.peek.setVariable("${field.name}", it)""")
 		}
 
 		efanSrc 	:= templateConverters.convertTemplate(efanFile)
