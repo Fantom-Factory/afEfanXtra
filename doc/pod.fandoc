@@ -164,6 +164,12 @@ class AppModule {
 Release Notes [#releaseNotes]
 *****************************
 
+v0.0.4 [#v0.0.4]
+----------------
+ - New: compiler hooks
+  - New ; efanextra.compoennt
+ - Chg: '@Component' facet is inherited
+
 v0.0.2 [#v0.0.2]
 ----------------
  - New: Preview Release
