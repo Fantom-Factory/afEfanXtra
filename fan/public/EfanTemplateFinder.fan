@@ -32,6 +32,26 @@ internal const class FindEfanByTypeName : EfanTemplateFinder {
 
 internal const class FindEfanByFacetValue : EfanTemplateFinder {
 	override File? findTemplate(Type componentType) {
-		null
+		comFacet := (Component) Type#.method("facet").callOn(componentType, [Component#])	// Stoopid F4
+		efanUri := comFacet.template
+		if (efanUri == null)
+			return null
+		
+		// if absolute, it should resolve against a scheme (hopefully fan:!)
+		if (efanUri.isAbs)
+			// TODO: Err msg if not a file
+			return comFacet.template.get
+		
+		// if relative, a local file maybe?
+		efanFile := efanUri.toFile 
+		if (efanFile.exists)
+			return efanFile
+		
+		// last ditch attempt, look for a local pod resource
+		if (efanUri.isPathAbs)
+			efanUri = efanUri.toStr[1..-1].toUri
+		// TODO: Err msg if not found
+			// TODO: Err msg if not a file
+		return `fan://${componentType.pod}/${efanUri}`.get(null, false)
 	}
 }
