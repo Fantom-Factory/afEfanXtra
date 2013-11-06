@@ -5,20 +5,22 @@ using afEfan::EfanCompiler
 using afEfan::EfanRenderer
 using afEfan::EfanMetaData
 
-** @Inject -  
+** (Service) -  
 @NoDoc
 const mixin ComponentCompiler {
 	
+	// TODO: change sig
+//	abstract EfanRenderer compile(Str libName, Type comType, Str efanSrc, Uri efanSrcLoc)
 	abstract EfanRenderer compile(Str libName, Type comType, File efanFile)
 }
 
 internal const class ComponentCompilerImpl : ComponentCompiler {
 
-	@Inject	private const EfanLibraries			efanLibraries
-	@Inject	private const TemplateConverters	templateConverters
-	@Inject	private const Registry				registry
-	@Inject private const EfanCompiler 			efanCompiler
-			private const |PlasticClassModel|[]	compilerCallbacks
+	@Inject	private const EfanLibraries				efanLibraries
+	@Inject	private const EfanTemplateConverters	templateConverters
+	@Inject	private const Registry					registry
+	@Inject private const EfanCompiler 				efanCompiler
+			private const |PlasticClassModel|[]		compilerCallbacks
 	
 	new make(|PlasticClassModel|[] compilerCallbacks, |This|in) { 
 		in(this) 

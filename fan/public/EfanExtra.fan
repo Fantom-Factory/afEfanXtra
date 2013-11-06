@@ -1,7 +1,7 @@
 using afIoc::Inject
 using afEfan::EfanRenderer
 
-** @Inject - Service methods for discovering and rendering efan components.
+** (Service) - Service methods for discovering and rendering efan components.
 const mixin EfanExtra {
 
 	** Returns the names of all contributed efan component libraries.

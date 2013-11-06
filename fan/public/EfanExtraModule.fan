@@ -31,11 +31,26 @@ const class EfanExtraModule {
 		binder.bindImpl(EfanExtraPrinter#)
 		
 		binder.bindImpl(EfanExtra#).withoutProxy
-		binder.bindImpl(TemplateConverters#)
+		binder.bindImpl(EfanTemplateConverters#)
+		binder.bindImpl(EfanTemplateFinders#)
+	}
+	
+	@Build { serviceId="EfanCompiler" }
+	internal static EfanCompiler buildEfanCompiler(IocConfigSource configSrc, PlasticCompiler plasticCompiler) {
+		// rely on afBedSheet to set srcCodePadding in PlasticCompiler (to be picked up by EfanCompiler) 
+		EfanCompiler(plasticCompiler) {
+			it.rendererClassName	= configSrc.getCoerced(EfanConfigIds.rendererClassName, Str#)
+		}
 	}
 
-	@Contribute { serviceType=TemplateConverters# }
-	internal static Void contributeTemplateConverters(MappedConfig config) {
+	@Contribute { serviceType=EfanTemplateFinders# }
+	internal static Void contributeEfanTemplateFinders(OrderedConfig config) {
+		config.addOrdered("FindByFacetValue", 	config.autobuild(FindEfanByFacetValue#))
+		config.addOrdered("FindByTypeName", 	config.autobuild(FindEfanByTypeName#))
+	}	
+
+	@Contribute { serviceType=EfanTemplateConverters# }
+	internal static Void contributeEfanTemplateConverters(MappedConfig config) {
 		config["efan"] = |File file -> Str| {
 			file.readAllStr
 		}
@@ -45,14 +60,6 @@ const class EfanExtraModule {
 	internal static Void contributeDependencyProviderSource(OrderedConfig config) {
 		config.add(config.autobuild(LibraryProvider#))
 	}	
-	
-	@Build { serviceId="EfanCompiler" }
-	internal static EfanCompiler buildEfanCompiler(IocConfigSource configSrc, PlasticCompiler plasticCompiler) {
-		// rely on afBedSheet to set srcCodePadding in PlasticCompiler (to be picked up by EfanCompiler) 
-		EfanCompiler(plasticCompiler) {
-			it.rendererClassName	= configSrc.getCoerced(EfanConfigIds.rendererClassName, Str#)
-		}
-	}
 
 	@Contribute { serviceType=FactoryDefaults# }
 	internal static Void contributeFactoryDefaults(MappedConfig config) {
@@ -66,5 +73,4 @@ const class EfanExtraModule {
 			efanPrinter.libraryDetailsToStr
 		}
 	}
-	
 }
