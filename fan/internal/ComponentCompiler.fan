@@ -68,7 +68,8 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 
 			// TODO: copy all facets
 			// normal render variables
-			if (!model.hasField(field.name))
+			// TODO: uncomment when using afPlastic 1.0.5
+//			if (!model.hasField(field.name))
 				model.overrideField(field, """afEfanExtra::ComponentCtx.peek.getVariable("${field.name}")""", """afEfanExtra::ComponentCtx.peek.setVariable("${field.name}", it)""")
 		}
 

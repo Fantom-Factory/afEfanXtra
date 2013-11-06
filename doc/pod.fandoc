@@ -4,12 +4,11 @@ Overview [#overview]
 components. Influenced by Java's [Tapestry 5]`http://tapestry.apache.org/index.html`, it pairs up Fantom classes and efan templates
 to encapsulate model / view behaviour.
 
-'afEfanExtra' is very much in its infancy, with ideas still being fleshed out. It works great in a web / afBedSheet environment,
-with URLs being automatically mapped to components (see [afBedSheetEfanExtra]`http://repo.status302.com/doc/afBedSheetEfanExtra/#overview`),
-but is presented here context free.
-
 'afEfanExtra' extends [afEfan]`http://repo.status302.com/doc/afEfan/#overview`, is powered by
 [afIoc]`http://repo.status302.com/doc/afIoc/#overview` and works great with [afSlim]`http://repo.status302.com/browse/afSlim`.
+
+'afEfanExtra' works great in a web / afBedSheet environment, with URLs being automatically mapped to components (see
+[afBedSheetEfanExtra]`http://repo.status302.com/doc/afBedSheetEfanExtra/#overview`), but is presented here context free.
 
 
 
@@ -94,8 +93,8 @@ Component mixins must be annotated with the '@Component' facet.
 All fields and methods of the mixin are directly accessible in the template. You can even use afIoc's '@Inject' facet to
 inject services just as you would in a service class.
 
-Use an 'initialise()' method to pass state into an efan component (the 'ctx' variable is not used). Only one 'initialise()'
-is allowed. It must be named 'initialise' but may take any number of parameters.
+Use an 'initialise()' method to pass state into an efan component (the efan 'ctx' variable is not used). Only one 'initialise()'
+method is allowed. It must be named 'initialise' but may take any number of parameters.
 
 Templates [#templates]
 ======================
@@ -167,9 +166,11 @@ Release Notes [#releaseNotes]
 
 v0.0.4 [#v0.0.4]
 ----------------
- - New: compiler hooks
-  - New ; efanextra.compoennt
- - Chg: '@Component' facet is inherited
+ - New: Component templates can be specified via the '@Component.template' field.
+ - New: Added a contributable 'EfanTemplateFinders' service.
+ - New: Added compiler hooks (mainly for [afBedSheetEfanExtra]`http://repo.status302.com/doc/afBedSheetEfanExtra/#overview`).
+ - New: 'EfanExtra.component()' returns component instances.
+ - Chg: '@Component' facet is inherited.
 
 v0.0.2 [#v0.0.2]
 ----------------
