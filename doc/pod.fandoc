@@ -5,7 +5,8 @@ components. Influenced by Java's [Tapestry 5]`http://tapestry.apache.org/index.h
 to encapsulate model / view behaviour.
 
 'afEfanExtra' is very much in its infancy, with ideas still being fleshed out. It works great in a web / afBedSheet environment,
-with URLs being automatically mapped to components (coming soon...!), but is presented here context free.
+with URLs being automatically mapped to components (see [afBedSheetEfanExtra]`http://repo.status302.com/doc/afBedSheetEfanExtra/#overview`),
+but is presented here context free.
 
 'afEfanExtra' extends [afEfan]`http://repo.status302.com/doc/afEfan/#overview`, is powered by
 [afIoc]`http://repo.status302.com/doc/afIoc/#overview` and works great with [afSlim]`http://repo.status302.com/browse/afSlim`.
@@ -150,7 +151,7 @@ class AppModule {
     binder.bindImpl(Slim#)
   }
 
-  @Contribute { serviceType=TemplateConverters# }
+  @Contribute { serviceType=EfanTemplateConverters# }
   internal static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
     config["slim"] = |File file -> Str| {
       slim.parseFromFile(file)

@@ -4,7 +4,7 @@ class Build : BuildPod {
 
 	new make() {
 		podName = "afEfanExtra"
-		summary = "A library for creating reusable Embedded Fantom (efan) components."
+		summary = "A library for creating reusable Embedded Fantom (efan) components"
 		version = Version([0,0,3])
 
 		meta	= [ "org.name"		: "Alien-Factory",

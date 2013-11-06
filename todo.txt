@@ -4,6 +4,9 @@ For 1.0.0
 
 Add @Component templateUri
 
+Make efan compilation optional - just have a render() method instead
+ - implement a render mixin - then compile against a known efan which just calls render() 
+
 sort out plastic facets
  - @Inject @Config { id=... } 
 

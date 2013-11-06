@@ -20,7 +20,7 @@ internal const class ComponentCacheImpl : ComponentCache {
 	private const Duration templateTimeout
 
 			private const FileCache 			fileCache
-	@Inject	private const TemplateConverters	templateConverters
+	@Inject	private const EfanTemplateFinders	templateFinders
 	@Inject	private const ComponentCompiler		compiler
 
 	new make(|This|in) { 
@@ -30,7 +30,7 @@ internal const class ComponentCacheImpl : ComponentCache {
 
 	override EfanRenderer getOrMake(Str libName, Type componentType) {
 		templateFile := (File) typeToFileCache.getOrAdd(componentType) |->File| {
-			findTemplate(componentType) 
+			templateFinders.findTemplate(componentType) 
 		}
 		
 		component := (EfanRenderer) fileCache.getOrAddOrUpdate(templateFile) |->Obj| {
@@ -39,21 +39,4 @@ internal const class ComponentCacheImpl : ComponentCache {
 
 		return component
 	}
-	
-	private File findTemplate(Type componentType) {
-		templateFiles := componentType.pod.files.findAll { templateConverters.extensions.contains(it.ext.lower) }
-		return templateFiles.find |file->Bool| {
-			index 		:= file.name.index(".")
-			fileName	:= file.name[0..<index].lower
-			pageName	:= componentType.name.lower
-			if (fileName == pageName)
-				return true
-			
-			// TODO: Maybe have a TemplateSuffixes service
-			if (pageName.endsWith("page") && fileName == pageName[0..<-4])
-				return true
-			
-			return false
-		} ?: throw NotFoundErr(ErrMsgs.componentTemplateNotFound(componentType), templateFiles)
-	}	
 }
