@@ -18,7 +18,6 @@ using afEfan::EfanCompiler
 ** The [afIoc]`http://repo.status302.com/doc/afIoc/#overview` module class.
 ** 
 ** This class is public so it may be referenced explicitly in tests.
-@SubModule { modules=[IocConfigModule#]} 
 const class EfanExtraModule {
 
 	internal static Void bind(ServiceBinder binder) {
