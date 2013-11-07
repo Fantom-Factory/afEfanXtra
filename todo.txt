@@ -2,7 +2,9 @@
 For 1.0.0
 =========
 
-Add @Component templateUri
+Make TemplateFinders public when no-longer file reliant - use EfanTemplateSource
+
+Add EfanTemlapteNameMapper / Matcher for *Page / *Component
 
 Make efan compilation optional - just have a render() method instead
  - implement a render mixin - then compile against a known efan which just calls render() 

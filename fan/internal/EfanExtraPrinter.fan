@@ -1,30 +1,43 @@
 using afIoc::Inject
+using afIocConfig::Config
 
-internal const class EfanExtraPrinter {
+** Used by afBedSheetEfanExtra
+@NoDoc
+const class EfanExtraPrinter {
 	private const static Log log := Utils.getLog(EfanExtraPrinter#)
 
 	@Inject private	const EfanExtra 		efanExtra
-	@Inject private	const LibraryCompiler	libraryCompiler
 	@Inject private	const ComponentMeta		componentMeta
+	
+	@Config { id="afEfan.supressStartupLogging" }
+	@Inject private const Bool				supressStartupLogging
 	
 	new make(|This| in) { in(this) }
 
-	Void libraryDetailsToStr() {
-		buf := StrBuf().add("\n")
+	Void logLibraries() {
+		if (supressStartupLogging)
+			return
 
-		efanExtra.libraries.each |library| {
-			comTypes := efanExtra.componentTypes(library)
-			
-			maxName	 := (Int) comTypes.reduce(0) |size, component| { ((Int) size).max(component.name.toDisplayName.size) }
-			buf.add("\nEfan Library: '${library}' has ${comTypes.size} components:\n")
-
-			comTypes.each |comType| {
-				line := comType.name.toDisplayName.padl(maxName) + " : " + "${library}." + componentMeta.renderMethodDec(comType)
-				buf.add("  ${line}\n")
-			}
+		details := "\n"
+		efanExtra.libraries.each |libName| {
+			details += libraryDetailsToStr(libName) { true }
 		}
 
-		buf.add("\n")
-		log.info(buf.toStr)		
+		log.info(details)		
+	}
+	
+	Str libraryDetailsToStr(Str libName, |Type component->Bool| filter) {
+		buf		 := StrBuf()
+		comTypes := efanExtra.componentTypes(libName).findAll(filter)
+		
+		maxName	 := (Int) comTypes.reduce(0) |size, component| { ((Int) size).max(component.name.toDisplayName.size) }
+		buf.add("\nEfan Library: '${libName}' has ${comTypes.size} components:\n")
+
+		comTypes.each |comType| {
+			line := comType.name.toDisplayName.padl(maxName) + " : " + "${libName}." + componentMeta.renderMethodDec(comType)
+			buf.add("  ${line}\n")
+		}
+		
+		return buf.toStr
 	}
 }

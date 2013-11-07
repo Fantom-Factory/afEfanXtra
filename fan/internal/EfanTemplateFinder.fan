@@ -1,5 +1,6 @@
 using afIoc::Inject
 
+@NoDoc
 const mixin EfanTemplateFinder {
 
 	** Return an EfanTemplateSource
