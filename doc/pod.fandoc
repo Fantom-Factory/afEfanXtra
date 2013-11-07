@@ -168,6 +168,7 @@ v0.0.4 [#v0.0.4]
 ----------------
  - New: Component templates can be specified via the '@Component.template' field.
  - New: Added a contributable 'EfanTemplateFinders' service.
+ - New: Ability to supress startup log messages.
  - New: Added compiler hooks (mainly for [afBedSheetEfanExtra]`http://repo.status302.com/doc/afBedSheetEfanExtra/#overview`).
  - New: 'EfanExtra.component()' returns component instances.
  - Chg: '@Component' facet is inherited.

@@ -1,6 +1,7 @@
 using afIoc
 
 ** (Service) - What you contribute your `EfanTemplateFinder` to.
+@NoDoc
 const mixin EfanTemplateFinders {
 
 	** Finds an efan template for the given efan component type.

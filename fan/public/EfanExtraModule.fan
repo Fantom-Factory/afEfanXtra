@@ -63,14 +63,15 @@ const class EfanExtraModule {
 
 	@Contribute { serviceType=FactoryDefaults# }
 	internal static Void contributeFactoryDefaults(MappedConfig config) {
-		config[EfanConfigIds.templateTimeout]	= 10sec
-		config[EfanConfigIds.rendererClassName]	= "EfanRendererImpl"
+		config[EfanConfigIds.templateTimeout]		= 10sec
+		config[EfanConfigIds.rendererClassName]		= "EfanRendererImpl"
+		config[EfanConfigIds.supressStartupLogging]	= false
 	}
 	
 	@Contribute { serviceType=RegistryStartup# }
 	internal static Void contributeRegistryStartup(OrderedConfig conf, EfanExtraPrinter efanPrinter) {
 		conf.add |->| {
-			efanPrinter.libraryDetailsToStr
+			efanPrinter.logLibraries
 		}
 	}
 }

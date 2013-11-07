@@ -20,4 +20,8 @@ const mixin EfanConfigIds {
 	** Defaults to 'EfanRendererImpl'
 	static const Str rendererClassName	:= "afEfan.rendererClassName"
 
+	** If 'true' then the useful component info at startup will not be logged.
+	** Defaults to 'false'
+	static const Str supressStartupLogging	:= "afEfan.supressStartupLogging"
+
 }
