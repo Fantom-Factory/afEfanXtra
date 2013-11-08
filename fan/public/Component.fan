@@ -8,4 +8,5 @@ facet class Component {
 	
 	// TODO: fandoc Component.template
 	const Uri? template
+	
 }

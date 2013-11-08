@@ -28,7 +28,7 @@ internal class EfanTest : Test {
 	
 	override Void setup() {
 		try {
-			reg 		= RegistryBuilder().addModules([AppModule#]).build.startup
+			reg 		= RegistryBuilder().addModules([AppModule#, IocConfigModule#]).build.startup
 			efanExtra	= reg.dependencyByType(EfanExtra#)
 			
 		} catch (PlasticCompilationErr pce) {

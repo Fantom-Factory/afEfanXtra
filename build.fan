@@ -31,6 +31,6 @@ class Build : BuildPod {
 
 		// exclude test code when building the pod
 		srcDirs = srcDirs.exclude { it.toStr.startsWith("test/") }
-		resDirs = resDirs.exclude { it.toStr.startsWith("test/") }
+//		resDirs = resDirs.exclude { it.toStr.startsWith("test/") }
 	}
 }
