@@ -2,6 +2,8 @@
 For 1.0.0
 =========
 
+FIXME: NEED to supress rendering! return false from beforeRender?
+
 Make TemplateFinders public when no-longer file reliant - use EfanTemplateSource
 
 Add EfanTemlapteNameMapper / Matcher for *Page / *Component
