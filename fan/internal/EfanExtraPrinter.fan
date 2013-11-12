@@ -25,7 +25,7 @@ const class EfanExtraPrinter {
 
 		log.info(details)		
 	}
-	
+
 	Str libraryDetailsToStr(Str libName, |Type component->Bool| filter) {
 		buf		 := StrBuf()
 		comTypes := efanExtra.componentTypes(libName).findAll(filter)
