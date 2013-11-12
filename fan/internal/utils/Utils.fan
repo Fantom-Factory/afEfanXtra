@@ -16,4 +16,19 @@ internal const class Utils {
 		err.trace(b.out, ["maxDepth":maxDepth])
 		return b.flip.in.readAllStr
 	}
+
+	static Obj cloneObj(Obj obj, |Obj, Field:Obj|? overridePlan := null) {
+		plan := Field:Obj[:]
+		obj.typeof.fields.each {
+			value := it.get(obj)
+			if (value != null)
+				plan[it] = value
+		}
+
+		overridePlan.call(obj, plan)
+		
+		planFunc := Field.makeSetFunc(plan)
+		return obj.typeof.make([planFunc])
+	}
+
 }

@@ -37,7 +37,6 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 
 		// give a more human ID - helpful for debugging
 		model.extendMixin(EfanRenderer#)
-		model.overrideMethod(EfanRenderer#id, "\"${libName}::${comType.name}\"")
 		
 		// add 3rd party component libraries
 		efanLibraries.libraries.each |type, name| {
@@ -76,10 +75,16 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		efanSrc 	:= templateConverters.convertTemplate(efanFile)
 		
 		renderer	:= efanCompiler.compileWithModel(efanFile.normalize.uri, efanSrc, null, model) |Type efanType, EfanMetaData efanMeta -> EfanRenderer| {
-			registry.autobuild(efanType, [efanMeta])
+			myefanMeta := clone(efanMeta) |efanMeta2, plan| {
+				plan[EfanMetaData#templateId] 	= "\"${libName}::${comType.name}\""
+			}
+			return registry.autobuild(efanType, [myefanMeta])
 		}
 		
 		return renderer
 	}
 	
+	private static EfanMetaData clone(EfanMetaData efanMeta, |EfanMetaData, Field:Obj?|? overridePlan := null) {
+		Utils.cloneObj(efanMeta, overridePlan)
+	}
 }
