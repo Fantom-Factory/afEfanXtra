@@ -177,6 +177,7 @@ v0.0.6 [#v0.0.6]
 ----------------
  - New: Fields may be annotated with *any* facet, not just '@Inject'. Think '@Config'!!!
  - Chg: Updated to efan-1.3.2
+ - Chg: Better Err msgs if component template not found.
 
 v0.0.4 [#v0.0.4]
 ----------------
