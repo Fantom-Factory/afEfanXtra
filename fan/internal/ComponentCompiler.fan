@@ -40,7 +40,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		
 		// add 3rd party component libraries
 		efanLibraries.libraries.each |type, name| {
-			model.addField(type.typeof, name, null, null, [Inject#])
+			model.addField(type.typeof, name, null, null).addFacet(Inject#)
 		}
 
 		// give callbacks a chance to add to our model
@@ -55,21 +55,20 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			if (field.parent == EfanRenderer#)
 				return
 
-			// TODO: copy values for all other facets
 			if (field.hasFacet(Inject#)) {
 				injectFieldName := "_af_inject${field.name.capitalize}"
 				// @see http://fantom.org/sidewalk/topic/2186#c14112
-				model.addField(field.type, injectFieldName, null, null, field.facets.map { it.typeof })
+				newField := model.addField(field.type, injectFieldName)
+				field.facets.each { newField.addFacetClone(it) }
 				model.overrideField(field, injectFieldName, """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")
 //				model.overrideField(field, "_af_componentHelper.service(${field.type.qname}#)", """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")
 				return
 			}
 
-			// TODO: copy all facets
-			// normal render variables
-			// TODO: uncomment when using afPlastic 1.0.5
-//			if (!model.hasField(field.name))
-				model.overrideField(field, """afEfanExtra::ComponentCtx.peek.getVariable("${field.name}")""", """afEfanExtra::ComponentCtx.peek.setVariable("${field.name}", it)""")
+			if (!model.hasField(field.name)) {
+				newField := model.overrideField(field, """afEfanExtra::ComponentCtx.peek.getVariable("${field.name}")""", """afEfanExtra::ComponentCtx.peek.setVariable("${field.name}", it)""")
+				field.facets.each { newField.addFacetClone(it) }
+			}
 		}
 
 		efanSrc 	:= templateConverters.convertTemplate(efanFile)

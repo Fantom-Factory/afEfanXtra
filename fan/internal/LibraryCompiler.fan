@@ -27,9 +27,9 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 		model.usingType(ComponentCtx#)
 		model.extendMixin(EfanLibrary#)
 		
-		model.addField(ComponentCache#, "componentCache", null, null, [Inject#])
+		model.addField(ComponentCache#, "componentCache").addFacet(Inject#)
 
-		model.overrideField(EfanLibrary#name, "\"${libName}\"", "throw Err(\"'name' is read only.\")", Type#.emptyList)
+		model.overrideField(EfanLibrary#name, "\"${libName}\"", "throw Err(\"'name' is read only.\")")
 
 		// add render methods
 		componentFinder.findComponentTypes(pod).each |comType| {	
