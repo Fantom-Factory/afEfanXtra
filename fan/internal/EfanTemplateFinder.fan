@@ -1,4 +1,5 @@
 using afIoc::Inject
+using afEfan::EfanErr
 
 @NoDoc
 const mixin EfanTemplateFinder {
@@ -39,9 +40,12 @@ internal const class FindEfanByFacetValue : EfanTemplateFinder {
 			return null
 		
 		// if absolute, it should resolve against a scheme (hopefully fan:!)
-		if (efanUri.isAbs)
-			// TODO: Err msg if not a file
-			return comFacet.template.get
+		if (efanUri.isAbs) {
+			obj := comFacet.template.get
+			if (!obj.typeof.fits(File#))
+				throw EfanErr(ErrMsgs.templateNotFile(efanUri, componentType, obj.typeof))
+			return obj
+		}
 		
 		// if relative, a local file maybe?
 		efanFile := efanUri.toFile 
@@ -51,8 +55,11 @@ internal const class FindEfanByFacetValue : EfanTemplateFinder {
 		// last ditch attempt, look for a local pod resource
 		if (efanUri.isPathAbs)
 			efanUri = efanUri.toStr[1..-1].toUri
-		// TODO: Err msg if not found
-			// TODO: Err msg if not a file
-		return `fan://${componentType.pod}/${efanUri}`.get(null, false)
+		obj := `fan://${componentType.pod}/${efanUri}`.get(null, false)
+		if (obj == null)
+			throw EfanErr(ErrMsgs.templateNotFound(efanUri, componentType))
+		if (!obj.typeof.fits(File#))
+			throw EfanErr(ErrMsgs.templateNotFile(efanUri, componentType, obj.typeof))
+		return obj
 	}
 }

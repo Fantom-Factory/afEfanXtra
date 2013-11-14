@@ -57,7 +57,6 @@ AppModule.fan:
 pre>
 using afIoc
 
-@SubModule { modules=[EfanExtraModule#]}
 class AppModule {
 
   static Void bind(ServiceBinder binder) {
@@ -67,7 +66,7 @@ class AppModule {
   @Contribute { serviceType=EfanLibraries# }
   static Void contributeEfanLibraries(MappedConfig config) {
 
-    // contribute all components in our pod as a library named 'app'
+    // contribute all components in the pod as a library named 'app'
     config["app"] = AppModule#.pod
   }
 }
@@ -110,6 +109,16 @@ Ensure '/fan/components/' is listed in your 'build.fan' as a resDir.
 > '/res/components/' - '/res/components/' would need to be added seperately. Example:
 
   resDirs = [`doc/`, `res/`, `res/components/`]
+
+If you wish the template to have a different name to the Fantom class, then you can set an explicit 'Uri' with the 'template'
+field on '@Component'. Example:
+
+pre>
+  @Component { template=`fan://acmePod/templates/Notice.efan` }
+  const mixin Overdue {
+    ...
+  }
+<pre
 
 
 

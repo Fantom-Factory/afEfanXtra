@@ -12,7 +12,7 @@ const mixin EfanLibrary {
 		
 		paramTypes	:= initParams.map { it.typeof }
 		if (!ReflectUtils.paramTypesFitMethodSignature(paramTypes, method))
-			throw Err("404 baby!")	// TODO: Err msg
+			throw Err("404 baby! TODO: better Err msg!")	// TODO: Err msg
 		
 		return method.callOn(this, initParams)
 	}

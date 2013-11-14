@@ -20,5 +20,13 @@ internal const class ErrMsgs {
 	static Str libraryNameNotValid(Str libName) {
 		"Efan Library name is not valid. It must be a legal Fantom name : ${libName}"
 	}
+
+	static Str templateNotFile(Uri templateLoc, Type comType, Type templateType) {
+		"Template Uri `${templateLoc}` for ${comType.qname} does not resolve to a file : ${templateType.qname}"
+	}
+
+	static Str templateNotFound(Uri templateLoc, Type comType) {
+		"Template Uri `${templateLoc}` for ${comType.qname} could not be resolved!"
+	}
 	
 }
