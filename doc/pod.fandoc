@@ -173,6 +173,10 @@ class AppModule {
 Release Notes [#releaseNotes]
 *****************************
 
+v0.0.8 [#v0.0.8]
+----------------
+ - New: Added 'EfanTemplateDirectories' service which scans external directories for efan templates.
+
 v0.0.6 [#v0.0.6]
 ----------------
  - New: Fields may be annotated with *any* facet, not just '@Inject'. Think '@Config'!!!

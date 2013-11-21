@@ -6,6 +6,7 @@ const mixin EfanTemplateFinders {
 
 	** Finds an efan template for the given efan component type.
 	abstract File findTemplate(Type componentType)
+	
 }
 
 internal const class EfanTemplateFindersImpl : EfanTemplateFinders {
@@ -19,7 +20,11 @@ internal const class EfanTemplateFindersImpl : EfanTemplateFinders {
 	}
 	
 	override File findTemplate(Type componentType) {
-		finders.eachrWhile { it.findTemplate(componentType) }
-		?: throw NotFoundErr(ErrMsgs.componentTemplateNotFound(componentType), templateConverters.files(componentType.pod))
+		template := finders.eachWhile { it.findTemplate(componentType) }
+		if (template != null)
+			return template
+		
+		templates := finders.reduce(File[,]) |File[] all, finder -> File[]| { all.addAll(finder.templateFiles(componentType)) }
+		throw NotFoundErr(ErrMsgs.componentTemplateNotFound(componentType), templates)
 	}
 }

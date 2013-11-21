@@ -17,7 +17,7 @@ using afEfan::EfanErr
 ** ...
 ** 
 ** @Contribute { serviceType=EfanTemplateConverters# }
-** internal static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
+** static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
 **   config["slim"] = |File file -> Str| {
 **     slim.parseFromFile(file)
 **   }
@@ -28,7 +28,8 @@ using afEfan::EfanErr
 ** 
 ** @uses Mapped config of '[Str:|File->Str|]' - file ext to func that converts the file to an efan str 
 const mixin EfanTemplateConverters {
-	
+
+	** Converts the given 'File' in to an efan template Str.
 	abstract Str convertTemplate(File templateFile)
 	
 	** Return a list of (lowercase) file extensions that denote which files can be converted to 
@@ -37,8 +38,8 @@ const mixin EfanTemplateConverters {
 	** Note the extensions are *not* prefixed with a dot, e.g. '["efan", "slim"]' 
 	abstract Str[] extensions()
 	
-	** Lists all files in the given pod that may be converted.
-	abstract File[] files(Pod pod)
+	** Returns 'true' if the given file can be converted / has a known extension 
+	abstract Bool canConvert(File file)
 }
 
 internal const class EfanTemplateConvertersImpl : EfanTemplateConverters {
@@ -60,7 +61,7 @@ internal const class EfanTemplateConvertersImpl : EfanTemplateConverters {
 		converters.keys
 	}
 	
-	override File[] files(Pod pod) {
-		pod.files.findAll { extensions.contains(it.ext) }
+	override Bool canConvert(File file) {
+		converters.keys.contains(file.ext)
 	}
 }
