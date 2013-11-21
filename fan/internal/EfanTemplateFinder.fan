@@ -54,18 +54,17 @@ internal const class FindEfanByTypeNameOnFileSystem : EfanTemplateFinder {
 	override File? findTemplate(Type componentType) {
 		pageName	:= componentType.name.lower
 		
-		return templateDirectories.templateDirs.eachWhile |templateDir->File| {
+		return templateDirectories.templateDirs.eachWhile |templateDir->File?| {
 			templateDir.listFiles.findAll { templateConverters.canConvert(it) }.find |file->Bool| {
-			fileName	:= baseName(file)
-			if (fileName == pageName)
-				return true
-
-			// TODO: Maybe have a TemplateSuffixes service
-			if (pageName.endsWith("page") && fileName == pageName[0..<-4])
-				return true
-			
-			return false
+				fileName	:= baseName(file)
+				if (fileName == pageName)
+					return true
+	
+				// TODO: Maybe have a TemplateSuffixes service
+				if (pageName.endsWith("page") && fileName == pageName[0..<-4])
+					return true
 				
+				return false				
 			}
 		}		
 	}

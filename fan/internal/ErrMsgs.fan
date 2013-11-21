@@ -32,9 +32,4 @@ internal const class ErrMsgs {
 	static Str templateDirIsNotDir(File templateDir) {
 		"Template Dir `${templateDir.normalize}` is not a directory!"
 	}
-
-	static Str templateDirNotFound(File templateDir) {
-		"Template Dir `${templateDir.normalize}` does not exist!"
-	}
-	
 }

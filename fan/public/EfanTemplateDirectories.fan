@@ -23,10 +23,8 @@ internal const class EfanTemplateDirectoriesImpl : EfanTemplateDirectories {
 	
 	new make(File[] templateDirs) {
 		templateDirs.each {  
-			if (!it.isDir) 
+			if (!it.isDir) // also called when file does not exist
 				throw EfanErr(ErrMsgs.templateDirIsNotDir(it))
-			if (!it.exists) 
-				throw EfanErr(ErrMsgs.templateDirNotFound(it))
 		}
 		this.templateDirs = templateDirs.toImmutable
 	}
