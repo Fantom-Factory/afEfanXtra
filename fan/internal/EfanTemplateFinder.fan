@@ -7,19 +7,56 @@ const mixin EfanTemplateFinder {
 	** Return an EfanTemplateSource
 	abstract File? findTemplate(Type componentType)
 
+	** Lists all possible template files - used when template could not be found 
+	abstract File[] templateFiles(Type componentType)
+
 }
 
-internal const class FindEfanByTypeName : EfanTemplateFinder {
+internal const class FindEfanByTypeNameInPod : EfanTemplateFinder {
 	
 	@Inject	private const EfanTemplateConverters	templateConverters
 
 	new make(|This|in) { in(this) }
 	
 	override File? findTemplate(Type componentType) {
-		templateConverters.files(componentType.pod).find |file->Bool| {
-			index 		:= file.name.index(".")
-			fileName	:= file.name[0..<index].lower
-			pageName	:= componentType.name.lower
+		pageName	:= componentType.name.lower
+
+		return templateFiles(componentType).find |file->Bool| {
+			fileName	:= baseName(file)
+			if (fileName == pageName)
+				return true
+
+			// TODO: Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
+			if (pageName.endsWith("page") && fileName == pageName[0..<-4])
+				return true
+
+			return false
+		}
+	}
+	
+	override File[] templateFiles(Type componentType) {
+		componentType.pod.files.findAll { templateConverters.canConvert(it) }
+	}
+	
+	private Str baseName(File file) {
+		i := file.name.index(".")
+		return file.name[0..<i].lower		
+	}
+}
+
+internal const class FindEfanByTypeNameOnFileSystem : EfanTemplateFinder {
+	
+	@Inject	private const EfanTemplateConverters	templateConverters
+	@Inject	private const EfanTemplateDirectories	templateDirectories
+
+	new make(|This|in) { in(this) }
+	
+	override File? findTemplate(Type componentType) {
+		pageName	:= componentType.name.lower
+		
+		return templateDirectories.templateDirs.eachWhile |templateDir->File| {
+			templateDir.listFiles.findAll { templateConverters.canConvert(it) }.find |file->Bool| {
+			fileName	:= baseName(file)
 			if (fileName == pageName)
 				return true
 
@@ -28,7 +65,18 @@ internal const class FindEfanByTypeName : EfanTemplateFinder {
 				return true
 			
 			return false
-		}
+				
+			}
+		}		
+	}
+
+	override File[] templateFiles(Type componentType) {
+		templateDirectories.templateDirs.reduce(File[,]) |File[] all, dir -> File[]| { all.addAll(dir.listFiles) }
+	}
+
+	private Str baseName(File file) {
+		i := file.name.index(".")
+		return file.name[0..<i].lower		
 	}
 }
 
@@ -61,5 +109,9 @@ internal const class FindEfanByFacetValue : EfanTemplateFinder {
 		if (!obj.typeof.fits(File#))
 			throw EfanErr(ErrMsgs.templateNotFile(efanUri, componentType, obj.typeof))
 		return obj
+	}
+	
+	override File[] templateFiles(Type componentType) {
+		File#.emptyList
 	}
 }

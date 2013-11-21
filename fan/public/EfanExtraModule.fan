@@ -31,6 +31,7 @@ const class EfanExtraModule {
 		
 		binder.bindImpl(EfanExtra#).withoutProxy
 		binder.bindImpl(EfanTemplateConverters#)
+		binder.bindImpl(EfanTemplateDirectories#)
 		binder.bindImpl(EfanTemplateFinders#)
 	}
 	
@@ -44,8 +45,9 @@ const class EfanExtraModule {
 
 	@Contribute { serviceType=EfanTemplateFinders# }
 	internal static Void contributeEfanTemplateFinders(OrderedConfig config) {
-		config.addOrdered("FindByFacetValue", 	config.autobuild(FindEfanByFacetValue#))
-		config.addOrdered("FindByTypeName", 	config.autobuild(FindEfanByTypeName#))
+		config.addOrdered("FindByFacetValue", 			config.autobuild(FindEfanByFacetValue#))
+		config.addOrdered("FindByTypeNameOnFileSystem",	config.autobuild(FindEfanByTypeNameOnFileSystem#))
+		config.addOrdered("FindByTypeNameInPod", 		config.autobuild(FindEfanByTypeNameInPod#))
 	}	
 
 	@Contribute { serviceType=EfanTemplateConverters# }

@@ -40,6 +40,7 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 
 			body := "component := (${comType.qname}) componentCache.getOrMake(\"${libName}\", ${comType.qname}#)\n"
 			body += "return EfanRenderCtx.renderEfan((EfanRenderer) component, (|->|?) bodyFunc) |->| {\n"
+			// relax, the push is more of a pop
 			body += "\tComponentCtx.push\n"
 			if (initMethod != null) 
 				body += "\tcomponent.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"
@@ -48,6 +49,18 @@ internal const class LibraryCompilerImpl : LibraryCompiler {
 			body += "}\n"
 
 			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)
+
+//			// NON-render method
+//			torso := "component := (${comType.qname}) componentCache.getOrMake(\"${libName}\", ${comType.qname}#)\n"
+//			// TODO rename renderEfan in EfanRenderCtx - 'cos we're not rendering but still need to set the ctx 
+//			torso += "return EfanRenderCtx.renderEfan((EfanRenderer) component, (|->|?) bodyFunc) |->| {\n"
+//			torso += "\tComponentCtx.push\n"
+//			if (initMethod != null) 
+//				torso += "\tcomponent.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"
+//			//body += "\t((EfanRenderer) component)._af_render(null)\n"
+//			torso += "}\n"
+//			
+//			model.addMethod(comType, comType.name.decapitalize, initSig, torso)
 		}
 
 //		Env.cur.err.printLine(model.toFantomCode)
