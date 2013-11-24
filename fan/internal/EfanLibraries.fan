@@ -1,4 +1,5 @@
 using afIoc::Inject
+using afIoc::NotFoundErr
 using afIoc::Registry
 using afEfan::EfanErr
 
@@ -38,22 +39,23 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	}
 
 	override Str:Obj libraries() { librariesF }
-	
+
 	override Type[] componentTypes(Str library) {
 		componentFinder.findComponentTypes(libNameToPod[library])
 	}
-	
+
 	override EfanLibrary library(Type componentType) {
-		// TODO: err if not found
 		libName := podToLibName[componentType.pod]
+		if (libName == null)
+			throw NotFoundErr(ErrMsgs.libraryNotFound(componentType.pod), podToLibName.keys)
 		return librariesF[libName]
 	}
-	
+
 	static Str:Pod verifyLibNames(Str:Pod libraries) {
 		libraries.each |pod, libName| { if (!isFieldName(libName)) throw EfanErr(ErrMsgs.libraryNameNotValid(libName)) }
 		return libraries
 	}
-	
+
 	private static Bool isFieldName(Str s) {
 		// @see http://fantom.org/sidewalk/topic/2193#c14128
 		!s.isEmpty && (s[0].isAlpha || s[0] == '_') && s.all |c| { c.isAlphaNum || c == '_' }

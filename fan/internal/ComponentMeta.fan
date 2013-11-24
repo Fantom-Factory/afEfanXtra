@@ -1,7 +1,5 @@
 
-// used by afBedSHeetEfanExtra for logging purposes
-@NoDoc
-const class ComponentMeta {
+internal const class ComponentMeta {
 	
 	Method? initMethod(Type componentType) {
 		componentType.methods.find { it.name == "initialise" }

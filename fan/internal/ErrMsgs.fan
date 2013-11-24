@@ -32,4 +32,8 @@ internal const class ErrMsgs {
 	static Str templateDirIsNotDir(File templateDir) {
 		"Template Dir `${templateDir.normalize}` is not a directory!"
 	}
+
+	static Str libraryNotFound(Pod pod) {
+		"Could not find efan library for pod '${pod.name}'"
+	}
 }
