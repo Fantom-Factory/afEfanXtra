@@ -36,4 +36,8 @@ internal const class ErrMsgs {
 	static Str libraryNotFound(Pod pod) {
 		"Could not find efan library for pod '${pod.name}'"
 	}
+
+	static Str alienAidComponentTypo(Str lib, Str comName) {
+		"\n  ALIEN-AID: Did you mean: ${lib}.render${comName}(...) ???"
+	}
 }
