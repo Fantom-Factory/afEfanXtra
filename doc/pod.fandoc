@@ -176,6 +176,7 @@ Release Notes [#releaseNotes]
 v0.0.8 [#v0.0.8]
 ----------------
  - New: Added 'EfanTemplateDirectories' service which scans external directories for efan templates.
+ - New: Compilation err msgs are updated with code hints should a simple component rendering typo be spotted. (ALIEN-AID)
 
 v0.0.6 [#v0.0.6]
 ----------------

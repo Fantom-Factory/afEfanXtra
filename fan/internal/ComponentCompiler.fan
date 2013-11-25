@@ -4,6 +4,7 @@ using afPlastic
 using afEfan::EfanCompiler
 using afEfan::EfanRenderer
 using afEfan::EfanMetaData
+using afEfan::EfanCompilationErr
 
 ** (Service) -  
 @NoDoc
@@ -73,14 +74,40 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 
 		efanSrc 	:= templateConverters.convertTemplate(efanFile)
 		
-		renderer	:= efanCompiler.compileWithModel(efanFile.normalize.uri, efanSrc, null, model) |Type efanType, EfanMetaData efanMeta -> EfanRenderer| {
-			myefanMeta := clone(efanMeta) |efanMeta2, plan| {
-				plan[EfanMetaData#templateId] 	= "\"${libName}::${comType.name}\""
+		try {
+			renderer	:= efanCompiler.compileWithModel(efanFile.normalize.uri, efanSrc, null, model) |Type efanType, EfanMetaData efanMeta -> EfanRenderer| {
+				myefanMeta := clone(efanMeta) |efanMeta2, plan| {
+					plan[EfanMetaData#templateId] 	= "\"${libName}::${comType.name}\""
+				}
+				return registry.autobuild(efanType, [myefanMeta])
 			}
-			return registry.autobuild(efanType, [myefanMeta])
+			return renderer
+			
+		} catch (EfanCompilationErr err) {
+			// try to help the user with silly typos and mistakes
+			regex	:= Regex.fromStr("(?i)^Unknown method '.+\\.render(.+)'\$")			
+			matcher := regex.matcher(err.msg)
+			if (!matcher.matches)  
+				throw err
+
+			comName := matcher.group(1)
+			lib := efanLibraries.libraries.keys.find |lName| {
+				cName := efanLibraries.componentTypes(lName).find { it.name.equalsIgnoreCase(comName) }
+				// re-assign comName to cater for case sensitivity mistakes
+				if (cName != null) 
+					comName = cName.name
+				return (cName != null)
+			}
+			
+			if (lib == null)
+				throw err
+			
+			msg := ErrMsgs.alienAidComponentTypo(lib, comName)
+			// TODO: EfanCompilationErr.withXtraMsg() when efan 1.3.4 is released
+			linesOfPadding := (Int) EfanCompilationErr#.field("linesOfPadding").get(err)
+			newErr := (Err) EfanCompilationErr#.method("make").call(err.srcCode, err.errLineNo, err.msg + msg, linesOfPadding, err.cause)
+			throw newErr
 		}
-		
-		return renderer
 	}
 	
 	private static EfanMetaData clone(EfanMetaData efanMeta, |EfanMetaData, Field:Obj?|? overridePlan := null) {
