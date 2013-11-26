@@ -70,7 +70,11 @@ internal const class FindEfanByTypeNameOnFileSystem : EfanTemplateFinder {
 	}
 
 	override File[] templateFiles(Type componentType) {
-		templateDirectories.templateDirs.reduce(File[,]) |File[] all, dir -> File[]| { all.addAll(dir.listFiles) }
+		templateDirectories.templateDirs.reduce(File[,]) |File[] all, dir -> File[]| { 
+			dir.listFiles.findAll { 
+				templateConverters.canConvert(it) 
+			}.addAll(dir.listFiles) 
+		}
 	}
 
 	private Str baseName(File file) {

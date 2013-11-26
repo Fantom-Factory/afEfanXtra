@@ -2,7 +2,7 @@ using afIoc
 
 @NoDoc
 @SubModule { modules=[EfanExtraModule#]} 
-class AppModule {
+class EfanAppModule {
 	
 	static Void bind(ServiceBinder binder) {
 		binder.bindImpl(DvdService#)
@@ -11,7 +11,7 @@ class AppModule {
 	// contribute all components in our pod as a library named 'app' 
 	@Contribute { serviceType=EfanLibraries# }
 	static Void contributeEfanLibraries(MappedConfig config) {
-		config["app"] = AppModule#.pod
+		config["app"] = EfanAppModule#.pod
 	}
 	
 }

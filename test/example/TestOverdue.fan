@@ -5,7 +5,7 @@ using concurrent::Actor
 class TestOverdue : Test {
 	
 	Void testOverdue() {
-		registry  := (Registry) RegistryBuilder().addModules([AppModule#, IocConfigModule#]).build.startup
+		registry  := (Registry) RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#]).build.startup
 		
 		efanExtra := (EfanExtra) registry.dependencyByType(EfanExtra#)
 		overdue	  := efanExtra.render(Overdue#, ["Mr Smith"])
