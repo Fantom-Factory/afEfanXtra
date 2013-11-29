@@ -1,9 +1,11 @@
 using afIoc
 
+// Maybe make this public - rename maybe?
 ** (Service) - What you contribute your `EfanTemplateFinder` to.
 @NoDoc
 const mixin EfanTemplateFinders {
 
+	// Maybe later this will return a templae source?
 	** Finds an efan template for the given efan component type.
 	abstract File findTemplate(Type componentType)
 	
