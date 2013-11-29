@@ -64,7 +64,7 @@ internal const class FindEfanByTypeNameOnFileSystem : EfanTemplateFinder {
 				if (pageName.endsWith("page") && fileName == pageName[0..<-4])
 					return true
 				
-				return false				
+				return false
 			}
 		}		
 	}
@@ -72,8 +72,8 @@ internal const class FindEfanByTypeNameOnFileSystem : EfanTemplateFinder {
 	override File[] templateFiles(Type componentType) {
 		templateDirectories.templateDirs.reduce(File[,]) |File[] all, dir -> File[]| { 
 			dir.listFiles.findAll { 
-				templateConverters.canConvert(it) 
-			}.addAll(dir.listFiles) 
+				templateConverters.canConvert(it)
+			}
 		}
 	}
 
@@ -84,6 +84,7 @@ internal const class FindEfanByTypeNameOnFileSystem : EfanTemplateFinder {
 }
 
 internal const class FindEfanByFacetValue : EfanTemplateFinder {
+	
 	override File? findTemplate(Type componentType) {
 		comFacet := (Component) Type#.method("facet").callOn(componentType, [Component#])	// Stoopid F4
 		efanUri := comFacet.template
