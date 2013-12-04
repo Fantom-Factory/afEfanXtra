@@ -37,7 +37,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		model.addCtor("makeWithIoc", "${EfanMetaData#.qname} efanMeta, |This|in", "in(this)\nthis._af_efanMetaData = efanMeta")
 
 		// give a more human ID - helpful for debugging
-		model.extendMixin(EfanRenderer#)
+		model.extendMixin(EfanComponent#)
 		
 		// add 3rd party component libraries
 		efanLibraries.libraries.each |type, name| {
@@ -49,11 +49,14 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		
 		// implement abstract fields
 		comType.fields.each |field| {
-			
+
 			if (field.isStatic)
 				return
 
 			if (field.parent == EfanRenderer#)
+				return
+
+			if (field.parent == EfanComponent#)
 				return
 
 			if (field.hasFacet(Inject#)) {
