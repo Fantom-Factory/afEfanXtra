@@ -22,7 +22,7 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	@Inject	private	const Registry			registry
 	@Inject	private	const ComponentFinder	componentFinder
 
-	new make(Str:Pod libraries, LibraryCompiler libraryCompiler, Registry registry, |This|in) {
+	new make(Str:Pod libraries, EfanLibraryCompiler libraryCompiler, Registry registry, |This|in) {
 		in(this)
 
 		this.libNameToPod	= verifyLibNames(libraries)

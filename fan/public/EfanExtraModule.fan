@@ -21,11 +21,11 @@ using afEfan::EfanCompiler
 const class EfanExtraModule {
 
 	internal static Void bind(ServiceBinder binder) {
-		binder.bindImpl(LibraryCompiler#)
 		binder.bindImpl(ComponentFinder#)
 		binder.bindImpl(ComponentCompiler#)
 		binder.bindImpl(ComponentCache#)
 		binder.bindImpl(ComponentMeta#)
+		binder.bindImpl(EfanLibraryCompiler#)
 		binder.bindImpl(EfanLibraries#)
 		binder.bindImpl(EfanExtraPrinter#)
 		
@@ -33,6 +33,7 @@ const class EfanExtraModule {
 		binder.bindImpl(EfanTemplateConverters#)
 		binder.bindImpl(EfanTemplateDirectories#)
 		binder.bindImpl(EfanTemplateFinders#)
+		binder.bindImpl(EfanLibraryHelper#)
 	}
 	
 	@Build { serviceId="EfanCompiler" }
