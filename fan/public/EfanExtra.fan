@@ -11,7 +11,7 @@ const mixin EfanExtra {
 	** annotated with the '@Component' facet.
 	abstract Type[]	componentTypes(Str libraryName)
 
-	** Renders the given component. The component's 'initialise(...)' method is called with the 
+	** Renders the given component. The component's 'initRender(...)' method is called with the 
 	** given 'initParams'.
 	abstract Str render(Type componentType, Obj[]? initParams := null)
 	
@@ -35,7 +35,7 @@ internal const class EfanExtraImpl : EfanExtra {
 	}
 
 	override Str render(Type componentType, Obj[]? initParams := null) {
-		efanLibraries.library(componentType).render(componentType, initParams ?: Obj#.emptyList)
+		efanLibraries.library(componentType).renderComponent(componentType, initParams ?: Obj#.emptyList)
 	}
 
 	override EfanRenderer component(Type componentType) {

@@ -33,7 +33,6 @@ const class EfanExtraModule {
 		binder.bindImpl(EfanTemplateConverters#)
 		binder.bindImpl(EfanTemplateDirectories#)
 		binder.bindImpl(EfanTemplateFinders#)
-		binder.bindImpl(EfanLibraryHelper#)
 	}
 	
 	@Build { serviceId="EfanCompiler" }

@@ -34,7 +34,7 @@ Overdue.fan:
       abstract Str? userName
 
       // called before the component is rendered
-      Void initialise(Str userName) {
+      Void initRender(Str userName) {
         this.userName = userName
       }
 

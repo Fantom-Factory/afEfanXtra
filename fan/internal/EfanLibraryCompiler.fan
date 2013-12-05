@@ -22,14 +22,10 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 		log.debug("Compiling Component Library '${libName}' for ${pod.name}")
 		model := PlasticClassModel("${libName.capitalize}EfanLibrary", true)
 
-		model.usingType(EfanRenderer#)
-		model.usingType(EfanRenderCtx#)
-		model.usingType(ComponentCtx#)
-		model.usingType(RenderBufStack#)
 		model.extendMixin(EfanLibrary#)
 
-//		model.addField(ComponentCache#, "componentCache").addFacet(Inject#)
-		model.addField(EfanLibraryHelper#, "libraryHelper").addFacet(Inject#)
+		inject(model, EfanLibrary#componentCache)
+		inject(model, EfanLibrary#componentMeta)
 
 		model.overrideField(EfanLibrary#name, "\"${libName}\"", "throw Err(\"'name' is read only.\")")
 
@@ -37,35 +33,24 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 		componentFinder.findComponentTypes(pod).each |comType| {	
 			log.debug("  - found component ${comType.name}")
 
-			initMethod	:= componentMeta.initMethod(comType)
-			initSig 	:= componentMeta.initMethodSig(comType, "|Obj?|? bodyFunc := null")
+			initMethod	:= componentMeta.findMethod(comType, InitRender#)
+			initSig 	:= componentMeta.methodSig(comType, InitRender#, "|Obj?|? bodyFunc := null")
 			
 			args := (initMethod != null && !initMethod.params.isEmpty) ? (initMethod.params.join(",") { it.name }) : "," 
 			body := "args := [${args}]\n"
-			body += "return libraryHelper.render(\"${libName}\", ${comType.qname}#, args, bodyFunc)\n"
+			body += "return _af_renderComponent(\"${libName}\", ${comType.qname}#, args, bodyFunc)\n"
 			
-//			initMethod	:= componentMeta.initMethod(comType)
-//			body := "component := (${comType.qname}) componentCache.getOrMake(\"${libName}\", ${comType.qname}#)\n"
-//			
-//			body += "rendered := RenderBufStack.push() |StrBuf renderBuf -> StrBuf| {\n"
-//			
-//			body += "\tEfanRenderCtx.renderEfan(renderBuf, (EfanRenderer) component, (|->|?) bodyFunc) |->| {\n"
-//			// relax, the push is more of a pop
-//			body += "\t\tComponentCtx.push\n"
-//			if (initMethod != null) 
-//				body += "\t\tcomponent.initialise(" + (initMethod?.params?.join(", ") { it.name } ?: "") + ")\n"
-//			body += "\t\t((EfanRenderer) component)._af_render(null)\n"
-//			body += "\t}\n"
-//			body += "\treturn renderBuf\n"
-//			
-//			body += "}\n"
-//
-//			body += "return (RenderBufStack.peek(false) == null) ? rendered.toStr : Str.defVal\n"
-
 			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)
 		}
 
 //		Env.cur.err.printLine(model.toFantomCode)
 		return plasticCompiler.compileModel(model)
+	}
+	
+	private Void inject(PlasticClassModel model, Field field) {
+		injectFieldName := "_af_inject${field.name.capitalize}"
+		newField := model.addField(field.type, injectFieldName)
+		field.facets.each { newField.addFacetClone(it) }
+		model.overrideField(field, injectFieldName, """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")
 	}
 }
