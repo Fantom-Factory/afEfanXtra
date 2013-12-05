@@ -34,7 +34,7 @@ const class EfanExtraPrinter {
 		buf.add("\nEfan Library: '${libName}' has ${comTypes.size} components:\n")
 
 		comTypes.each |comType| {
-			line := comType.name.toDisplayName.padl(maxName) + " : " + "${libName}." + componentMeta.renderMethodDec(comType)
+			line := comType.name.toDisplayName.padl(maxName) + " : " + "${libName}." + componentMeta.methodDec(comType, InitRender#)
 			buf.add("  ${line}\n")
 		}
 		

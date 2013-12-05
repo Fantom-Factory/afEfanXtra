@@ -5,7 +5,7 @@ const mixin Nested {
 	abstract Int n
 	abstract Str text
 	
-	Void initialise(Int n) {
+	Void initRender(Int n) {
 		this.n = n
 	}
 }
