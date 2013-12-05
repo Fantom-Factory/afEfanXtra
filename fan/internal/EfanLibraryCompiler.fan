@@ -40,7 +40,7 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 			initMethod	:= componentMeta.initMethod(comType)
 			initSig 	:= componentMeta.initMethodSig(comType, "|Obj?|? bodyFunc := null")
 			
-			args := initMethod != null ? initMethod.params.join(",") { it.name } : "," 
+			args := (initMethod != null && !initMethod.params.isEmpty) ? (initMethod.params.join(",") { it.name }) : "," 
 			body := "args := [${args}]\n"
 			body += "return libraryHelper.render(\"${libName}\", ${comType.qname}#, args, bodyFunc)\n"
 			

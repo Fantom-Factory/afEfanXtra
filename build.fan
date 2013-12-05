@@ -25,7 +25,7 @@ class Build : BuildPod {
 					"afIocConfig 0+", 
 //					"afEfan 1.3.2+", 
 					"afEfan 0+", 
-					"afPlastic 1.0.6+"]
+					"afPlastic 1.0.8+"]
 		srcDirs = [`test/unit-tests/`, `test/unit-tests/internal/`, `test/unit-tests/internal/utils/`, `test/unit-tests/components/`, `test/example/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`, `IocUtils/`]
 		resDirs = [`doc/`, `test/example/`, `test/unit-tests/components/`]
 

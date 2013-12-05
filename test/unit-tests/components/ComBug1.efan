@@ -1,0 +1,8 @@
+ComBug1 - start
+<% app.renderComBug2() { %>
+ComBug1 - start body
+<% app.renderComBug3() %>
+ComBug1 - end body
+<% } %>
+ComBug1 - end
+<% bug() %>
