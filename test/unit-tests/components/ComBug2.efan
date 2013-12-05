@@ -1,0 +1,3 @@
+ComBug2 - start
+<% renderBody() %>
+ComBug2 - end
