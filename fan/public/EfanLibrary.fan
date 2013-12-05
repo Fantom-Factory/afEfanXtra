@@ -28,7 +28,9 @@ const mixin EfanLibrary {
 			EfanRenderCtx.renderEfan(renderBuf, (EfanRenderer) component, (|->|?) bodyFunc) |->| {
 				ComponentCtx.push
 				componentMeta.callMethod(comType, InitRender#, component, initArgs)
+				componentMeta.callMethod(comType, BeforeRender#, component, [renderBuf])
 				((EfanRenderer) component)._af_render(null)
+				componentMeta.callMethod(comType, AfterRender#, component, [renderBuf])
 			}
 			return renderBuf
 		}

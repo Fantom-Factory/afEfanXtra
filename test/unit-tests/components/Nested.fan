@@ -1,6 +1,5 @@
 
-@NoDoc
-@Component
+@NoDoc @Component
 const mixin Nested {
 	abstract Int n
 	abstract Str text
