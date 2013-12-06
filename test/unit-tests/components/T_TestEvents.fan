@@ -1,7 +1,7 @@
 using concurrent
 
-@NoDoc @Component
-const mixin T_TestEvents {
+@NoDoc
+const mixin T_TestEvents : EfanComponent {
 	
 	@InitRender
 	Void e1() {

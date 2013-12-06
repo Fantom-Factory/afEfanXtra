@@ -1,8 +1,7 @@
 using afIoc
 
 @NoDoc
-@Component
-const mixin Overdue {
+const mixin Overdue : EfanComponent {
 
   // use afIoc services!
   @Inject abstract DvdService? dvdService

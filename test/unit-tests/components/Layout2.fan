@@ -1,5 +1,5 @@
 
-@NoDoc @Component
-const mixin Layout2 {
+@NoDoc
+const mixin Layout2 : EfanComponent {
 
 }

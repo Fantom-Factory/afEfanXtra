@@ -1,13 +1,13 @@
 
-@NoDoc @Component { }
-const mixin T_BeforeFalseAborts {	
+@NoDoc
+const mixin T_BeforeFalseAborts : EfanComponent {	
 	Bool initRender() {
 		false
 	}
 }
 
-@NoDoc @Component { }
-const mixin T_BeforeTrueOkay {	
+@NoDoc
+const mixin T_BeforeTrueOkay : EfanComponent {	
 	Bool initRender() {
 		true
 	}

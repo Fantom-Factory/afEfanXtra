@@ -1,4 +1,4 @@
 
 @NoDoc
 @Component { template=`/test/unit-tests/components/EfanComponentPodLocal.efan` } 
-const mixin TemplateFromFacetInPodLocal { }
+const mixin TemplateFromFacetInPodLocal : EfanComponent { }
