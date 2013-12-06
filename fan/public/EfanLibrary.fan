@@ -15,7 +15,7 @@ const mixin EfanLibrary {
 		Env.cur.err.printLine(component.efanMetaData.efanSrcCode)
 		
 		rendered := RenderBufStack.push() |StrBuf renderBuf -> StrBuf| {
-			EfanRenderCtx.renderEfan(renderBuf, (EfanRenderer) component, (|->|?) bodyFunc) |->| {
+			EfanRenderCtx.renderEfan(renderBuf, (BaseEfanImpl) component, (|->|?) bodyFunc) |->| {
 				ComponentCtx.push
 				
 				initRet := componentMeta.callMethod(comType, InitRender#, component, initArgs)
@@ -29,7 +29,7 @@ const mixin EfanLibrary {
 					if (b4Ret == false)
 						return
 					
-					((EfanRenderer) component)._af_render(null)
+					((BaseEfanImpl) component)._af_render(null)
 					aftRet	:= componentMeta.callMethod(comType, AfterRender#, component, [renderBuf])
 					
 					renderLoop = (aftRet == false)

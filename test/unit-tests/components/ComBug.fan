@@ -2,12 +2,7 @@ using afEfan
 
 @NoDoc
 @Component
-const mixin ComBug1 : EfanRenderer { 
-	Void bug() {
-		a:=efanMetaData.efanSrcCode
-		Env.cur.err.printLine(a)
-	}
-}
+const mixin ComBug1 { }
 
 @NoDoc
 @Component
