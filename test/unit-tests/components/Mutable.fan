@@ -1,6 +1,6 @@
 
-@NoDoc @Component
-const mixin Mutable {
+@NoDoc
+const mixin Mutable : EfanComponent {
 	@AfterRender
 	Void afterRender(StrBuf renderBuf) {
 		renderBuf.clear

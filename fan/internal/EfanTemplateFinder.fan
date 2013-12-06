@@ -86,6 +86,9 @@ internal const class FindEfanByTypeNameOnFileSystem : EfanTemplateFinder {
 internal const class FindEfanByFacetValue : EfanTemplateFinder {
 	
 	override File? findTemplate(Type componentType) {
+		if (!componentType.hasFacet(Component#))
+			return null
+		
 		comFacet := (Component) Type#.method("facet").callOn(componentType, [Component#])	// Stoopid F4
 		efanUri := comFacet.template
 		if (efanUri == null)

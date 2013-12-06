@@ -1,15 +1,12 @@
 using afEfan
 
 @NoDoc
-@Component
-const mixin ComBug1 { }
+const mixin ComBug1 : EfanComponent { }
 
 @NoDoc
-@Component
-const mixin ComBug2 { }
+const mixin ComBug2 : EfanComponent { }
 
 @NoDoc
-@Component
-const mixin ComBug3 { }
+const mixin ComBug3 : EfanComponent { }
 
 

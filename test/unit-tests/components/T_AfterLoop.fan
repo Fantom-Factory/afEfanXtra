@@ -1,6 +1,6 @@
 
-@NoDoc @Component { }
-const mixin T_AfterLoop {
+@NoDoc 
+const mixin T_AfterLoop : EfanComponent {
 	abstract Int? loopy
 	
 	Void initRender() {

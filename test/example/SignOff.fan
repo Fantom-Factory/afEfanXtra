@@ -1,7 +1,6 @@
 
 @NoDoc
-@Component
-const mixin SignOff {
+const mixin SignOff : EfanComponent {
 
   abstract Str? who
 

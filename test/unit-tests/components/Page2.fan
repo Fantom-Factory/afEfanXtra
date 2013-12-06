@@ -1,8 +1,5 @@
 
 @NoDoc
-@Component
-const mixin Page2 {
-
+const mixin Page2 : EfanComponent {
 	abstract Str judge
-	
 }

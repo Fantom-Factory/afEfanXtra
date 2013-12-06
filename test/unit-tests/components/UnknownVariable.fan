@@ -1,4 +1,3 @@
 
 @NoDoc
-@Component
-const mixin UnknownVariable { }
+const mixin UnknownVariable : EfanComponent { }

@@ -1,6 +1,6 @@
 
-@NoDoc @Component
-const mixin Nested {
+@NoDoc
+const mixin Nested : EfanComponent {
 	abstract Int n
 	abstract Str text
 	
