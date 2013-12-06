@@ -1,13 +1,11 @@
 using afEfan::EfanRenderCtx
-using afEfan::EfanRenderer
-using concurrent::Actor
+using afEfan::EfanMetaData
 
 @NoDoc
-const mixin EfanComponent : EfanRenderer {
+const mixin EfanComponent {
 
-	override Str render(Obj? ctx, |Obj?|? bodyFunc := null) {
-		throw Err("Strictly not allowed!")
-	}
+	** Meta data about the compiled efan templates
+	abstract EfanMetaData efanMetaData
 
 	** Renders the body of the enclosing efan template. Example, a simple 'layout.html' may be 
 	** defined as: 
@@ -21,8 +19,11 @@ const mixin EfanComponent : EfanRenderer {
 	**     <%= renderBody() %>
 	** </html>
 	** <pre
-	override Str renderBody() {
+	virtual Str renderBody() {
 		EfanRenderCtx.renderBody(RenderBufStack.peek)
 		return Str.defVal
 	}
+
+	** Returns efanMetaData.templateId()
+	override Str toStr() { efanMetaData.templateId }
 }

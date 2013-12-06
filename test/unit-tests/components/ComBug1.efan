@@ -5,4 +5,3 @@ ComBug1 - start body
 ComBug1 - end body
 <% } %>
 ComBug1 - end
-<% bug() %>

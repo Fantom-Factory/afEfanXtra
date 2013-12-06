@@ -5,14 +5,15 @@ using afEfan::EfanCompiler
 using afEfan::EfanRenderer
 using afEfan::EfanMetaData
 using afEfan::EfanCompilationErr
+using afEfan::BaseEfanImpl
 
 ** (Service) -  
 @NoDoc
 const mixin ComponentCompiler {
 	
 	// TODO: change sig
-//	abstract EfanRenderer compile(Str libName, Type comType, Str efanSrc, Uri efanSrcLoc)
-	abstract EfanRenderer compile(Str libName, Type comType, File efanFile)
+//	abstract EfanComponent compile(Str libName, Type comType, Str efanSrc, Uri efanSrcLoc)
+	abstract EfanComponent compile(Str libName, Type comType, File efanFile)
 }
 
 internal const class ComponentCompilerImpl : ComponentCompiler {
@@ -28,7 +29,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		this.compilerCallbacks = compilerCallbacks
 	}
 
-	override EfanRenderer compile(Str libName, Type comType, File efanFile) {
+	override EfanComponent compile(Str libName, Type comType, File efanFile) {
 		model := PlasticClassModel("${comType.name}Impl", true)
 		model.extendMixin(comType)
 
@@ -78,7 +79,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		efanSrc 	:= templateConverters.convertTemplate(efanFile)
 		
 		try {
-			renderer	:= efanCompiler.compileWithModel(efanFile.normalize.uri, efanSrc, null, model) |Type efanType, EfanMetaData efanMeta -> EfanRenderer| {
+			renderer	:= efanCompiler.compileWithModel(efanFile.normalize.uri, efanSrc, null, model) |Type efanType, EfanMetaData efanMeta -> BaseEfanImpl| {
 				myefanMeta := clone(efanMeta) |efanMeta2, plan| {
 					plan[EfanMetaData#templateId] 	= "\"${libName}::${comType.name}\""
 				}

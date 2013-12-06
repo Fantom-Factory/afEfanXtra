@@ -16,7 +16,7 @@ const mixin EfanExtra {
 	abstract Str render(Type componentType, Obj[]? initParams := null)
 	
 	** Returns an instance of the component, cast to an 'EfanRenderer'.
-	abstract EfanRenderer component(Type componentType)
+	abstract EfanComponent component(Type componentType)
 }
 
 internal const class EfanExtraImpl : EfanExtra {
@@ -38,7 +38,7 @@ internal const class EfanExtraImpl : EfanExtra {
 		efanLibraries.library(componentType).renderComponent(componentType, initParams ?: Obj#.emptyList)
 	}
 
-	override EfanRenderer component(Type componentType) {
+	override EfanComponent component(Type componentType) {
 		library := efanLibraries.library(componentType) 
 		return componentCache.getOrMake(library.name, componentType)
 	}
