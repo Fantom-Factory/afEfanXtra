@@ -11,7 +11,7 @@ using afEfan::BaseEfanImpl
 @NoDoc
 const mixin ComponentCompiler {
 	
-	// TODO: change sig
+	// TODO: introduce efanSrc & efanSrcLoc
 //	abstract EfanComponent compile(Str libName, Type comType, Str efanSrc, Uri efanSrcLoc)
 	abstract EfanComponent compile(Str libName, Type comType, File efanFile)
 }

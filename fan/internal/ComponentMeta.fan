@@ -1,3 +1,5 @@
+using afIoc::NotFoundErr
+using afEfan::EfanErr
 
 @NoDoc
 const class ComponentMeta {
@@ -6,7 +8,7 @@ const class ComponentMeta {
 		methods := comType.methods.findAll { it.hasFacet(facetType) }
 
 		if (methods.size > 1)
-			throw Err("I only need the one, Fool!")	// FIXME: better Err msg
+			throw NotFoundErr(ErrMsgs.componentMetaTooManyMethods(comType, facetType), methods.map { it.name })
 
 		if (methods.size == 1)
 			return methods.first
@@ -21,15 +23,14 @@ const class ComponentMeta {
 		if (method == null)
 			return null
 		
-		at:=args.map { it.typeof }
-		if (!ReflectUtils.paramTypesFitMethodSignature(at, method))
-		// FIXME: better Err msg
-			throw Err("It don't fit, Fool!")
+		// FIXME: fantom topic - types := args.map |arg->Type| { arg.typeof }  types is Obj?[], not Type[]
+		types := (Type[]) args.map { it.typeof }
+		if (!ReflectUtils.paramTypesFitMethodSignature(types, method))
+			throw EfanErr()
 		
 		return method.callOn(instance, args)
 	}
-	
-	
+
 	Str methodSig(Type comType, Type facetType, Str extraParams := Str.defVal) {
 		initSig := findMethod(comType, facetType)?.params?.map { "${it.type.signature} ${it.name}" } ?: Str[,]
 		if (!extraParams.isEmpty)
