@@ -37,6 +37,14 @@ internal const class ErrMsgs {
 		"Could not find efan library for pod '${pod.name}'"
 	}
 
+	static Str componentMetaTooManyMethods(Type comType, Type facetType) {
+		"${comType.qname} should only have ONE method annotated with @${facetType.name}"
+	}
+
+	static Str componentMetaParamsDontFitMethod(Type[] types, Method method) {
+		"Param types [" + types.map { it.qname } + "] does not fit method signature: ${method.signature}"
+	}
+
 	static Str alienAidComponentTypo(Str lib, Str comName) {
 		"\n  ALIEN-AID: Did you mean: ${lib}.render${comName}(...) ???"
 	}
