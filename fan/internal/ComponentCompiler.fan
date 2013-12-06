@@ -106,10 +106,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 				throw err
 			
 			msg := ErrMsgs.alienAidComponentTypo(lib, comName)
-			// TODO: EfanCompilationErr.withXtraMsg() when efan 1.3.4 is released
-			linesOfPadding := (Int) EfanCompilationErr#.field("linesOfPadding").get(err)
-			newErr := (Err) EfanCompilationErr#.method("make").call(err.srcCode, err.errLineNo, err.msg + msg, linesOfPadding, err.cause)
-			throw newErr
+			throw err.withXtraMsg(msg)
 		}
 	}
 	

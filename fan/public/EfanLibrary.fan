@@ -9,33 +9,36 @@ const mixin EfanLibrary {
 	@NoDoc	@Inject abstract ComponentCache	componentCache
 	@NoDoc	@Inject abstract ComponentMeta	componentMeta
 	
-	Str renderComponent(Type componentType, Obj[] initParams) {
-		methodName	:= "render${componentType.name.capitalize}"
-		method		:= typeof.method(methodName)
-		
-		paramTypes	:= initParams.map { it.typeof }
-		if (!ReflectUtils.paramTypesFitMethodSignature(paramTypes, method))
-			throw Err("404 baby! TODO: better Err msg!")	// TODO: Err msg
-		
-		return method.callOn(this, initParams)
-	}
-	
-	
-	protected Str _af_renderComponent(Str libName, Type comType, Obj[] initArgs, |Obj?|? bodyFunc) {		
-		component := componentCache.getOrMake(libName, comType)
+	Str renderComponent(Type comType, Obj[] initArgs, |Obj?|? bodyFunc := null) {
+		component := componentCache.getOrMake(name, comType)
 
+		Env.cur.err.printLine(component.efanMetaData.efanSrcCode)
+		
 		rendered := RenderBufStack.push() |StrBuf renderBuf -> StrBuf| {
 			EfanRenderCtx.renderEfan(renderBuf, (EfanRenderer) component, (|->|?) bodyFunc) |->| {
 				ComponentCtx.push
-				componentMeta.callMethod(comType, InitRender#, component, initArgs)
-				componentMeta.callMethod(comType, BeforeRender#, component, [renderBuf])
-				((EfanRenderer) component)._af_render(null)
-				componentMeta.callMethod(comType, AfterRender#, component, [renderBuf])
+				
+				initRet := componentMeta.callMethod(comType, InitRender#, component, initArgs)
+				if (initRet == false)
+					return
+				
+				renderLoop := true
+				while (renderLoop) {
+					
+					b4Ret	:= componentMeta.callMethod(comType, BeforeRender#, component, [renderBuf])
+					if (b4Ret == false)
+						return
+					
+					((EfanRenderer) component)._af_render(null)
+					aftRet	:= componentMeta.callMethod(comType, AfterRender#, component, [renderBuf])
+					
+					renderLoop = (aftRet == false)
+				}
 			}
 			return renderBuf
 		}
 
-		return (RenderBufStack.peek(false) == null) ? rendered.toStr : Str.defVal		
+		// if the stack is empty, return the result of rendering
+		return (RenderBufStack.peek(false) == null) ? rendered.toStr : Str.defVal
 	}
-
 }

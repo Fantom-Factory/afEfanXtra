@@ -38,7 +38,7 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 			
 			args := (initMethod != null && !initMethod.params.isEmpty) ? (initMethod.params.join(",") { it.name }) : "," 
 			body := "args := [${args}]\n"
-			body += "return _af_renderComponent(\"${libName}\", ${comType.qname}#, args, bodyFunc)\n"
+			body += "return renderComponent(${comType.qname}#, args, bodyFunc)\n"
 			
 			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)
 		}
