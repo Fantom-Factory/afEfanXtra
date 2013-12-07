@@ -12,3 +12,10 @@ const mixin T_InitTrueOkay : EfanComponent {
 		true
 	}
 }
+
+@NoDoc
+const mixin T_InitReturnsObj : EfanComponent {
+	Obj? initRender() {
+		69
+	}
+}

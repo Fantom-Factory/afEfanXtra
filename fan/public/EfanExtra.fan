@@ -13,7 +13,9 @@ const mixin EfanExtra {
 
 	** Renders the given component. The component's 'initRender(...)' method is called with the 
 	** given 'initParams'.
-	abstract Str render(Type componentType, Obj[]? initParams := null)
+	** If the '@InitRender' method returns a non-null value, then that value is returned and rendering is aborted. 
+	** Otherwise the rendered Str is returned. 
+	abstract Obj? render(Type componentType, Obj[]? initParams := null)
 	
 	** Returns an instance of the component, cast to an 'EfanRenderer'.
 	abstract EfanComponent component(Type componentType)
@@ -34,7 +36,7 @@ internal const class EfanExtraImpl : EfanExtra {
 		efanLibraries.componentTypes(libraryName).sort
 	}
 
-	override Str render(Type componentType, Obj[]? initParams := null) {
+	override Obj? render(Type componentType, Obj[]? initParams := null) {
 		efanLibraries.library(componentType).renderComponent(componentType, initParams ?: Obj#.emptyList)
 	}
 

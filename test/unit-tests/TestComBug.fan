@@ -6,7 +6,7 @@ internal class TestComBug : EfanTest {
 	Void testComBug() {
 		Pod.find("afEfan").log.level = LogLevel.debug
 		
-		text := efanExtra.render(ComBug1#)
+		text := efanExtra.render(ComBug1#).toStr
 
 		verify(text.contains("ComBug1 - start body"))
 	}
