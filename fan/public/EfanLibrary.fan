@@ -8,8 +8,6 @@ const mixin EfanLibrary {
 	
 	@NoDoc	@Inject abstract ComponentCache	componentCache
 	@NoDoc	@Inject abstract ComponentMeta	componentMeta
-
-	// TODO: fitsInitRenderMethod(...)
 	
 	Obj? renderComponent(Type comType, Obj[] initArgs, |Obj?|? bodyFunc := null) {
 		component 	:= componentCache.getOrMake(name, comType)
@@ -50,25 +48,9 @@ const mixin EfanLibrary {
 			return (RenderBufStack.peek(false) == null) ? renderBuf.toStr : Str.defVal
 		return rendered
 	}
-}
 
-const class A2 : BaseEfanImpl {
-	
-	override EfanMetaData efanMetaData {
-		get { [,].first }
-		set {}
-	}
-	
-	override Void _af_render(Obj? _ctx) { }
-
-}
-
-class Example {
-	
-	Void main() {
-		dude:=#main.returns
-		echo(#main.returns)
-		echo(#main.returns == Void#)
-	}
-	
+	Bool fitsInitRenderMethod(Type comType, Type[] paramTypes) {
+		initMethod := componentMeta.findMethod(comType, InitRender#)
+		return ReflectUtils.paramTypesFitMethodSignature(paramTypes, initMethod)
+	}	
 }

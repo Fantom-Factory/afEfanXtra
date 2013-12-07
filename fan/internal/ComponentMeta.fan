@@ -23,7 +23,7 @@ const class ComponentMeta {
 		if (method == null)
 			return null
 		
-		// FIXME: fantom topic - types := args.map |arg->Type| { arg.typeof }  types is Obj?[], not Type[]
+		// Wot no type inference from List.map? - see http://fantom.org/sidewalk/topic/2217
 		types := (Type[]) args.map { it.typeof }
 		if (!ReflectUtils.paramTypesFitMethodSignature(types, method))
 			throw EfanErr()
