@@ -45,6 +45,10 @@ internal const class ErrMsgs {
 		"Param types [" + types.map { it.qname } + "] does not fit method signature: ${method.signature}"
 	}
 
+	static Str componentCompilerWrongReturnType(Method method, Type[] allowedReturnTypes) {
+		"Method '${method.returns.name} ${method.qname}' should return one of " + allowedReturnTypes.join(", ") { it.name }
+	}
+
 	static Str alienAidComponentTypo(Str lib, Str comName) {
 		"\n  ALIEN-AID: Did you mean: ${lib}.render${comName}(...) ???"
 	}

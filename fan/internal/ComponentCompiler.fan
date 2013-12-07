@@ -2,6 +2,7 @@ using afIoc::Inject
 using afIoc::Registry
 using afPlastic
 using afEfan::EfanCompiler
+using afEfan::EfanErr
 using afEfan::EfanRenderer
 using afEfan::EfanMetaData
 using afEfan::EfanCompilationErr
@@ -18,18 +19,31 @@ const mixin ComponentCompiler {
 
 internal const class ComponentCompilerImpl : ComponentCompiler {
 
+	@Inject	private const ComponentMeta				componentMeta
 	@Inject	private const EfanLibraries				efanLibraries
 	@Inject	private const EfanTemplateConverters	templateConverters
 	@Inject	private const Registry					registry
 	@Inject private const EfanCompiler 				efanCompiler
 			private const |PlasticClassModel|[]		compilerCallbacks
-	
+			private const Type[]					allowedReturnTypes 		:= [Void#, Bool#]
+
 	new make(|PlasticClassModel|[] compilerCallbacks, |This|in) { 
 		in(this) 
 		this.compilerCallbacks = compilerCallbacks
 	}
 
+	private Void voidy() { }
+	
 	override EfanComponent compile(Str libName, Type comType, File efanFile) {
+		before := componentMeta.findMethod(comType, BeforeRender#)
+		// FIXME: Fantom topic - where get Void() from ? 
+		if (!allowedReturnTypes.any {(before?.returns ?: ComponentCompilerImpl#voidy.returns).fits(it)} )
+			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(before, allowedReturnTypes))
+
+		after := componentMeta.findMethod(comType, AfterRender#)
+		if (!allowedReturnTypes.any {(after?.returns ?: ComponentCompilerImpl#voidy.returns).fits(it)} )
+			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(after, allowedReturnTypes))
+		
 		model := PlasticClassModel("${comType.name}Impl", true)
 		model.extendMixin(comType)
 
