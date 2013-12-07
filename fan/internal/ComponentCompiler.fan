@@ -32,16 +32,13 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		this.compilerCallbacks = compilerCallbacks
 	}
 
-	private Void voidy() { }
-	
 	override EfanComponent compile(Str libName, Type comType, File efanFile) {
 		before := componentMeta.findMethod(comType, BeforeRender#)
-		// FIXME: Fantom topic - where get Void() from ? 
-		if (!allowedReturnTypes.any {(before?.returns ?: ComponentCompilerImpl#voidy.returns).fits(it)} )
+		if (!allowedReturnTypes.any {(before?.returns ?: Void#).fits(it)} )
 			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(before, allowedReturnTypes))
 
 		after := componentMeta.findMethod(comType, AfterRender#)
-		if (!allowedReturnTypes.any {(after?.returns ?: ComponentCompilerImpl#voidy.returns).fits(it)} )
+		if (!allowedReturnTypes.any {(after?.returns ?: Void#).fits(it)} )
 			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(after, allowedReturnTypes))
 		
 		model := PlasticClassModel("${comType.name}Impl", true)
