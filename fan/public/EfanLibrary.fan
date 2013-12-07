@@ -63,19 +63,12 @@ const class A2 : BaseEfanImpl {
 
 }
 
-//class Example {
-//	
-//	Void main() {
-//		echo("sjsf")
-//		renderEfan(A2(), (|->|?) null) |->Obj?| {
-//			return true
-//		}
-//		Env.cur.err.printLine("done")
-//	}
-//	
-//	static Obj? renderEfan(BaseEfanImpl rendering, |->|? bodyFunc, |->Obj?| func) {
-////		EfanCtxStack.withCtx("") |EfanCtxStackElement element| {
-//			return ((|Obj?|) func).call(69)
-////		}
-//	}
-//}
+class Example {
+	
+	Void main() {
+		dude:=#main.returns
+		echo(#main.returns)
+		echo(#main.returns == Void#)
+	}
+	
+}
