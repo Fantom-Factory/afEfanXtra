@@ -176,6 +176,11 @@ Release Notes [#releaseNotes]
 v0.0.10 [#v0.0.10]
 ------------------
  - New: Added '@Abstract' facet to mark base components.
+ - New: Mutable templates
+ @InitRender ret values
+ @BeforeRender
+ @AfterRender
+
 
 v0.0.8 [#v0.0.8]
 ----------------
