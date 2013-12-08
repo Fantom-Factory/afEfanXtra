@@ -5,7 +5,7 @@ using afPlastic
 
 internal class EfanTest : Test {
 	Registry? 	reg
-	EfanExtra?	efanExtra
+	EfanXtra?	efanXtra
 	
 	Void verifyEfanErrMsg(Str errMsg, |Obj| func) {
 		verifyErrTypeMsg(EfanErr#, errMsg, func)
@@ -29,7 +29,7 @@ internal class EfanTest : Test {
 	override Void setup() {
 		try {
 			reg 		= RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#]).build.startup
-			efanExtra	= reg.dependencyByType(EfanExtra#)
+			efanXtra	= reg.dependencyByType(EfanXtra#)
 			
 		} catch (PlasticCompilationErr pce) {
 			Env.cur.err.printLine(pce.print("Ooops", 50))

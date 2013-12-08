@@ -1,7 +1,7 @@
 using afIoc
 
 @NoDoc
-@SubModule { modules=[EfanExtraModule#]} 
+@SubModule { modules=[EfanXtraModule#]} 
 class EfanAppModule {
 	
 	static Void bind(ServiceBinder binder) {

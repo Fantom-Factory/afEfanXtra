@@ -1,7 +1,7 @@
 using afEfan::EfanRenderer
 
 ** Allows you to explicitly set a template for your component.
-** By default, 'afEfanExtra' looks for an efan template with the same name as the component class. 
+** By default, 'afEfanXtra' looks for an efan template with the same name as the component class. 
 @FacetMeta { inherited = true }
 facet class EfanTemplate {	
 

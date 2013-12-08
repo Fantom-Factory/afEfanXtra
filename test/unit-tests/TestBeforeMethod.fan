@@ -4,13 +4,13 @@ using afEfan
 internal class TestBeforeMethod : EfanTest {
 	
 	Void testBeforeFalseAborts() {
-		text := efanExtra.render(T_BeforeFalseAborts#)
+		text := efanXtra.render(T_BeforeFalseAborts#)
 		verifyEq(text, "")
 	}
 
 	Void testBeforeTrueOkay() {
 		try {
-		text := efanExtra.render(T_BeforeTrueOkay#)
+		text := efanXtra.render(T_BeforeTrueOkay#)
 		verifyEq(text, "Hello!")
 			
 		} catch(Err e) {
@@ -22,13 +22,13 @@ internal class TestBeforeMethod : EfanTest {
 
 	Void testBeforeNonBool() {
 		verifyErrTypeMsg(EfanErr#, ErrMsgs.componentCompilerWrongReturnType(T_BeforeNonBool#beforeRender, [Void#, Bool#])) {
-			efanExtra.render(T_BeforeNonBool#)
+			efanXtra.render(T_BeforeNonBool#)
 		}
 	}
 
 	Void testAfterNonBool() {
 		verifyErrTypeMsg(EfanErr#, ErrMsgs.componentCompilerWrongReturnType(T_AfterNonBool#afterRender, [Void#, Bool#])) {
-			efanExtra.render(T_AfterNonBool#)
+			efanXtra.render(T_AfterNonBool#)
 		}
 	}
 

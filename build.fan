@@ -3,21 +3,21 @@ using build::BuildPod
 class Build : BuildPod {
 
 	new make() {
-		podName = "afEfanExtra"
+		podName = "afEfanXtra"
 		summary = "A library for creating reusable Embedded Fantom (efan) components"
 		version = Version([0,0,9])
 
 		meta	= [ "org.name"		: "Alien-Factory",
 					"org.uri"		: "http://www.alienfactory.co.uk/",
-					"vcs.uri"		: "https://bitbucket.org/AlienFactory/afefanextra",
-					"proj.name"		: "EfanExtra",
+					"vcs.uri"		: "https://bitbucket.org/AlienFactory/afefanxtra",
+					"proj.name"		: "Efan Xtra",
 					"license.name"	: "BSD 2-Clause License",
 					"repo.private"	: "true"
 
-					,"afIoc.module" : "afEfanExtra::EfanExtraModule"
+					,"afIoc.module" : "afEfanXtra::EfanXtraModule"
 				]
 
-		index = [ "afIoc.module"	: "afEfanExtra::EfanExtraModule"
+		index = [ "afIoc.module"	: "afEfanXtra::EfanXtraModule"
 				]
 
 		depends = ["sys 1.0", "concurrent 1.0", "build 1.0",

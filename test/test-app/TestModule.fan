@@ -1,6 +1,6 @@
 using afIoc
 
-@SubModule { modules=[EfanExtraModule#]} 
+@SubModule { modules=[EfanXtraModule#]} 
 internal class TestModule {
 	
 	static Void bind(ServiceBinder binder) {

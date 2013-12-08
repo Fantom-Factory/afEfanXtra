@@ -2,7 +2,7 @@ using afIoc::Inject
 using afEfan::EfanRenderer
 
 ** (Service) - Service methods for discovering and rendering efan components.
-const mixin EfanExtra {
+const mixin EfanXtra {
 
 	** Returns the names of all contributed efan component libraries.
 	abstract Str[]	libraries()
@@ -21,7 +21,7 @@ const mixin EfanExtra {
 	abstract EfanComponent component(Type componentType)
 }
 
-internal const class EfanExtraImpl : EfanExtra {
+internal const class EfanXtraImpl : EfanXtra {
 
 	@Inject	private const EfanLibraries efanLibraries
 	@Inject	private const ComponentCache componentCache
