@@ -8,7 +8,7 @@ to encapsulate model / view behaviour.
 [afIoc]`http://repo.status302.com/doc/afIoc/#overview` and works great with [afSlim]`http://repo.status302.com/browse/afSlim`.
 
 'efanXtra' works great in a web / afBedSheet environment, with URLs being automatically mapped to components (see
-[afBedSheetEfanExtra]`http://repo.status302.com/doc/afBedSheetEfanExtra/#overview`), but is presented here context free.
+[afPillow]`http://repo.status302.com/doc/afPillow/#overview`), but is presented here context free.
 
 
 
@@ -198,7 +198,7 @@ v0.0.4 [#v0.0.4]
  - New: Component templates can be specified via the '@Component.template' field.
  - New: Added a contributable 'EfanTemplateFinders' service.
  - New: Ability to supress startup log messages.
- - New: Added compiler hooks (mainly for [afBedSheetEfanExtra]`http://repo.status302.com/doc/afBedSheetEfanExtra/#overview`).
+ - New: Added compiler hooks (mainly for [afPillow]`http://repo.status302.com/doc/afPillow/#overview`).
  - New: 'efanXtra.component()' returns component instances.
  - Chg: '@Component' facet is inherited.
 

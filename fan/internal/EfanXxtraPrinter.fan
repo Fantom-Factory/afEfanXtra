@@ -1,7 +1,7 @@
 using afIoc::Inject
 using afIocConfig::Config
 
-** Used by afBedSheetEfanExtra
+** Used by afPillow
 @NoDoc
 const class EfanXtraPrinter {
 	private const static Log log := Utils.getLog(EfanXtraPrinter#)
