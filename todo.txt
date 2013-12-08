@@ -20,5 +20,5 @@ For Future
 Naa - It's a Bad Idea
 =====================
 
-Don't have events / method callers in efanExtra - it should be purely templating 
+Don't have events / method callers in efanXtra - it should be purely templating 
  - by all means have hooks to call methods but no more

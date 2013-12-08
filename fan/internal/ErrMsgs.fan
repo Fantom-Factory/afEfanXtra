@@ -10,11 +10,11 @@ internal const class ErrMsgs {
 	}
 
 	static Str componentNotMixin(Type type) {
-		"EfanExtra component ${type.qname} is NOT a mixin"
+		"EfanXtra component ${type.qname} is NOT a mixin"
 	}
 
 	static Str componentNotConst(Type type) {
-		"EfanExtra component ${type.qname} is NOT const"
+		"EfanXtra component ${type.qname} is NOT const"
 	}
 
 	static Str libraryNameNotValid(Str libName) {

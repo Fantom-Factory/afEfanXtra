@@ -1,6 +1,6 @@
-# EfanExtra
+# EfanXtra
 
-`afEfanExtra` is a [Fantom](http://fantom.org/) library for creating reusable [Embedded Fantom (efan)](https://bitbucket.org/AlienFactory/afefan) components. It pairs up Fantom classes and efan templates 
+`efanXtra` is a [Fantom](http://fantom.org/) library for creating reusable [Embedded Fantom (efan)](https://bitbucket.org/AlienFactory/afefan) components. It pairs up Fantom classes and efan templates 
 to encapsulate model / view behaviour.
 
 
@@ -22,7 +22,7 @@ Overdue.efan:
 Overdue.fan:
 
     using afIoc
-    using afEfanExtra
+    using afEfanXtra
 
     @Component
     const mixin Overdue {
@@ -48,7 +48,7 @@ AppModule.fan:
 
     using afIoc
 
-    @SubModule { modules=[EfanExtraModule#]}
+    @SubModule { modules=[EfanXtraModule#]}
     class AppModule {
 
       static Void bind(ServiceBinder binder) {
@@ -65,24 +65,24 @@ AppModule.fan:
 
 Then to render a component:
 
-    efanExtra.render(Overdue#, "Mr Smith")
+    efanXtra.render(Overdue#, "Mr Smith")
 
 
 
 ## Documentation
 
-Full API & fandocs are available on the [status302 repository](http://repo.status302.com/doc/afEfanExtra/#overview).
+Full API & fandocs are available on the [status302 repository](http://repo.status302.com/doc/afEfanXtra/#overview).
 
 
 
 ## Install
 
-Download from [status302](http://repo.status302.com/browse/afEfanExtra).
+Download from [status302](http://repo.status302.com/browse/afEfanXtra).
 
 Or install via fanr:
 
-    $ fanr install -r http://repo.status302.com/fanr/ afEfanExtra
+    $ fanr install -r http://repo.status302.com/fanr/ afEfanXtra
 
 To use in a project, add a dependency in your `build.fan`:
 
-    depends = ["sys 1.0", ..., "afEfanExtra 0+"]
+    depends = ["sys 1.0", ..., "afEfanXtra 0+"]

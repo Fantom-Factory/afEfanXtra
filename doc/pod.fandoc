@@ -1,13 +1,13 @@
 Overview [#overview]
 ********************
-'afEfanExtra' is a library for creating managed libraries of reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview`
+'efanXtra' is a library for creating managed libraries of reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview`
 components. Influenced by Java's [Tapestry 5]`http://tapestry.apache.org/index.html`, it pairs up Fantom classes and efan templates
 to encapsulate model / view behaviour.
 
-'afEfanExtra' extends [afEfan]`http://repo.status302.com/doc/afEfan/#overview`, is powered by
+'efanXtra' extends [afEfan]`http://repo.status302.com/doc/afEfan/#overview`, is powered by
 [afIoc]`http://repo.status302.com/doc/afIoc/#overview` and works great with [afSlim]`http://repo.status302.com/browse/afSlim`.
 
-'afEfanExtra' works great in a web / afBedSheet environment, with URLs being automatically mapped to components (see
+'efanXtra' works great in a web / afBedSheet environment, with URLs being automatically mapped to components (see
 [afBedSheetEfanExtra]`http://repo.status302.com/doc/afBedSheetEfanExtra/#overview`), but is presented here context free.
 
 
@@ -30,7 +30,7 @@ Please return them at your convenience.
 Overdue.fan:
 pre>
 using afIoc
-using afEfanExtra
+using afEfanXtra
 
 @Component
 const mixin Overdue {
@@ -74,9 +74,9 @@ class AppModule {
 
 Then to render a component:
 
-  efanExtra.render(Overdue#, "Mr Smith")
+  efanXtra.render(Overdue#, "Mr Smith")
 
-Full example source code available on [BitBucket]`https://bitbucket.org/AlienFactory/afefanextra/src/default/test/example/`.
+Full example source code available on [BitBucket]`https://bitbucket.org/AlienFactory/afefanxtra/src/default/test/example/`.
 
 
 
@@ -145,13 +145,13 @@ In the example above, the library (in a field named 'app') has 2 render methods,
 
 Use with Slim [#useSlim]
 **************************
-'afEfanExtra' works great with [afSlim]`http://repo.status302.com/browse/afSlim`! Add the following to your 'AppModule'
-and 'afEfanExtra' will automatically pick up component templates with the extenstion '.slim':
+'efanXtra' works great with [slim]`http://repo.status302.com/browse/afSlim`! Add the following to your 'AppModule'
+and 'efanXtra' will automatically pick up component templates with the extenstion '.slim':
 
 pre>
 using afIoc
 using afSlim
-using afEfanExtra
+using afEfanXtra
 
 class AppModule {
 
@@ -199,7 +199,7 @@ v0.0.4 [#v0.0.4]
  - New: Added a contributable 'EfanTemplateFinders' service.
  - New: Ability to supress startup log messages.
  - New: Added compiler hooks (mainly for [afBedSheetEfanExtra]`http://repo.status302.com/doc/afBedSheetEfanExtra/#overview`).
- - New: 'EfanExtra.component()' returns component instances.
+ - New: 'efanXtra.component()' returns component instances.
  - Chg: '@Component' facet is inherited.
 
 v0.0.2 [#v0.0.2]

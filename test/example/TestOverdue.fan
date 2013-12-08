@@ -7,13 +7,13 @@ class TestOverdue : Test {
 	Void testOverdue() {
 		registry  := (Registry) RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#]).build.startup
 		
-		efanExtra := (EfanExtra) registry.dependencyByType(EfanExtra#)
-		overdue	  := efanExtra.render(Overdue#, ["Mr Smith"])
+		efanXtra := (EfanXtra) registry.dependencyByType(EfanXtra#)
+		overdue	  := efanXtra.render(Overdue#, ["Mr Smith"])
 		
 		echo("[${overdue}]")
 		verifyEq(overdue, `test/example/letter.txt`.toFile.readAllStr)
 		
-		if (Actor.locals["efanExtra.componentCtx"] != null) {
+		if (Actor.locals["efanXtra.componentCtx"] != null) {
 			afIoc::IocHelper.locals.each |val, key| {
 				Env.cur.err.printLine("$key = $val")
 			}

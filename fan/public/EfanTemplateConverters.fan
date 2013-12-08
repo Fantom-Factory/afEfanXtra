@@ -12,7 +12,7 @@ using afEfan::EfanErr
 ** 
 ** pre>
 ** using afSlim::Slim
-** using afEfanExtra::EfanTemplateConverters
+** using afEfanXtra::EfanTemplateConverters
 ** 
 ** ...
 ** 

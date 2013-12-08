@@ -3,10 +3,10 @@ using afIocConfig::Config
 
 ** Used by afBedSheetEfanExtra
 @NoDoc
-const class EfanExtraPrinter {
-	private const static Log log := Utils.getLog(EfanExtraPrinter#)
+const class EfanXtraPrinter {
+	private const static Log log := Utils.getLog(EfanXtraPrinter#)
 
-	@Inject private	const EfanExtra 		efanExtra
+	@Inject private	const EfanXtra 			efanXtra
 	@Inject private	const ComponentMeta		componentMeta
 	
 	@Config { id="afEfan.supressStartupLogging" }
@@ -19,7 +19,7 @@ const class EfanExtraPrinter {
 			return
 
 		details := "\n"
-		efanExtra.libraries.each |libName| {
+		efanXtra.libraries.each |libName| {
 			details += libraryDetailsToStr(libName) { true }
 		}
 
@@ -28,7 +28,7 @@ const class EfanExtraPrinter {
 
 	Str libraryDetailsToStr(Str libName, |Type component->Bool| filter) {
 		buf		 := StrBuf()
-		comTypes := efanExtra.componentTypes(libName).findAll(filter)
+		comTypes := efanXtra.componentTypes(libName).findAll(filter)
 		
 		maxName	 := (Int) comTypes.reduce(0) |size, component| { ((Int) size).max(component.name.toDisplayName.size) }
 		buf.add("\nEfan Library: '${libName}' has ${comTypes.size} components:\n")

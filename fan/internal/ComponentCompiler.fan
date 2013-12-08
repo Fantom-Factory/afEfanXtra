@@ -82,7 +82,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			}
 
 			if (!model.hasField(field.name)) {
-				newField := model.overrideField(field, """afEfanExtra::ComponentCtx.peek.getVariable("${field.name}")""", """afEfanExtra::ComponentCtx.peek.setVariable("${field.name}", it)""")
+				newField := model.overrideField(field, """afEfanXtra::ComponentCtx.peek.getVariable("${field.name}")""", """afEfanXtra::ComponentCtx.peek.setVariable("${field.name}", it)""")
 				field.facets.each { newField.addFacetClone(it) }
 			}
 		}

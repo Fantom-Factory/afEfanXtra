@@ -18,7 +18,7 @@ using afEfan::EfanCompiler
 ** The [afIoc]`http://repo.status302.com/doc/afIoc/#overview` module class.
 ** 
 ** This class is public so it may be referenced explicitly in tests.
-const class EfanExtraModule {
+const class EfanXtraModule {
 
 	internal static Void bind(ServiceBinder binder) {
 		binder.bindImpl(ComponentFinder#)
@@ -27,9 +27,9 @@ const class EfanExtraModule {
 		binder.bindImpl(ComponentMeta#)
 		binder.bindImpl(EfanLibraryCompiler#)
 		binder.bindImpl(EfanLibraries#)
-		binder.bindImpl(EfanExtraPrinter#)
+		binder.bindImpl(EfanXtraPrinter#)
 		
-		binder.bindImpl(EfanExtra#).withoutProxy
+		binder.bindImpl(EfanXtra#).withoutProxy
 		binder.bindImpl(EfanTemplateConverters#)
 		binder.bindImpl(EfanTemplateDirectories#)
 		binder.bindImpl(EfanTemplateFinders#)
@@ -70,7 +70,7 @@ const class EfanExtraModule {
 	}
 	
 	@Contribute { serviceType=RegistryStartup# }
-	internal static Void contributeRegistryStartup(OrderedConfig conf, EfanExtraPrinter efanPrinter) {
+	internal static Void contributeRegistryStartup(OrderedConfig conf, EfanXtraPrinter efanPrinter) {
 		conf.add |->| {
 			efanPrinter.logLibraries
 		}

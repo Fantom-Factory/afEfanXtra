@@ -3,7 +3,7 @@ using afEfan::EfanErr
 ** (Service) - Contribute directories that may contain efan / slim templates.
 ** 
 ** pre>
-** using afEfanExtra::EfanTemplateDirectories
+** using afEfanXtra::EfanTemplateDirectories
 ** 
 ** ...
 ** 

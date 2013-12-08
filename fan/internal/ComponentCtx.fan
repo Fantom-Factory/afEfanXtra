@@ -30,10 +30,10 @@ class ComponentCtx {
 	// ---- static methods ----
 
 	static ComponentCtx peek() {
-		EfanCtxStack.peek.ctx["efanExtra.componentCtx"]
+		EfanCtxStack.peek.ctx["efanXtra.componentCtx"]
 	}
 	
 	static Void push() {
-		EfanCtxStack.peek.ctx["efanExtra.componentCtx"] = ComponentCtx()
+		EfanCtxStack.peek.ctx["efanXtra.componentCtx"] = ComponentCtx()
 	}
 }
