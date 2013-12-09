@@ -1,4 +1,4 @@
 
 ** This should not be recognised as a component.
-@Abstract
+@NoDoc @Abstract
 const mixin T_MyBaseComponent : EfanComponent { }

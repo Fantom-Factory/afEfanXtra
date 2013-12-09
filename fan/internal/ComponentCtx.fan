@@ -36,4 +36,9 @@ class ComponentCtx {
 	static Void push() {
 		EfanCtxStack.peek.ctx["efanXtra.componentCtx"] = ComponentCtx()
 	}
+	
+	Void main(Str[] args) {
+		echo(this.typeof.pod.version)
+	}
+	
 }

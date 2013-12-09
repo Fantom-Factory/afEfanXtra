@@ -1,14 +1,15 @@
 Overview [#overview]
 ********************
-'efanXtra' is a library for creating managed libraries of reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview`
-components. Influenced by Java's [Tapestry 5]`http://tapestry.apache.org/index.html`, it pairs up Fantom classes and efan templates
+'efanXtra' creates managed libraries of reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview`
+components. Influenced by Java's [Tapestry 5]`http://tapestry.apache.org/index.html`, it pairs up Fantom classes and efan template files
 to encapsulate model / view behaviour.
 
 'efanXtra' extends [afEfan]`http://repo.status302.com/doc/afEfan/#overview`, is powered by
-[afIoc]`http://repo.status302.com/doc/afIoc/#overview` and works great with [afSlim]`http://repo.status302.com/browse/afSlim`.
+[afIoc]`http://repo.status302.com/doc/afIoc/#overview` and works great with [Slim]`http://repo.status302.com/browse/afSlim` templates.
 
-'efanXtra' works great in a web / afBedSheet environment, with URLs being automatically mapped to components (see
-[afPillow]`http://repo.status302.com/doc/afPillow/#overview`), but is presented here context free.
+'efanXtra' excels in a web / BedSheet environment, where URLs are automatically mapped to efan components (see
+[Pillow]`http://repo.status302.com/doc/afPillow/#overview`), but is presented here context free for maximum reuse.
+Think email, code generation, blog posts, etc...
 
 
 
@@ -32,21 +33,22 @@ pre>
 using afIoc
 using afEfanXtra
 
-@Component
-const mixin Overdue {
+const mixin Overdue : EfanComponent {
 
   // use afIoc services!
-  @Inject abstract DvdService? dvdService
+  @Inject
+  abstract DvdService? dvdService
 
-  // template can access mixin fields
+  // mixin fields can be accessed by the template
   abstract Str? userName
 
-  // called before the component is rendered
-  Void initialise(Str userName) {
+  // use lifecycle methods to initialise your components
+  @InitRender
+  Void initRender(Str userName) {
     this.userName = userName
   }
 
-  // methods may be called from the template
+  // mixin methods can be called from the template
   Str[] dvds() {
     dvdService.findByName(userName)
   }
@@ -72,7 +74,7 @@ class AppModule {
 }
 <pre
 
-Then to render a component:
+Then to render an efan component:
 
   efanXtra.render(Overdue#, "Mr Smith")
 
@@ -82,40 +84,43 @@ Full example source code available on [BitBucket]`https://bitbucket.org/AlienFac
 
 Components [#components]
 ************************
-An efan component consists of a Fantom 'const mixin' class and a corresponding efan template file.
+An efan component consists of a 'const mixin' Fantom class and a corresponding efan template file.
+
+'efanXtra' does away with [efan's]`http://repo.status302.com/doc/afEfan/#overview` ctx variable and instead lets the template
+access fields and methods of the component class directly.
 
 Mixins [#mixins]
 ================
+Component mixins must be 'const' and extend the `EfanComponent` mixin.
 
-Component mixins must be annotated with the '@Component' facet.
+All fields and methods of the mixin are directly accessible in the template. Components are created by
+[afIoc]`http://repo.status302.com/doc/afIoc/#overview` so feel free to '@Inject' services just as you would in a service class.
 
-All fields and methods of the mixin are directly accessible in the template. You can even use afIoc's '@Inject' facet to
-inject services just as you would in a service class.
+Any non-private method or field in your mixin is visible from your template code.
 
-Use an 'initialise()' method to pass state into an efan component (the efan 'ctx' variable is not used). Only one 'initialise()'
-method is allowed. It must be named 'initialise' but may take any number of parameters.
+See [Lifecycle Methods]`#lifecycle` for how to initialise and pass data into your components.
 
 Templates [#templates]
 ======================
 By default, the template file has the same name as the component (with a '.efan' extension) and lives anywhere in a pod
-resource dir. Example component files:
+resource dir. For example, if you were to create a component called 'Layout', you may have the following files:
 
   /fan/components/Layout.fan
   /fan/components/Layout.efan
 
-Ensure '/fan/components/' is listed in your 'build.fan' as a resDir.
+Be sure to add '/fan/components/' as a 'resDir' in your 'build.fan'.
 
 > **ALIEN-AID:** Note resource directories in your 'build.fan' are NOT nested. Adding 'res/' will NOT add
-> '/res/components/' - '/res/components/' would need to be added seperately. Example:
+> '/res/components/' - '/res/components/' needs to be added separately. Example:
 
   resDirs = [`doc/`, `res/`, `res/components/`]
 
-If you wish the template to have a different name to the Fantom class, then you can set an explicit 'Uri' with the 'template'
-field on '@Component'. Example:
+If you wish the template to have a different name to the Fantom class, set an explicit 'Uri' with the
+[@EfanTemplate]`EfanTemplate` facet. Example:
 
 pre>
-  @Component { template=`fan://acmePod/templates/Notice.efan` }
-  const mixin Overdue {
+  @EfanTemplate { uri=`fan://acmePod/templates/Notice.efan` }
+  const mixin Overdue : EfanComponent {
     ...
   }
 <pre
@@ -124,29 +129,118 @@ pre>
 
 Libraries [#libraries]
 **********************
-Components are managed in libraries. To package up your components, add to the following to your app module:
+Components are organised by libraries. A library encompasses all components within a pod.
+To use your efan components, you need add your pod as a library. Do this in your 'AppModule':
+
+pre>
+using afIoc
+using afEfanXtra
+
+class AppModule {
+
+  ...
 
   @Contribute { serviceType=EfanLibraries# }
   static Void contributeEfanLibraries(MappedConfig config) {
 
-    // contribute all components in the pod as a library named 'app'
+    // contribute all components in the same pod as AppModule, as a library called 'app'
     config["app"] = AppModule#.pod
   }
+}
+<pre
 
 Library classes are automatically added as fields in your components. Library classes contain component render methods.
-In the example above, the library (in a field named 'app') has 2 render methods, available to your templates:
+In the example above, the library (in a field named 'app') would bave 2 render methods, available for use in your templates:
 
    app.renderOverdue(Str userName)
    app.renderSignOff(Str who)
+
+This allows you to render components from within templates by calling '<libName>.render<ComponentName>(...)'
 
 > **ALIEN-AID:** Library render methods are logged at registry startup so you don't have to remember them!
 
 
 
+Lifecycle Methods [#lifecycle]
+******************************
+Components can be thought of as having a lifecycle. Components can be made aware of the lifecycle by annotating callback
+methods with lifecycle facets. The lifecycle only exists for the duration of the render.
+
+![efanXtra Component Lifecycle]`http://static.alienfactory.co.uk/fantom-docs/lifecycle.png`
+
+@InitRender [#initRender]
+=========================
+A method annotated with [@InitRender]`InitRender` will be called before any other. It allows you to initialise and prepare
+your component for rendering.
+
+The '@InitRender' may take any parameters, the signature will be mimicked by the containing library's render method. Example,
+if your '@InitRender' looks like:
+
+  const mixin MyComponent : EfanComponent {
+
+    @InitRender
+    Obj? initRender(Int x, Str y) { ... }
+
+    ...
+  }
+
+then the library render method will look like:
+
+  Obj? renderMyComponent(Int x, Str y) { ... }
+
+This lets you pass any arguments you want into your components.
+
+'@InitRender' methods may return any object. If defined as 'Void' or it returns 'null' or 'true' then rendering continues as
+normal. Any other object aborts the rendering and is passed back via the library render method.
+
+@BeforeRender [#beforeRender]
+=============================
+A method annotated with [@BeforeRender]`BeforeRender` is invoked after '@InitRender' but before any template rendering. It may
+optionally take a 'StrBuf' as a parameter, this will hold the contents of the current render buffer.
+
+'@InitRender' methods may return 'Bool'. If 'true', the template is rendered as usual. If 'false', template rendering is skipped.
+
+@AfterRender [#afterRender]
+===========================
+A method annotated with [@AfterRender]`AfterRender` is invoked after the template has rendered. It may
+optionally take a 'StrBuf' as a parameter, this will hold the contents of the current render buffer.
+
+'@AfterRender' methods may return 'Bool'. If 'true', the template is rendered as usual. If 'false', template rendering is skipped.
+
+
+
+Render Variables [#renderVariables]
+***********************************
+Efan components can store state! Components may be 'const' and they may be 'mixins', but they can still store variables that
+can be accessed and used by the rendering template. Taking the [Overdue]`#overview` component as an example:
+
+Overdue.fan:
+pre>
+using afEfanXtra
+
+const mixin Overdue : EfanComponent {
+
+  abstract Str? userName
+
+  @InitRender
+  Void initRender(Str userName) {
+    this.userName = userName
+  }
+}
+<pre
+
+'userName' is a render variable used by the efan template. Before 'initRender()' is called, all render variables are reset to 'null'
+(hence they need to be 'nullable'). They may then be initialised during 'initRender()', and used and / or reset at any other point in
+the rendering lifecycle.
+
+Note that state is *not* preserved between different renderings of the component.
+
+
+
 Use with Slim [#useSlim]
-**************************
-'efanXtra' works great with [slim]`http://repo.status302.com/browse/afSlim`! Add the following to your 'AppModule'
-and 'efanXtra' will automatically pick up component templates with the extenstion '.slim':
+************************
+'efanXtra' works great with [Slim]`http://repo.status302.com/browse/afSlim`! Just add the following to your 'AppModule'
+and 'efanXtra' will automatically pick up component templates with the extension '.slim':
 
 pre>
 using afIoc
@@ -161,9 +255,7 @@ class AppModule {
 
   @Contribute { serviceType=EfanTemplateConverters# }
   internal static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
-    config["slim"] = |File file -> Str| {
-      slim.parseFromFile(file)
-    }
+    config["slim"] = |File file -> Str| { slim.parseFromFile(file) }
   }
 }
 <pre
@@ -173,14 +265,13 @@ class AppModule {
 Release Notes [#releaseNotes]
 *****************************
 
-v0.0.10 [#v0.0.10]
-------------------
+v1.0.0 [#v1.0.0]
+----------------
+ - New: Introduced component lifecycle methods: [@InitRender]`InitRender`, [@BeforeRender]`BeforeRender` & [AfterRender]`AfterRender`.
  - New: Added '@Abstract' facet to mark base components.
- - New: Mutable templates
- @InitRender ret values
- @BeforeRender
- @AfterRender
-
+ - Chg: Template rendering is held in a single mutable 'StrBuf' so it may be manipulated by lifecycle methods.
+ - Chg: Components are now defined by extending 'EfanComponent', not by annotating with a '@Component' facet.
+ - Chg: Renamed to 'efanXtra' (from 'efanExtra').
 
 v0.0.8 [#v0.0.8]
 ----------------
@@ -197,7 +288,7 @@ v0.0.4 [#v0.0.4]
 ----------------
  - New: Component templates can be specified via the '@Component.template' field.
  - New: Added a contributable 'EfanTemplateFinders' service.
- - New: Ability to supress startup log messages.
+ - New: Ability to suppress startup log messages.
  - New: Added compiler hooks (mainly for [afPillow]`http://repo.status302.com/doc/afPillow/#overview`).
  - New: 'efanXtra.component()' returns component instances.
  - Chg: '@Component' facet is inherited.

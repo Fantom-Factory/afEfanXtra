@@ -1,6 +1,6 @@
 using afEfan::EfanErr
 
-** (Service) - Contribute to convert files to efan templates. 
+** (Service) - Contribute functions that convert files to efan templates. 
 ** 
 ** Some templates, such as [afSlim]`http://repo.status302.com/doc/afSlim/#overview`, need to be 
 ** pre-processed / converted to efan notation before they can be compiled into components. Do this
@@ -43,7 +43,7 @@ const mixin EfanTemplateConverters {
 }
 
 internal const class EfanTemplateConvertersImpl : EfanTemplateConverters {
-	
+
 	private const Str:|File->Str| converters
 	
 	new make(Str:|File->Str| converters) {

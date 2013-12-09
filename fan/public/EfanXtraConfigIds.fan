@@ -1,16 +1,20 @@
 
-** Config values as used by Efan. 
+** Config values as used by EfanXtra. 
 ** To change their value, override them in your 'AppModule'. Example:
 ** 
 ** pre>
-** @Contribute { serviceType=ApplicationDefaults# } 
-** static Void configureAppDefaults(MappedConfig conf) {
+** using afIocConfig
 ** 
-**   conf[EfanConfigIds.templateTimeout] = 1min
+** class AppModule {
+**   ...
 ** 
-** }
+**   @Contribute { serviceType=ApplicationDefaults# } 
+**   static Void configureAppDefaults(MappedConfig conf) {
+** 
+**     conf[EfanXtraConfigIds.templateTimeout] = 1min
+**   }
 ** <pre
-const mixin EfanConfigIds {
+const mixin EfanXtraConfigIds {
 
 	** The time before the file system is checked for template updates.
 	** Defaults to '10sec'

@@ -43,7 +43,7 @@ internal class ReflectUtils {
 		}
 	}
 
-	static Bool paramTypesFitMethodSignature(Type[] params, Method method) {
+	static Bool paramTypesFitMethodSignature(Type[] params, Method? method) {
 		return method.params.all |methodParam, i->Bool| {
 			if (i >= params.size)
 				return methodParam.hasDefault
