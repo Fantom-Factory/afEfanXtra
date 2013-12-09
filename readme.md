@@ -5,6 +5,18 @@ to encapsulate model / view behaviour.
 
 
 
+## Install
+
+Download from [status302](http://repo.status302.com/browse/afEfanXtra) and copy to `%FAN_HOME/lib/fan/` or install via [fanr](http://fantom.org/doc/docFanr/Tool.html#install):
+
+    $ fanr install -r http://repo.status302.com/fanr/ afEfanXtra
+
+To use in a [Fantom](http://fantom.org/) project, add a dependency in your `build.fan`:
+
+    depends = ["sys 1.0", ..., "afEfanXtra 1+"]
+
+
+
 ## Quick Start
 
 Overdue.efan:
@@ -72,17 +84,3 @@ Then to render a component:
 ## Documentation
 
 Full API & fandocs are available on the [status302 repository](http://repo.status302.com/doc/afEfanXtra/#overview).
-
-
-
-## Install
-
-Download from [status302](http://repo.status302.com/browse/afEfanXtra).
-
-Or install via fanr:
-
-    $ fanr install -r http://repo.status302.com/fanr/ afEfanXtra
-
-To use in a project, add a dependency in your `build.fan`:
-
-    depends = ["sys 1.0", ..., "afEfanXtra 0+"]
