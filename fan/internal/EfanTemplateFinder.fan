@@ -55,7 +55,7 @@ internal const class FindEfanByTypeNameOnFileSystem : EfanTemplateFinder {
 		pageName	:= componentType.name.lower
 		
 		return templateDirectories.templateDirs.eachWhile |templateDir->File?| {
-			templateDir.listFiles.findAll { templateConverters.canConvert(it) }.find |file->Bool| {
+			return templateDir.listFiles.findAll { templateConverters.canConvert(it) }.find |file->Bool| {
 				fileName	:= baseName(file)
 				if (fileName == pageName)
 					return true
