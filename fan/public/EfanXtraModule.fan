@@ -39,7 +39,7 @@ const class EfanXtraModule {
 	internal static EfanCompiler buildEfanCompiler(IocConfigSource configSrc, PlasticCompiler plasticCompiler) {
 		// rely on afBedSheet to set srcCodePadding in PlasticCompiler (to be picked up by EfanCompiler) 
 		EfanCompiler(plasticCompiler) {
-			it.rendererClassName	= configSrc.getCoerced(EfanConfigIds.rendererClassName, Str#)
+			it.rendererClassName	= configSrc.getCoerced(EfanXtraConfigIds.rendererClassName, Str#)
 		}
 	}
 
@@ -64,9 +64,9 @@ const class EfanXtraModule {
 
 	@Contribute { serviceType=FactoryDefaults# }
 	internal static Void contributeFactoryDefaults(MappedConfig config) {
-		config[EfanConfigIds.templateTimeout]		= 10sec
-		config[EfanConfigIds.rendererClassName]		= "EfanRendererImpl"
-		config[EfanConfigIds.supressStartupLogging]	= false
+		config[EfanXtraConfigIds.templateTimeout]		= 10sec
+		config[EfanXtraConfigIds.rendererClassName]		= "EfanComponentImpl"
+		config[EfanXtraConfigIds.supressStartupLogging]	= false
 	}
 	
 	@Contribute { serviceType=RegistryStartup# }
