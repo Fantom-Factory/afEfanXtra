@@ -11,9 +11,15 @@ Download from [status302](http://repo.status302.com/browse/afEfanXtra) and copy 
 
     $ fanr install -r http://repo.status302.com/fanr/ afEfanXtra
 
-To use in a [Fantom](http://fantom.org/) project, add a dependency in your `build.fan`:
+To use in a [Fantom](http://fantom.org/) project, add a dependency to your `build.fan`:
 
-    depends = ["sys 1.0", ..., "afEfanXtra 1+"]
+    depends = ["sys 1.0", ..., "afEfanXtra 1.0+"]
+
+
+
+## Documentation
+
+Full API & fandocs are available on the [status302 repository](http://repo.status302.com/doc/afEfanXtra/#overview).
 
 
 
@@ -80,7 +86,3 @@ Then to render a component:
     efanXtra.render(Overdue#, "Mr Smith")
 
 
-
-## Documentation
-
-Full API & fandocs are available on the [status302 repository](http://repo.status302.com/doc/afEfanXtra/#overview).
