@@ -52,4 +52,10 @@ internal const class ErrMsgs {
 	static Str alienAidComponentTypo(Str lib, Str comName) {
 		"\n  ALIEN-AID: Did you mean: ${lib}.render${comName}(...) ???"
 	}
+
+	static Str metaTypesDoNotFitInitMethod(Method initMethod, Type?[] types) {
+		t := types.join(", ") { it?.signature ?: "" }
+		return "@InitMethod ${initMethod.signature} can not be called with param types [${t}]"
+	}
+	
 }

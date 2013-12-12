@@ -159,10 +159,6 @@ This allows you to render components from within templates by calling '<libName>
 
 > **ALIEN-AID:** Library render methods are logged at registry startup so you don't have to remember them!
 
-
-
-Lifecycle Methods [#lifecycle]
-******************************
 Components can be thought of as having a lifecycle. Components can be made aware of the lifecycle by annotating callback
 methods with lifecycle facets. The lifecycle only exists for the duration of the render.
 
@@ -205,7 +201,8 @@ optionally take a 'StrBuf' as a parameter, this will hold the contents of the cu
 A method annotated with [@AfterRender]`AfterRender` is invoked after the template has rendered. It may
 optionally take a 'StrBuf' as a parameter, this will hold the contents of the current render buffer.
 
-'@AfterRender' methods may return 'Bool'. If 'true', the template is rendered as usual. If 'false', template rendering is skipped.
+'@AfterRender' methods may return 'Bool'. If 'true', the template rendering ends. If 'false', template rendering is sent back
+to '@BeforeRender'. In this way, simple loops may be set up.
 
 
 
