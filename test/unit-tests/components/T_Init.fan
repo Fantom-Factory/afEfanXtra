@@ -19,3 +19,14 @@ const mixin T_InitReturnsObj : EfanComponent {
 		69
 	}
 }
+
+@NoDoc
+const mixin T_InitParams : EfanComponent {
+	abstract Str? x
+	abstract Int y
+	
+	Void initRender(Str? x, Int y) {
+		this.x = x
+		this.y = y
+	}
+}

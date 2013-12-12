@@ -17,17 +17,18 @@ const class ComponentMeta {
 		return comType.method(facetType.name.decapitalize, false)
 	}
 
-	Obj? callMethod(Type comType, Type facetType, Obj instance, Obj[] args) {
+	Obj? callMethod(Type comType, Type facetType, Obj instance, Obj?[] args) {
 		method := findMethod(comType, facetType)
 		
 		if (method == null)
 			return null
 		
 		// Wot no type inference from List.map? - see http://fantom.org/sidewalk/topic/2217
-		types := (Type[]) args.map { it.typeof }
-		if (!ReflectUtils.paramTypesFitMethodSignature(types, method))
-			throw EfanErr()
-		
+		types := (Type?[]) args.map { it?.typeof }
+		if (!ReflectUtils.paramTypesFitMethodSignature(types, method)) {
+			throw EfanErr(ErrMsgs.metaTypesDoNotFitInitMethod(method, types))
+		}
+
 		return method.callOn(instance, args)
 	}
 

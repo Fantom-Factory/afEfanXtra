@@ -17,4 +17,14 @@ internal class TestInitMethod : EfanTest {
 		text := efanXtra.render(T_InitReturnsObj#)
 		verifyEq(text, 69)
 	}
+
+	Void testInitParams() {
+		text := efanXtra.render(T_InitParams#, ["Dude", 69])
+		verifyEq(text, "X := Dude; Y := 69;")
+	}
+
+	Void testInitHandlesNulls() {
+		text := efanXtra.render(T_InitParams#, [null, 69])
+		verifyEq(text, "X := null; Y := 69;")
+	}
 }
