@@ -3,8 +3,9 @@
 class TestReflectUtils : Test {
 
 	Void testFindField() {
-		field := ReflectUtils.findField(MyReflectTestUtils2#, "int", Int#)
-		verifyEq(field, MyReflectTestUtils2#int)
+		field := null
+//		field := ReflectUtils.findField(MyReflectTestUtils2#, "int", Int#)
+//		verifyEq(field, MyReflectTestUtils2#int)
 		field = ReflectUtils.findField(MyReflectTestUtils1#, "int", Int#)
 		verifyEq(field, MyReflectTestUtils1#int)
 
@@ -127,6 +128,12 @@ class TestReflectUtils : Test {
 		
 		// test I can call a method with more params than it declares
 		MyReflectTestUtils2#params1.callOn(MyReflectTestUtils2(), [48, 45])
+
+		// test nulls
+		verify		(ReflectUtils.paramTypesFitMethodSignature([Str#, Int#],		 MyReflectTestUtils2#nully))
+		verify		(ReflectUtils.paramTypesFitMethodSignature([null, Int#],		 MyReflectTestUtils2#nully))
+		verify		(ReflectUtils.paramTypesFitMethodSignature([null, Int?#],		 MyReflectTestUtils2#nully))
+		verifyFalse	(ReflectUtils.paramTypesFitMethodSignature([null, Str#],		 MyReflectTestUtils2#nully))
 	}
 	
 	Void testKnarlyFuncsInParams() {
@@ -177,4 +184,6 @@ internal class MyReflectTestUtils2 : MyReflectTestUtils1 {
 	
 	Void funcy1(|Num?| f) { }
 	Void funcy2(|Num?->Num| f) { }
+
+	Void nully(Str? x, Int y) { }
 }
