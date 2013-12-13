@@ -1,5 +1,5 @@
 
-** [IocConfig]`http://repo.status302.com/doc/afIocConfig/` values as used by 'efanXtra'. 
+** [IocConfig]`http://repo.status302.com/doc/afIocConfig/` values as provided by 'efanXtra'. 
 ** To change their value, override them in your 'AppModule'. Example:
 ** 
 ** pre>
