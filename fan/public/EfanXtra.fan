@@ -7,17 +7,17 @@ const mixin EfanXtra {
 	** Returns the names of all contributed efan component libraries.
 	abstract Str[]	libraries()
 	
-	** Returns the types of all components in the given library. A component type is a 'const mixin'
-	** annotated with the '@Component' facet.
+	** Returns the types of all components in the given library. 
 	abstract Type[]	componentTypes(Str libraryName)
 
-	** Renders the given component. The component's 'initRender(...)' method is called with the 
-	** given 'initParams'.
-	** If the '@InitRender' method returns a non-null value, then that value is returned and rendering is aborted. 
+	** Renders the given component. 
+	** 
+	** The component's '@InitRender' method is called with the given 'initParams'.
+	** If the '@InitRender' method returns a non-null value, then rendering is aborted and the non-null value is returned. 
 	** Otherwise the rendered Str is returned. 
-	abstract Obj? render(Type componentType, Obj?[]? initParams := null)
+	abstract Obj render(Type componentType, Obj?[]? initParams := null)
 	
-	** Returns an instance of the component, cast to an 'EfanRenderer'.
+	** Returns an instance of the component.
 	abstract EfanComponent component(Type componentType)
 }
 
@@ -36,7 +36,7 @@ internal const class EfanXtraImpl : EfanXtra {
 		efanLibraries.componentTypes(libraryName).sort
 	}
 
-	override Obj? render(Type componentType, Obj?[]? initParams := null) {
+	override Obj render(Type componentType, Obj?[]? initParams := null) {
 		efanLibraries.library(componentType).renderComponent(componentType, initParams ?: Obj#.emptyList)
 	}
 

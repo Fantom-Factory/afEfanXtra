@@ -1,10 +1,43 @@
 using afIoc::Inject
 using afEfan
 
-** TODO: better doc
-** Holds efan components as defined in a contributed pod. 
-** Contains dynamically generated methods for rendering efan components. 
-** Libs are auto injected into your components 
+** Use to manually render a component; an library instance exists for each contributed pod.
+** 
+** As well as the generic 'renderComponent()' method, libraries also have render methods for each individual component. 
+** Example, if you had a component:
+** 
+** pre>
+** const mixin CreamPie : EfanComponent {
+**   @InitRender
+**   Void initRender(Str x, Int y) { ... }
+** }
+** <pre
+** 
+** Then the corresponding library would define:
+** 
+**   Obj renderCreamPie(Str x, Int y, |Obj?|? bodyFunc := null) { ... }
+** 
+** Each library is automatically injected into your efan components as a field. The field has the same name as the 
+** contribution. This allows you to group / namespace components in pods and distribute them as 3rd Party libraries. 
+** Example, if 'CreamPie' was in a pod called 'pies', then if the 'pies' 'AppModule' contained: 
+** 
+** pre>
+** using afIoc
+** using afEfanExtra
+** 
+** class AppModule {
+**   @Contribute { serviceType=EfanLibraries# }
+**   static Void contributeEfanLibs(MappedConfig config) {
+**     config["pies"] = Pod.find("pies")
+**   }
+** }
+** <pre
+** 
+** Then any application that references the 'pies' pod automatically has the component 'pies.creamPie', which may be 
+** rendered with:
+** 
+**   <% pies.renderCreamPie("cream", 69) %>
+**    
 const mixin EfanLibrary {
 
 	** The name of library - given when you contribute a pod to 'EfanLibraries'. 
@@ -13,9 +46,11 @@ const mixin EfanLibrary {
 	@NoDoc	@Inject abstract ComponentCache	componentCache
 	@NoDoc	@Inject abstract ComponentMeta	componentMeta
 	
-	** Renders the given efan component. If the '@InitRender' method returns anything other than Void, null or true, 
-	** rendering is aborted and the value returned.
-	Obj? renderComponent(Type comType, Obj?[] initArgs, |Obj?|? bodyFunc := null) {
+	// TODO: have renderComponent() return Str and throw Errs to abort???
+	** Renders the given efan component and returns the rendered Str. 
+	** If the '@InitRender' method returns anything other than 'Void', 'null' or 'true', rendering is aborted and the 
+	** value returned.
+	Obj renderComponent(Type comType, Obj?[] initArgs, |Obj?|? bodyFunc := null) {
 		component 	:= componentCache.getOrMake(name, comType)
 
 		renderBuf	:= (StrBuf?) null
@@ -55,8 +90,8 @@ const mixin EfanLibrary {
 		return rendered
 	}
 
-	** Utility method to check if a set of parameters fit the [@InitRenderMethod]`InitRenderMethod`.
-	Bool fitsInitRenderMethod(Type comType, Type[] paramTypes) {
+	** Utility method to check if a set of parameters fit the component's [@InitRender]`InitRender` method.
+	Bool fitsInitRender(Type comType, Type[] paramTypes) {
 		initMethod := componentMeta.findMethod(comType, InitRender#)
 		if (initMethod == null) {
 			return paramTypes.isEmpty

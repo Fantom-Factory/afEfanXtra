@@ -4,6 +4,8 @@ For 1.0.0
 
 Have render methods return Void...???
 
+have initRender() return Bool? so lib.render() always returns a Str - throw an Err if you want conditional ret values.
+
 For Future
 ==========
 
@@ -12,7 +14,6 @@ Make TemplateFinders public when no-longer file reliant - use EfanTemplateSource
 Add EfanTemlapteNameMapper / Matcher for *Page / *Component
 
 Make efan compilation optional - just have a render() method instead
- - implement a render mixin - then compile against a known efan which just calls render() 
 
 
 
