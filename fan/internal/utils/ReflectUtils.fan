@@ -47,7 +47,7 @@ internal class ReflectUtils {
 		return method.params.all |methodParam, i->Bool| {
 			if (i >= params.size)
 				return methodParam.hasDefault
-			if (params[i] == null)	// FIXME: Test!
+			if (params[i] == null)
 				return methodParam.type.isNullable
 			if (!params[i].fits(methodParam.type))
 				return false
