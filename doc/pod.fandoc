@@ -117,7 +117,7 @@ For 'efanXtra' to find your template file, be sure to add '/fan/components/' as 
 
   resDirs = [`doc/`, `res/`, `res/components/`]
 
-You can also contribute to `EfanDirectories` if you wish to keep template files on the file system. This can be very handy
+You can also contribute to `EfanTemplateDirectories` if you wish to keep template files on the file system. This can be very handy
 for development.
 
 If you wish the template to have a different name to the Fantom class, you can set an explicit 'Uri' with the
