@@ -40,7 +40,7 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 			body := "args := [${args}]\n"
 			body += "return renderComponent(${comType.qname}#, args, bodyFunc)\n"
 			
-			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)
+			model.addMethod(Obj#, "render" + comType.name.capitalize, initSig, body)
 		}
 
 //		Env.cur.err.printLine(model.toFantomCode)

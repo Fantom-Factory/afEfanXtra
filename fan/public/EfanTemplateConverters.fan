@@ -11,25 +11,25 @@ using afEfan::EfanErr
 ** following to your 'AppModule':
 ** 
 ** pre>
-** using afSlim::Slim
-** using afEfanXtra::EfanTemplateConverters
+** using afIoc
+** using afSlim
+** using afEfanXtra
 ** 
-** ...
+** class AppModule {
 ** 
-** @Contribute { serviceType=EfanTemplateConverters# }
-** static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
-**   config["slim"] = |File file -> Str| {
-**     slim.parseFromFile(file)
+**   @Contribute { serviceType=EfanTemplateConverters# }
+**   static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
+**     config["slim"] = |File file -> Str| { slim.parseFromFile(file) }
 **   }
 ** }
 ** <pre
 ** 
-** That will convert all files with a '.slim' extension to efan templates.
+** That will convert all files with a '.slim' extension to an efan template.
 ** 
-** @uses Mapped config of '[Str:|File->Str|]' - file ext to func that converts the file to an efan str 
+** @uses Mapped config of '[Str:|File->Str|]' - file ext to func that converts the file to an efan template 
 const mixin EfanTemplateConverters {
 
-	** Converts the given 'File' in to an efan template Str.
+	** Converts the given 'File' to an efan template Str.
 	abstract Str convertTemplate(File templateFile)
 	
 	** Return a list of (lowercase) file extensions that denote which files can be converted to 
@@ -38,7 +38,7 @@ const mixin EfanTemplateConverters {
 	** Note the extensions are *not* prefixed with a dot, e.g. '["efan", "slim"]' 
 	abstract Str[] extensions()
 	
-	** Returns 'true' if the given file can be converted / has a known extension 
+	** Returns 'true' if the given file can be converted / has a known extension.
 	abstract Bool canConvert(File file)
 }
 
