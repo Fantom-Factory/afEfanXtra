@@ -15,7 +15,7 @@ const mixin EfanLibrary {
 	
 	** Renders the given efan component. If the '@InitRender' method returns anything other than Void, null or true, 
 	** rendering is aborted and the value returned.
-	Obj? renderComponent(Type comType, Obj[] initArgs, |Obj?|? bodyFunc := null) {
+	Obj? renderComponent(Type comType, Obj?[] initArgs, |Obj?|? bodyFunc := null) {
 		component 	:= componentCache.getOrMake(name, comType)
 
 		renderBuf	:= (StrBuf?) null

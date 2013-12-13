@@ -25,9 +25,8 @@ const class ComponentMeta {
 		
 		// Wot no type inference from List.map? - see http://fantom.org/sidewalk/topic/2217
 		types := (Type?[]) args.map { it?.typeof }
-		if (!ReflectUtils.paramTypesFitMethodSignature(types, method)) {
+		if (!ReflectUtils.paramTypesFitMethodSignature(types, method))
 			throw EfanErr(ErrMsgs.metaTypesDoNotFitInitMethod(method, types))
-		}
 
 		return method.callOn(instance, args)
 	}
