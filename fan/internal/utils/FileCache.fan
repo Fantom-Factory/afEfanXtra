@@ -23,7 +23,7 @@ internal const class FileCache {
 		cache.containsKey(file)
 	}
 	
-	Obj? getOrAddOrUpdate(File file, |File->Obj| bob) {
+	Obj? getOrAddOrUpdate(File file, |File->Obj?| bob) {
 		state := (FileCacheState?) cache[file]
 
 		if (state?.isTimedOut(timeout) ?: true) {
@@ -40,6 +40,14 @@ internal const class FileCache {
 		}
 
 		return state?.payload
+	}
+	
+	Void addFile(File file) {
+		getOrAddOrUpdate(file) |File f->Obj?| { null }
+	}
+	
+	Void updateFile(File file, |->| bob) {
+		getOrAddOrUpdate(file) |File f->Obj?| { bob.call; return null } 
 	}
 }
 
