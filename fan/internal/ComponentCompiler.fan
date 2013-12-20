@@ -91,7 +91,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		
 		try {
 			renderer	:= efanCompiler.compileWithModel(efanFile.normalize.uri, efanSrc, null, model) |Type efanType, EfanMetaData efanMeta -> BaseEfanImpl| {
-				myefanMeta := clone(efanMeta) |efanMeta2, plan| {
+				myefanMeta := clone(efanMeta) |plan| {
 					plan[EfanMetaData#templateId] 	= "\"${libName}::${comType.name}\""
 				}
 				return registry.autobuild(efanType, [myefanMeta])
@@ -122,7 +122,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		}
 	}
 	
-	private static EfanMetaData clone(EfanMetaData efanMeta, |EfanMetaData, Field:Obj?|? overridePlan := null) {
+	private static EfanMetaData clone(EfanMetaData efanMeta, |Field:Obj?|? overridePlan := null) {
 		Utils.cloneObj(efanMeta, overridePlan)
 	}
 }

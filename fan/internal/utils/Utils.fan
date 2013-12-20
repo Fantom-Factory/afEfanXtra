@@ -20,7 +20,7 @@ internal const class Utils {
 		return b.flip.in.readAllStr
 	}
 
-	static Obj cloneObj(Obj obj, |Obj, Field:Obj|? overridePlan := null) {
+	static Obj cloneObj(Obj obj, |Field:Obj|? overridePlan := null) {
 		plan := Field:Obj[:]
 		obj.typeof.fields.each {
 			value := it.get(obj)
@@ -28,7 +28,7 @@ internal const class Utils {
 				plan[it] = value
 		}
 
-		overridePlan.call(obj, plan)
+		overridePlan.call(plan)
 		
 		planFunc := Field.makeSetFunc(plan)
 		return obj.typeof.make([planFunc])
