@@ -272,13 +272,10 @@ class AppModule {
 Release Notes [#releaseNotes]
 *****************************
 
-v1.0.6 [#v1.0.6]
+v1.0.4 [#v1.0.4]
 ----------------
  - Chg: '@InitMethods' may now only return 'Void' or 'Bool'. Throw
  [BedSheet's]`http://repo.status302.com/doc/afPillow/#overview` 'ReProcessErr' if you wish to perform a different action.
-
-v1.0.4 [#v1.0.4]
-----------------
  - Chg: Multiple components may now share the same template file.
 
 v1.0.2 [#v1.0.2]
