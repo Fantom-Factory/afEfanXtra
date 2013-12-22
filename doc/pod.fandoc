@@ -189,7 +189,6 @@ if your '@InitRender' looks like:
     @InitRender
     Bool? initRender(Int x, Str y) { ... }
 
-    ...
   }
 
 then the library render method will look like:
