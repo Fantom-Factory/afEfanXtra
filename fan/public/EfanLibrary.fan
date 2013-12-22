@@ -46,11 +46,10 @@ const mixin EfanLibrary {
 	@NoDoc	@Inject abstract ComponentCache	componentCache
 	@NoDoc	@Inject abstract ComponentMeta	componentMeta
 	
-	// TODO: have renderComponent() return Str and throw Errs to abort???
 	** Renders the given efan component and returns the rendered Str. 
 	** If the '@InitRender' method returns anything other than 'Void', 'null' or 'true', rendering is aborted and the 
 	** value returned.
-	Obj renderComponent(Type comType, Obj?[] initArgs, |Obj?|? bodyFunc := null) {
+	Str renderComponent(Type comType, Obj?[] initArgs, |Obj?|? bodyFunc := null) {
 		component 	:= componentCache.getOrMake(name, comType)
 
 		renderBuf	:= (StrBuf?) null
@@ -60,10 +59,8 @@ const mixin EfanLibrary {
 				ComponentCtx.push
 
 				initRet := componentMeta.callMethod(comType, InitRender#, component, initArgs)
-				if (initRet != null && initRet.typeof != Bool#)
-					return initRet
-
-				// technically this is correct, but I'm wondering if I should return an empty Str instead???
+				
+				// if init() returns false, cut rendering short
 				if (initRet == false)
 					return initRet
 
@@ -85,9 +82,9 @@ const mixin EfanLibrary {
 		}
 
 		// if the stack is empty, return the result of rendering
-		if (rendered == true)
-			return (RenderBufStack.peek(false) == null) ? renderBuf.toStr : Str.defVal
-		return rendered
+		if (rendered && (RenderBufStack.peek(false) == null))
+			return renderBuf.toStr
+		return Str.defVal
 	}
 
 	** Utility method to check if a set of parameters fit the component's [@InitRender]`InitRender` method.

@@ -187,7 +187,7 @@ if your '@InitRender' looks like:
   const mixin MyComponent : EfanComponent {
 
     @InitRender
-    Obj? initRender(Int x, Str y) { ... }
+    Bool? initRender(Int x, Str y) { ... }
 
     ...
   }
@@ -198,15 +198,14 @@ then the library render method will look like:
 
 This lets you pass any arguments you want into your components.
 
-'@InitRender' methods may return any object. If defined as 'Void' or it returns 'null' or 'true' then rendering continues as
-normal. Any other object aborts the rendering and is passed back via the library render method.
+'@InitRender' methods may return 'Bool'. If 'true', the template is rendered as usual. If 'false', then template rendering is skipped.
 
 @BeforeRender [#beforeRender]
 =============================
 A method annotated with [@BeforeRender]`BeforeRender` is invoked after '@InitRender' but before any template rendering. It may
 optionally take a 'StrBuf' as a parameter, this will hold the contents of the current render buffer.
 
-'@InitRender' methods may return 'Bool'. If 'true', the template is rendered as usual. If 'false', template rendering is skipped.
+'@BeforeRender' methods may return 'Bool'. If 'true', the template is rendered as usual. If 'false', then template rendering is skipped.
 
 @AfterRender [#afterRender]
 ===========================
@@ -272,6 +271,15 @@ class AppModule {
 
 Release Notes [#releaseNotes]
 *****************************
+
+v1.0.6 [#v1.0.6]
+----------------
+ - Chg: '@InitMethods' may now only return 'Void' or 'Bool'. Throw
+ [BedSheet's]`http://repo.status302.com/doc/afPillow/#overview` 'ReProcessErr' if you wish to perform a different action.
+
+v1.0.4 [#v1.0.4]
+----------------
+ - Chg: Multiple components may now share the same template file.
 
 v1.0.2 [#v1.0.2]
 ----------------

@@ -33,6 +33,10 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 	}
 
 	override EfanComponent compile(Str libName, Type comType, File efanFile) {
+		init := componentMeta.findMethod(comType, InitRender#)
+		if (!allowedReturnTypes.any {(init?.returns ?: Void#).fits(it)} )
+			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(init, allowedReturnTypes))
+
 		before := componentMeta.findMethod(comType, BeforeRender#)
 		if (!allowedReturnTypes.any {(before?.returns ?: Void#).fits(it)} )
 			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(before, allowedReturnTypes))
