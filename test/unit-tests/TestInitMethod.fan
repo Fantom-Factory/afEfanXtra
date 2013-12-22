@@ -4,8 +4,7 @@ internal class TestInitMethod : EfanTest {
 	
 	Void testInitFalseAborts() {
 		text := efanXtra.render(T_InitFalseAborts#)
-		// technically this is correct, but I'm wondering if I should return an empty Str instead???
-		verifyEq(text, false)
+		verifyEq(text, "")
 	}
 
 	Void testInitTrueOkay() {
@@ -13,9 +12,10 @@ internal class TestInitMethod : EfanTest {
 		verifyEq(text, "Hello!")
 	}
 
-	Void testInitReturnsObj() {
-		text := efanXtra.render(T_InitReturnsObj#)
-		verifyEq(text, 69)
+	Void testInitReturnsObjThrowsErr() {
+		verifyEfanErrMsg(ErrMsgs.componentCompilerWrongReturnType(T_InitReturnsObj#initRender, [Void#, Bool#])) {
+			text := efanXtra.render(T_InitReturnsObj#)			
+		}
 	}
 
 	Void testInitParams() {
