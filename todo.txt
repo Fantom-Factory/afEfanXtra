@@ -1,10 +1,8 @@
 
-For 1.0.0
+For 1.1.0
 =========
 
 Have render methods return Void...???
-
-have initRender() return Bool? so lib.render() always returns a Str - throw an Err if you want conditional ret values.
 
 For Future
 ==========

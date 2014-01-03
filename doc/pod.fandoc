@@ -1,15 +1,15 @@
 Overview [#overview]
 ********************
-'efanXtra' creates managed libraries of reusable [Embedded Fantom (efan)]`http://repo.status302.com/doc/afEfan/#overview`
+'efanXtra' creates managed libraries of reusable [Embedded Fantom (efan)]`http://www.fantomfactory.org/pods/afEfan`
 components. Influenced by Java's [Tapestry 5]`http://tapestry.apache.org/index.html`, it pairs up Fantom classes and efan template
 files to encapsulate model / view behaviour.
 
-'efanXtra' extends [afEfan]`http://repo.status302.com/doc/afEfan/#overview`, is powered by
-[afIoc]`http://repo.status302.com/doc/afIoc/#overview` and works great with [Slim]`http://repo.status302.com/browse/afSlim`
+'efanXtra' extends [afEfan]`http://www.fantomfactory.org/pods/afEfan`, is powered by
+[Ioc]`http://www.fantomfactory.org/pods/afIoc` and works great with [Slim]`http://www.fantomfactory.org/pods/afSlim`
 templates.
 
-'efanXtra' excels in a [BedSheet]`http://repo.status302.com/doc/afPillow/#overview` web environment, where URLs are
-automatically mapped to efan components (see [Pillow]`http://repo.status302.com/doc/afPillow/#overview`), but is presented
+'efanXtra' excels in a [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet` web environment, where URLs are
+automatically mapped to efan components (see [Pillow]`http://www.fantomfactory.org/pods/afPillow`), but is presented
 here context free for maximum reuse. Think email, code generation, blog posts, etc...
 
 
@@ -87,7 +87,7 @@ Components [#components]
 ************************
 An efan component consists of a 'const mixin' Fantom class and a corresponding efan template file.
 
-'efanXtra' does away with [efan's]`http://repo.status302.com/doc/afEfan/#overview` 'ctx' variable and instead lets the template
+'efanXtra' does away with [efan's]`http://www.fantomfactory.org/pods/afEfan` 'ctx' variable and instead lets the template
 access fields and methods of the component class directly.
 
 Mixins [#mixins]
@@ -95,7 +95,7 @@ Mixins [#mixins]
 Component mixins must be 'const' and extend the `EfanComponent` mixin.
 
 All fields and methods of the mixin are directly accessible in the template. Components are created by
-[afIoc]`http://repo.status302.com/doc/afIoc/#overview` so feel free to annotate fields with '@Inject' just as you would with
+[Ioc]`http://www.fantomfactory.org/pods/afIoc` so feel free to annotate fields with '@Inject' just as you would with
 a service class.
 
 Any non-private method or field in your mixin is visible from your template code.
@@ -245,7 +245,7 @@ Note that state is *not* preserved between different renderings of the component
 
 Use with Slim [#useSlim]
 ************************
-'efanXtra' works great with [Slim]`http://repo.status302.com/browse/afSlim`! Just add the following to your 'AppModule'
+'efanXtra' works great with [Slim]`http://www.fantomfactory.org/pods/afSlim`! Just add the following to your 'AppModule'
 and 'efanXtra' will automatically pick up component templates with the extension '.slim':
 
 pre>
@@ -271,10 +271,15 @@ class AppModule {
 Release Notes [#releaseNotes]
 *****************************
 
+v1.0.6 [#v1.0.6]
+----------------
+ - Chg: Upgraded to [afIoc-1.5.0]`http://www.fantomfactory.org/pods/afIoc`.
+ - Chg: Upgraded to [afIocConfig-1.0.0]`http://www.fantomfactory.org/pods/afIocConfig`.
+
 v1.0.4 [#v1.0.4]
 ----------------
  - Chg: '@InitMethods' may now only return 'Void' or 'Bool'. Throw
- [BedSheet's]`http://repo.status302.com/doc/afPillow/#overview` 'ReProcessErr' if you wish to perform a different action.
+ [BedSheet's]`http://www.fantomfactory.org/pods/afBedSheet` 'ReProcessErr' if you wish to perform a different action.
  - Chg: Multiple components may now share the same template file.
 
 v1.0.2 [#v1.0.2]
@@ -307,7 +312,7 @@ v0.0.4 [#v0.0.4]
  - New: Component templates can be specified via the '@Component.template' field.
  - New: Added a contributable 'EfanTemplateFinders' service.
  - New: Ability to suppress startup log messages.
- - New: Added compiler hooks (mainly for [afPillow]`http://repo.status302.com/doc/afPillow/#overview`).
+ - New: Added compiler hooks (mainly for [afPillow]`http://www.fantomfactory.org/pods/afPillow`).
  - New: 'efanXtra.component()' returns component instances.
  - Chg: '@Component' facet is inherited.
 
