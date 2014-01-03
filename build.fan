@@ -35,8 +35,8 @@ class Build : BuildPod {
 		docSrc = true
 
 		// exclude test code when building the pod
-		srcDirs = srcDirs.exclude { it.toStr.startsWith("test/") }
-		resDirs = resDirs.exclude { it.toStr.startsWith("test/") }
+//		srcDirs = srcDirs.exclude { it.toStr.startsWith("test/") }
+//		resDirs = resDirs.exclude { it.toStr.startsWith("test/") }
 	}
 	
 	@Target { help = "Compile to pod file and associated natives" }
