@@ -39,7 +39,7 @@ const class EfanXtraModule {
 	internal static EfanCompiler buildEfanCompiler(IocConfigSource configSrc, PlasticCompiler plasticCompiler) {
 		// rely on afBedSheet to set srcCodePadding in PlasticCompiler (to be picked up by EfanCompiler) 
 		EfanCompiler(plasticCompiler) {
-			it.rendererClassName	= configSrc.getCoerced(EfanXtraConfigIds.rendererClassName, Str#)
+			it.rendererClassName	= configSrc.get(EfanXtraConfigIds.rendererClassName, Str#)
 		}
 	}
 

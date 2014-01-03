@@ -5,12 +5,13 @@ class Build : BuildPod {
 	new make() {
 		podName = "afEfanXtra"
 		summary = "A library for creating reusable Embedded Fantom (efan) components"
-		version = Version("1.0.5")
+		version = Version("1.0.6")
 
 		meta	= [ "org.name"		: "Alien-Factory",
 					"org.uri"		: "http://www.alienfactory.co.uk/",
-					"vcs.uri"		: "https://bitbucket.org/AlienFactory/afefanxtra",
 					"proj.name"		: "efanXtra",
+					"proj.uri"		: "http://www.fantomfactory.org/pods/afEfanXtra",			
+					"vcs.uri"		: "https://bitbucket.org/AlienFactory/afefanxtra",
 					"license.name"	: "BSD 2-Clause License",
 					"repo.private"	: "true"
 
@@ -21,8 +22,8 @@ class Build : BuildPod {
 
 		depends = [	"sys 1.0", 
 					"concurrent 1.0",
-					"afIoc 1.4.10+", 
-					"afIocConfig 0+", 
+					"afIoc 1.5.0+", 
+					"afIocConfig 1.0+", 
 					"afEfan 1.3.4+", 
 					"afPlastic 1.0.8+"
 				]
@@ -34,8 +35,8 @@ class Build : BuildPod {
 		docSrc = true
 
 		// exclude test code when building the pod
-//		srcDirs = srcDirs.exclude { it.toStr.startsWith("test/") }
-//		resDirs = resDirs.exclude { it.toStr.startsWith("test/") }
+		srcDirs = srcDirs.exclude { it.toStr.startsWith("test/") }
+		resDirs = resDirs.exclude { it.toStr.startsWith("test/") }
 	}
 	
 	@Target { help = "Compile to pod file and associated natives" }
