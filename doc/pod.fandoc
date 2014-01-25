@@ -271,6 +271,10 @@ class AppModule {
 Release Notes [#releaseNotes]
 *****************************
 
+v1.0.8 [#v1.0.8]
+----------------
+ - New: 'fandoc' files may be used as efan templates!
+
 v1.0.6 [#v1.0.6]
 ----------------
  - Chg: Upgraded to [afIoc-1.5.0]`http://www.fantomfactory.org/pods/afIoc`.

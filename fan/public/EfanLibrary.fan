@@ -66,7 +66,7 @@ const mixin EfanLibrary {
 
 				renderLoop := true
 				while (renderLoop) {
-					
+
 					b4Ret	:= componentMeta.callMethod(comType, BeforeRender#, component, [renderBufIn])
 					if (b4Ret != false)
 						((BaseEfanImpl) component)._af_render(null)
