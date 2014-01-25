@@ -1,0 +1,2 @@
+Look ma, Fandoc rendering: <% app.renderT_ComFandoc2() %>
+====

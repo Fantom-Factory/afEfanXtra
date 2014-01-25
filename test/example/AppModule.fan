@@ -5,7 +5,7 @@ using afIoc
 class EfanAppModule {
 	
 	static Void bind(ServiceBinder binder) {
-		binder.bindImpl(DvdService#)
+		binder.bind(DvdService#)
 	}
 
 	// contribute all components in our pod as a library named 'app' 

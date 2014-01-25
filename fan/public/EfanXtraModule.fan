@@ -21,18 +21,19 @@ using afEfan::EfanCompiler
 const class EfanXtraModule {
 
 	internal static Void bind(ServiceBinder binder) {
-		binder.bindImpl(ComponentFinder#)
-		binder.bindImpl(ComponentCompiler#)
-		binder.bindImpl(ComponentCache#)
-		binder.bindImpl(ComponentMeta#)
-		binder.bindImpl(EfanLibraryCompiler#)
-		binder.bindImpl(EfanLibraries#)
-		binder.bindImpl(EfanXtraPrinter#)
+		binder.bind(ComponentFinder#)
+		binder.bind(ComponentCompiler#)
+		binder.bind(ComponentCache#)
+		binder.bind(ComponentMeta#)
+		binder.bind(EfanLibraryCompiler#)
+		binder.bind(EfanLibraries#)
+		binder.bind(EfanXtraPrinter#)
 		
-		binder.bindImpl(EfanXtra#).withoutProxy
-		binder.bindImpl(EfanTemplateConverters#)
-		binder.bindImpl(EfanTemplateDirectories#)
-		binder.bindImpl(EfanTemplateFinders#)
+		binder.bind(EfanXtra#).withoutProxy
+		binder.bind(EfanTemplateConverters#)
+		binder.bind(EfanTemplateDirectories#)
+		binder.bind(EfanTemplateFinders#)
+		binder.bind(FandocToHtmlConverter#)
 	}
 	
 	@Build { serviceId="EfanCompiler" }
@@ -51,12 +52,11 @@ const class EfanXtraModule {
 	}	
 
 	@Contribute { serviceType=EfanTemplateConverters# }
-	internal static Void contributeEfanTemplateConverters(MappedConfig config) {
-		config["efan"] = |File file -> Str| {
-			file.readAllStr
-		}
+	internal static Void contributeEfanTemplateConverters(MappedConfig config, FandocToHtmlConverter fandocToHtml) {
+		config["efan"] 	 = |File file -> Str| { file.readAllStr }
+		config["fandoc"] = |File file -> Str| { fandocToHtml.convert(file) }
 	}	
-	
+
 	@Contribute { serviceType=DependencyProviderSource# }
 	internal static Void contributeDependencyProviderSource(OrderedConfig config) {
 		config.add(config.autobuild(LibraryProvider#))

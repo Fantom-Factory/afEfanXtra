@@ -48,7 +48,8 @@ internal const class ComponentCacheImpl : ComponentCache {
 		// re-compile component if the template's been updated 
 		fileCache.updateFile(state.templateFile) |->| {
 			newComponent	:= compiler.compile(libName, state.componentType, state.templateFile)
-			typeToState[state.componentType] = state.withComponent(newComponent)
+			state			= state.withComponent(newComponent)
+			typeToState[state.componentType] = state
 		}
 		
 		return state.componentInst
