@@ -19,15 +19,15 @@ const mixin ComponentCompiler {
 
 internal const class ComponentCompilerImpl : ComponentCompiler {
 
-	@Inject	private const ComponentMeta				componentMeta
-	@Inject	private const EfanLibraries				efanLibraries
-	@Inject	private const EfanTemplateConverters	templateConverters
-	@Inject	private const Registry					registry
-	@Inject private const EfanCompiler 				efanCompiler
-			private const |PlasticClassModel|[]		compilerCallbacks
-			private const Type[]					allowedReturnTypes 		:= [Void#, Bool#]
+	@Inject	private const ComponentMeta					componentMeta
+	@Inject	private const EfanLibraries					efanLibraries
+	@Inject	private const EfanTemplateConverters		templateConverters
+	@Inject	private const Registry						registry
+	@Inject private const EfanCompiler 					efanCompiler
+			private const |Type, PlasticClassModel|[]	compilerCallbacks
+	static	private const Type[]						allowedReturnTypes 	:= [Void#, Bool#]
 
-	new make(|PlasticClassModel|[] compilerCallbacks, |This|in) { 
+	new make(|Type, PlasticClassModel|[] compilerCallbacks, |This|in) { 
 		in(this) 
 		this.compilerCallbacks = compilerCallbacks
 	}
@@ -47,6 +47,10 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		
 		model := PlasticClassModel("${comType.name}Impl", true)
 		model.extendMixin(comType)
+		
+		// use the component's pod - it's expected behaviour as you think of the component as being in the same pod
+		// (and not in some plastic generated-on-the-fly pod!)
+		model.usingPod(comType.pod)
 
 		// create ctor for afIoc to instantiate	
 		// todo: add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
@@ -61,7 +65,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		}
 
 		// give callbacks a chance to add to our model
-		compilerCallbacks.each { it.call(model) }
+		compilerCallbacks.each { it.call(comType, model) }
 		
 		// implement abstract fields
 		comType.fields.each |field| {

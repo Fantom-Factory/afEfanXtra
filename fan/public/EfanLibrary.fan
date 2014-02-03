@@ -36,7 +36,7 @@ using afEfan
 ** Then any application that references the 'pies' pod automatically has the component 'pies.creamPie', which may be 
 ** rendered with:
 ** 
-**   <% pies.renderCreamPie("cream", 69) %>
+**   <% pies.renderCreamPie("cream", 7) %>
 **    
 const mixin EfanLibrary {
 
@@ -58,7 +58,8 @@ const mixin EfanLibrary {
 			return EfanRenderCtx.renderEfan(renderBufIn, (BaseEfanImpl) component, (|->|?) bodyFunc) |->Obj?| {
 				ComponentCtx.push
 
-				initRet := componentMeta.callMethod(comType, InitRender#, component, initArgs)
+				initRet := componentMeta.callMethod(component.typeof, InitRender#, component, initArgs)
+//				initRet := componentMeta.callMethod(comType, InitRender#, component, initArgs)
 				
 				// if init() returns false, cut rendering short
 				if (initRet == false)
