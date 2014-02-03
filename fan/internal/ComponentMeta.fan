@@ -18,6 +18,7 @@ const class ComponentMeta {
 	}
 
 	Obj? callMethod(Type comType, Type facetType, Obj instance, Obj?[] args) {
+		// TODO: look for the method on the instance, not just the mixin type. The method may have been dynamically added to the model. 
 		method := findMethod(comType, facetType)
 		
 		if (method == null)
