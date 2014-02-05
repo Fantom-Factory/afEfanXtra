@@ -17,9 +17,10 @@ const class ComponentMeta {
 		return comType.method(facetType.name.decapitalize, false)
 	}
 
-	Obj? callMethod(Type comType, Type facetType, Obj instance, Obj?[] args) {
-		// TODO: look for the method on the instance, not just the mixin type. The method may have been dynamically added to the model. 
-		method := findMethod(comType, facetType)
+	Obj? callMethod(Type facetType, Obj instance, Obj?[] args) {
+		// look for the method on the instance, not just the mixin type, because the method may have been 
+		// dynamically added to the model. 
+		method := findMethod(instance.typeof, facetType)
 		
 		if (method == null)
 			return null
@@ -27,7 +28,7 @@ const class ComponentMeta {
 		// Wot no type inference from List.map? - see http://fantom.org/sidewalk/topic/2217
 		types := (Type?[]) args.map { it?.typeof }
 		if (!ReflectUtils.paramTypesFitMethodSignature(types, method))
-			throw EfanErr(ErrMsgs.metaTypesDoNotFitInitMethod(method, types))
+			throw EfanErr(ErrMsgs.metaTypesDoNotFitMethod(facetType, method, types))
 
 		return method.callOn(instance, args)
 	}
