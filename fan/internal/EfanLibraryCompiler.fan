@@ -11,11 +11,11 @@ const mixin EfanLibraryCompiler {
 
 internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 	private const static Log log := Utils.getLog(EfanLibraries#)
-	
+
 	@Inject private	const PlasticCompiler	plasticCompiler
 	@Inject private	const ComponentFinder	componentFinder
 	@Inject private	const ComponentMeta		componentMeta
-	
+
 	new make(|This| in) { in(this) }
 
 	override Type compileLibrary(Str libName, Pod pod) {
@@ -33,8 +33,9 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 		componentFinder.findComponentTypes(pod).each |comType| {	
 			log.debug("  - found component ${comType.name}")
 
+			// TODO: filter out Pillow pages, as you their @PageContext means you may not be able to render them anyway
 			initMethod	:= componentMeta.findMethod(comType, InitRender#)
-			initSig 	:= componentMeta.methodSig(comType, InitRender#, "|Obj?|? bodyFunc := null")
+			initSig 	:= componentMeta.methodSig (comType, InitRender#, "|Obj?|? bodyFunc := null")
 			
 			args := (initMethod != null && !initMethod.params.isEmpty) ? (initMethod.params.join(",") { it.name }) : "," 
 			body := "args := [${args}]\n"

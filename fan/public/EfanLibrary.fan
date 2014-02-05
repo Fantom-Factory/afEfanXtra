@@ -58,8 +58,7 @@ const mixin EfanLibrary {
 			return EfanRenderCtx.renderEfan(renderBufIn, (BaseEfanImpl) component, (|->|?) bodyFunc) |->Obj?| {
 				ComponentCtx.push
 
-				initRet := componentMeta.callMethod(component.typeof, InitRender#, component, initArgs)
-//				initRet := componentMeta.callMethod(comType, InitRender#, component, initArgs)
+				initRet := componentMeta.callMethod(InitRender#, component, initArgs)
 				
 				// if init() returns false, cut rendering short
 				if (initRet == false)
@@ -68,11 +67,11 @@ const mixin EfanLibrary {
 				renderLoop := true
 				while (renderLoop) {
 
-					b4Ret	:= componentMeta.callMethod(comType, BeforeRender#, component, [renderBufIn])
+					b4Ret	:= componentMeta.callMethod(BeforeRender#, component, [renderBufIn])
 					if (b4Ret != false)
 						((BaseEfanImpl) component)._af_render(null)
 					
-					aftRet	:= componentMeta.callMethod(comType, AfterRender#, component, [renderBufIn])
+					aftRet	:= componentMeta.callMethod(AfterRender#, component, [renderBufIn])
 					
 					renderLoop = (aftRet == false)
 				}
@@ -95,5 +94,17 @@ const mixin EfanLibrary {
 			return paramTypes.isEmpty
 		}
 		return ReflectUtils.paramTypesFitMethodSignature(paramTypes, initMethod)
-	}	
+	}
+	
+	
+	@NoDoc
+	Obj? callMethod(Type comType, Obj?[] initArgs, |->Obj?| func) {
+		component 	:= componentCache.getOrMake(name, comType)
+		rendering	:= (BaseEfanImpl) component
+		return EfanCtxStack.withCtx(rendering.efanMetaData.templateId) |EfanCtxStackElement element->Obj?| {
+			ComponentCtx.push
+			componentMeta.callMethod(InitRender#, component, initArgs)			
+			return func.call
+		}
+	}
 }

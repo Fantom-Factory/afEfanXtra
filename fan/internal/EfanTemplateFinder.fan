@@ -83,20 +83,24 @@ internal const class FindEfanByTypeNameOnFileSystem : EfanTemplateFinder {
 	}
 }
 
-internal const class FindEfanByFacetValue : EfanTemplateFinder {
+@NoDoc	// used by Pillow
+const class FindEfanByFacetValue : EfanTemplateFinder {
 	
 	override File? findTemplate(Type componentType) {
 		if (!componentType.hasFacet(EfanTemplate#))
 			return null
 		
 		comFacet := (EfanTemplate) Type#.method("facet").callOn(componentType, [EfanTemplate#])	// Stoopid F4
-		efanUri := comFacet.uri
+		return findFile(componentType, comFacet.uri)
+	}
+	
+	static File? findFile(Type componentType, Uri? efanUri) {
 		if (efanUri == null)
 			return null
 		
 		// if absolute, it should resolve against a scheme (hopefully fan:!)
 		if (efanUri.isAbs) {
-			obj := comFacet.uri.get
+			obj := efanUri.get
 			if (!obj.typeof.fits(File#))
 				throw EfanErr(ErrMsgs.templateNotFile(efanUri, componentType, obj.typeof))
 			return obj
@@ -115,7 +119,7 @@ internal const class FindEfanByFacetValue : EfanTemplateFinder {
 			throw EfanErr(ErrMsgs.templateNotFound(efanUri, componentType))
 		if (!obj.typeof.fits(File#))
 			throw EfanErr(ErrMsgs.templateNotFile(efanUri, componentType, obj.typeof))
-		return obj
+		return obj		
 	}
 	
 	override File[] templateFiles(Type componentType) {

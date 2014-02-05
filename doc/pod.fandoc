@@ -270,6 +270,13 @@ class AppModule {
 
 Release Notes [#releaseNotes]
 *****************************
+v1.0.10 [#v1.0.10]
+------------------
+ - New: Added 'EfanLibraries.callMethod()' for [Pillow]`http://www.fantomfactory.org/pods/afPillow`.
+ - Chg: Components automatically 'use' the pod that the component mixin was defined in.
+ - Chg: 'ComponentCompiler' callbacks now take the component type.
+ - Chg: 'FindEfanByFacetValue' is public for use by [Pillow]`http://www.fantomfactory.org/pods/afPillow`.
+ - Chg: Render methods are searched for on the component *instance*, not just the mixin. This is so it may still be called if it's added dynamically.
 
 v1.0.8 [#v1.0.8]
 ----------------
