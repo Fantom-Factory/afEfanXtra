@@ -13,6 +13,11 @@ internal class TestNonConstObjs : EfanTest {
 		verifyEq(text, "Non-Const Service!")
 	}
 
+	Void testLogFields() {
+		text := efanXtra.render(T_LogFields#)
+		verifyEq(text, "Wotever")
+	}
+
 	override Void setup() {
 		reg 		= RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#, TestNonConstObjs#]).build.startup
 		efanXtra	= reg.dependencyByType(EfanXtra#)
@@ -39,6 +44,13 @@ const mixin T_NonConstFields : EfanComponent {
 const mixin T_NonConstService : EfanComponent {
 	@Inject abstract NonConstService service
 	Str render() { service.toStr }
+}
+
+@NoDoc
+@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
+const mixin T_LogFields : EfanComponent {
+	@Inject abstract Log log
+	Str render() { log.info("Hello!"); return "Wotever" }
 }
 
 class NonConstService {
