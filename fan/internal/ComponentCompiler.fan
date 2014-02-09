@@ -90,7 +90,8 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			if (field.hasFacet(Inject#)) {
 				// keep app-scope services as fields to reduce overhead - we don't want to look up the service from IoC 
 				// each and every time if we can help it
-				if (serviceScopes[field.type] == ServiceScope.perApplication) {
+				// Also if field facets other than @Inject, assume the user knows what they're doing... (e.g. @Config) 
+				if (serviceScopes[field.type] == ServiceScope.perApplication || field.facets.size > 1) {
 					injectFieldName := "_af_inject${field.name.capitalize}"
 					// @see http://fantom.org/sidewalk/topic/2186#c14112
 					newField := model.addField(field.type, injectFieldName)
@@ -100,7 +101,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 				}
 				// have calls to threaded / non-const services call through to the registry, so they're not actually 
 				// held in the efan component. This'll work for 95% of use cases where the service can be identified
-				// solely by service type - but if the dependency requires other facets to resolve - you're screwed!
+				// solely by service type...
 				regRequired = true
 				model.overrideField(field, """_af_registry.dependencyByType(${field.type}#)""", """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")				
 			}

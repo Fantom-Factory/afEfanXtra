@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afEfanXtra"
 		summary = "A library for creating reusable Embedded Fantom (efan) components"
-		version = Version("1.0.13")
+		version = Version("1.0.12.1")
 
 		meta = [
 			"org.name"		: "Alien-Factory",
@@ -14,7 +14,7 @@ class Build : BuildPod {
 			"proj.uri"		: "http://www.fantomfactory.org/pods/afEfanXtra",			
 			"vcs.uri"		: "https://bitbucket.org/AlienFactory/afefanxtra",
 			"license.name"	: "The MIT Licence",
-			"repo.private"	: "true",
+			"repo.private"	: "false",
 
 			"afIoc.module" : "afEfanXtra::EfanXtraModule"
 		]
