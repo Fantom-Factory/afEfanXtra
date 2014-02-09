@@ -1,5 +1,8 @@
 using afIoc::Inject
 using afIoc::Registry
+using afIoc::ServiceStats
+using afIoc::ServiceStat
+using afIoc::ServiceScope
 using afPlastic
 using afEfan::EfanCompiler
 using afEfan::EfanErr
@@ -11,7 +14,6 @@ using afEfan::BaseEfanImpl
 ** (Service) -  
 @NoDoc
 const mixin ComponentCompiler {
-	
 	// TODO: introduce efanSrc & efanSrcLoc
 //	abstract EfanComponent compile(Str libName, Type comType, Str efanSrc, Uri efanSrcLoc)
 	abstract EfanComponent compile(Str libName, Type comType, File efanFile)
@@ -24,12 +26,18 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 	@Inject	private const EfanTemplateConverters		templateConverters
 	@Inject	private const Registry						registry
 	@Inject private const EfanCompiler 					efanCompiler
+	@Inject private const ServiceStats					serviceStats
 			private const |Type, PlasticClassModel|[]	compilerCallbacks
 	static	private const Type[]						allowedReturnTypes 	:= [Void#, Bool#]
+			private const Type:ServiceScope				serviceScopes
 
 	new make(|Type, PlasticClassModel|[] compilerCallbacks, |This|in) { 
 		in(this) 
 		this.compilerCallbacks = compilerCallbacks
+		
+		scopes := [:]
+		serviceStats.stats.each { scopes[it.serviceType] = it.scope }
+		this.serviceScopes = scopes
 	}
 
 	override EfanComponent compile(Str libName, Type comType, File efanFile) {
@@ -44,7 +52,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		after := componentMeta.findMethod(comType, AfterRender#)
 		if (!allowedReturnTypes.any {(after?.returns ?: Void#).fits(it)} )
 			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(after, allowedReturnTypes))
-		
+
 		model := PlasticClassModel("${comType.name}Impl", true)
 		model.extendMixin(comType)
 		
@@ -66,10 +74,10 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 
 		// give callbacks a chance to add to our model
 		compilerCallbacks.each { it.call(comType, model) }
+		regRequired := false
 		
 		// implement abstract fields
 		comType.fields.each |field| {
-
 			if (field.isStatic)
 				return
 
@@ -80,13 +88,21 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 				return
 
 			if (field.hasFacet(Inject#)) {
-				injectFieldName := "_af_inject${field.name.capitalize}"
-				// @see http://fantom.org/sidewalk/topic/2186#c14112
-				newField := model.addField(field.type, injectFieldName)
-				field.facets.each { newField.addFacetClone(it) }
-				model.overrideField(field, injectFieldName, """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")
-//				model.overrideField(field, "_af_componentHelper.service(${field.type.qname}#)", """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")
-				return
+				// keep app-scope services as fields to reduce overhead - we don't want to look up the service from IoC 
+				// each and every time if we can help it
+				if (serviceScopes[field.type] == ServiceScope.perApplication) {
+					injectFieldName := "_af_inject${field.name.capitalize}"
+					// @see http://fantom.org/sidewalk/topic/2186#c14112
+					newField := model.addField(field.type, injectFieldName)
+					field.facets.each { newField.addFacetClone(it) }
+					model.overrideField(field, injectFieldName, """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")
+					return
+				}
+				// have calls to threaded / non-const services call through to the registry, so they're not actually 
+				// held in the efan component. This'll work for 95% of use cases where the service can be identified
+				// solely by service type - but if the dependency requires other facets to resolve - you're screwed!
+				regRequired = true
+				model.overrideField(field, """_af_registry.dependencyByType(${field.type}#)""", """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")				
 			}
 
 			if (!model.hasField(field.name)) {
@@ -95,6 +111,11 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			}
 		}
 
+		if (regRequired) {
+			newField := model.addField(Registry#, "_af_registry")
+			newField.addFacet(Inject#)
+		}
+		
 		efanSrc 	:= templateConverters.convertTemplate(efanFile)
 		
 		try {
