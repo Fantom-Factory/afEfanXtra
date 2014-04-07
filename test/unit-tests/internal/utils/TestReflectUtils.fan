@@ -3,9 +3,8 @@
 class TestReflectUtils : Test {
 
 	Void testFindField() {
-		field := null
-//		field := ReflectUtils.findField(MyReflectTestUtils2#, "int", Int#)
-//		verifyEq(field, MyReflectTestUtils2#int)
+		field := ReflectUtils.findField(MyReflectTestUtils2#, "int", Int#)
+		verifyEq(field, MyReflectTestUtils2#int)
 		field = ReflectUtils.findField(MyReflectTestUtils1#, "int", Int#)
 		verifyEq(field, MyReflectTestUtils1#int)
 
@@ -62,11 +61,11 @@ class TestReflectUtils : Test {
 		Obj.echo("Num?#.fits(Num#) -> ${Num?#.fits(Num#)}")	// Num?#.fits(Num#) -> true
 		
 		method = ReflectUtils.findMethod(MyReflectTestUtils2#, "method3", [,], false, Num#)
-//		verifyNull(method)	// this fails!??
+		verifyEq(method, MyReflectTestUtils2#method3)	// 'cos Num?# fits Num#
 		method = ReflectUtils.findMethod(MyReflectTestUtils2#, "method3", [,], false, Num?#)
 		verifyEq(method, MyReflectTestUtils2#method3)
 		method = ReflectUtils.findMethod(MyReflectTestUtils2#, "method3", [,], false, Obj#)
-//		verifyNull(method)	// this fails!??
+		verifyEq(method, MyReflectTestUtils2#method3)	// 'cos Num?# fits Obj#
 		method = ReflectUtils.findMethod(MyReflectTestUtils2#, "method3", [,], false, Obj?#)
 		verifyEq(method, MyReflectTestUtils2#method3)
 		method = ReflectUtils.findMethod(MyReflectTestUtils2#, "method3", [,], false, Int#)
