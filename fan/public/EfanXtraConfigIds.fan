@@ -18,7 +18,7 @@
 const mixin EfanXtraConfigIds {
 
 	** The time before the file system is checked for template updates.
-	** Defaults to '10sec'
+	** Defaults to '30sec'
 	static const Str templateTimeout	:= "afEfan.templateTimeout"
 
 	** The class name given to compiled efan renderer instances.

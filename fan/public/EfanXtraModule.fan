@@ -1,23 +1,14 @@
-using afIoc::Build
-using afIoc::Contribute
-using afIoc::OrderedConfig
-using afIoc::MappedConfig
-using afIoc::ServiceBinder
-using afIoc::ServiceScope
-using afIoc::DependencyProvider
-using afIoc::DependencyProviderSource
-using afIoc::RegistryStartup
-using afIoc::SubModule
-using afPlastic::PlasticCompiler
-using afIocConfig::IocConfigModule
-using afIocConfig::IocConfigSource
-using afIocConfig::FactoryDefaults
+using concurrent
+using afIoc
+using afIocConfig
 using afEfan::EfanCompiler
+using afPlastic::PlasticCompiler
 
 
 ** The [afIoc]`http://repo.status302.com/doc/afIoc/#overview` module class.
 ** 
 ** This class is public so it may be referenced explicitly in tests.
+@NoDoc
 const class EfanXtraModule {
 
 	internal static Void bind(ServiceBinder binder) {
@@ -57,6 +48,11 @@ const class EfanXtraModule {
 		config["fandoc"] = |File file -> Str| { fandocToHtml.convert(file) }
 	}	
 
+	@Contribute { serviceType=ActorPools# }
+	static Void contributeActorPools(MappedConfig config) {
+		config["afEfanXtra.fileCache"] = ActorPool()
+	}
+
 	@Contribute { serviceType=DependencyProviderSource# }
 	internal static Void contributeDependencyProviderSource(OrderedConfig config) {
 		config.add(config.autobuild(LibraryProvider#))
@@ -64,7 +60,7 @@ const class EfanXtraModule {
 
 	@Contribute { serviceType=FactoryDefaults# }
 	internal static Void contributeFactoryDefaults(MappedConfig config) {
-		config[EfanXtraConfigIds.templateTimeout]		= 10sec
+		config[EfanXtraConfigIds.templateTimeout]		= 30sec
 		config[EfanXtraConfigIds.rendererClassName]		= "EfanComponentImpl"
 		config[EfanXtraConfigIds.supressStartupLogging]	= false
 	}
