@@ -116,10 +116,10 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			newField.addFacet(Inject#)
 		}
 		
-		efanSrc 	:= templateConverters.convertTemplate(efanFile)
+		efanSrc := templateConverters.convertTemplate(efanFile)
 		
 		try {
-			renderer	:= efanCompiler.compileWithModel(efanFile.normalize.uri, efanSrc, null, model) |Type efanType, EfanMetaData efanMeta -> BaseEfanImpl| {
+			renderer := efanCompiler.compileWithModel(efanFile.normalize.uri, efanSrc, null, model) |Type efanType, EfanMetaData efanMeta -> BaseEfanImpl| {
 				myefanMeta := clone(efanMeta) |plan| {
 					plan[EfanMetaData#templateId] 	= "\"${libName}::${comType.name}\""
 				}

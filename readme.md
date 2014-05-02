@@ -1,4 +1,4 @@
-# EfanXtra
+# efanXtra
 
 `efanXtra` is a [Fantom](http://fantom.org/) library for creating reusable [Embedded Fantom (efan)](https://bitbucket.org/AlienFactory/afefan) components. It pairs up Fantom classes and efan templates to encapsulate model / view behaviour.
 
@@ -6,11 +6,9 @@
 
 ## Install
 
-Install `efanXtra` with the [Fantom Respository Manager](http://fantom.org/doc/docFanr/Tool.html#install):
+Install `efanXtra` with the Fantom Respository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
     C:\> fanr install -r http://repo.status302.com/fanr/ afEfanXtra
-
-Or download the pod from [Status302](http://repo.status302.com/browse/afEfanXtra) and copy it to `%FAN_HOME%/lib/fan/`.
 
 To use in a Fantom project, add a dependency to its `build.fan`:
 
@@ -85,5 +83,3 @@ AppModule.fan:
 Then to render a component:
 
     efanXtra.render(Overdue#, "Mr Smith")
-
-

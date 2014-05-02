@@ -1,7 +1,5 @@
-using afIoc::ConcurrentCache
-using afIoc::Inject
-using afIoc::Registry
-using afIoc::NotFoundErr
+using afConcurrent
+using afIoc
 using afPlastic::PlasticClassModel
 using afEfan::EfanRenderer
 using afIocConfig::Config
@@ -20,68 +18,26 @@ internal const class ComponentCacheImpl : ComponentCache {
 	@Inject	private const Duration 				templateTimeout
 	@Inject	private const EfanTemplateFinders	templateFinders
 	@Inject	private const ComponentCompiler		compiler
-			private const FileCache 			fileCache
-			private const ConcurrentCache 		typeToState	:= ConcurrentCache() 
+			private const AtomicMap 			typeToFile
+			private const SynchronizedFileMap	fileToComponent
 
-	new make(|This|in) { 
+	new make(ActorPools actorPools, |This|in) { 
 		in(this) 
-		fileCache = FileCache(templateTimeout)
+		typeToFile		= AtomicMap()
+		fileToComponent	= SynchronizedFileMap(actorPools["afEfanXtra.fileCache"], templateTimeout)
 	}
 
 	override EfanComponent getOrMake(Str libName, Type componentType) {
 		
-		state := (ComponentCacheState) typeToState.getOrAdd(componentType) |->ComponentCacheState| {
-			templateFile 	:= templateFinders.findTemplate(componentType)
-			componentInst	:= compiler.compile(libName, componentType, templateFile)
-			
-			state := ComponentCacheState() {
-				it.componentType 	= componentType
-				it.componentInst	= componentInst
-				it.templateFile		= templateFile
-			}
-			
-			fileCache.addFile(templateFile)
-			
-			return state
-		}
-
-		// re-compile component if the template's been updated 
-		fileCache.updateFile(state.templateFile) |->| {
-			newComponent	:= compiler.compile(libName, state.componentType, state.templateFile)
-			state			= state.withComponent(newComponent)
-			typeToState[state.componentType] = state
+		templateFile := typeToFile.getOrAdd(componentType) {
+			templateFinders.findTemplate(componentType)
 		}
 		
-		return state.componentInst
-	}
-}
-
-internal const class ComponentCacheState {
-	const Type			componentType
-	const EfanComponent	componentInst
-	const File 			templateFile
-	
-	new make(|This|in) { in(this) }
-	
-	ComponentCacheState withComponent(EfanComponent componentInst) {
-		Utils.cloneObj(this) |Field:Obj plan| {
-			plan[#componentInst] = componentInst
+		component := fileToComponent.getOrAddOrUpdate(templateFile) {
+			compiler.compile(libName, componentType, templateFile)
 		}
+
+		return component
 	}
 }
 
-//internal const mixin Clonable {
-//	This clone(|Field:Obj|? overridePlan := null) {
-//		plan := Field:Obj[:]
-//		typeof.fields.each {
-//			value := it.get(this)
-//			if (value != null)
-//				plan[it] = value
-//		}
-//		
-//		overridePlan.call(plan)
-//		
-//		planFunc := Field.makeSetFunc(plan)
-//		return (Clonable) typeof.make([planFunc])
-//	}
-//}
