@@ -16,7 +16,8 @@ class Build : BuildPod {
 			"license.name"	: "The MIT Licence",
 			"repo.private"	: "true",
 
-			"afIoc.module" : "afEfanXtra::EfanXtraModule"
+			"tags"			: "templating",
+			"afIoc.module"	: "afEfanXtra::EfanXtraModule"
 		]
 
 		index = [
