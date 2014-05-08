@@ -5,9 +5,9 @@ using afEfan::EfanCompiler
 using afPlastic::PlasticCompiler
 
 
-** The [afIoc]`http://repo.status302.com/doc/afIoc/#overview` module class.
+** The [IoC]`http://www.fantomfactory.org/pods/afIoc` module class.
 ** 
-** This class is public so it may be referenced explicitly in tests.
+** This class is public so it may be referenced explicitly in test code.
 @NoDoc
 const class EfanXtraModule {
 
@@ -22,8 +22,8 @@ const class EfanXtraModule {
 		binder.bind(EfanXtraPrinter#)
 		
 		binder.bind(EfanXtra#).withoutProxy
-		binder.bind(EfanTemplateConverters#)
-		binder.bind(EfanTemplateDirectories#)
+		binder.bind(EfanTemplateConverters#, TemplateConvertersImpl#)
+		binder.bind(EfanTemplateDirectories#, TemplateDirectoriesImpl#)
 		binder.bind(TemplateFinders#)
 		binder.bind(FandocToHtmlConverter#)
 	}
@@ -51,7 +51,7 @@ const class EfanXtraModule {
 
 	@Contribute { serviceType=ActorPools# }
 	static Void contributeActorPools(MappedConfig config) {
-		config["afEfanXtra.fileCache"] = ActorPool() { it.maxThreads = 5 }
+		config["afEfanXtra.componentCache"] = ActorPool() { it.maxThreads = 5 }
 	}
 
 	@Contribute { serviceType=DependencyProviderSource# }

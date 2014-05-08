@@ -40,7 +40,6 @@ internal const class EfanXtraImpl : EfanXtra {
 	}
 
 	override EfanComponent component(Type componentType) {
-		library := efanLibraries.library(componentType) 
-		return componentCache.getOrMake(library.name, componentType)
+		return componentCache.getOrMake(componentType)
 	}
 }

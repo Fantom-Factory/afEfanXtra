@@ -14,16 +14,13 @@ using afEfan::BaseEfanImpl
 ** (Service) -  
 @NoDoc
 const mixin ComponentCompiler {
-	// TODO: introduce efanSrc & efanSrcLoc
-//	abstract EfanComponent compile(Str libName, Type comType, Str efanSrc, Uri efanSrcLoc)
-	abstract EfanComponent compile(Str libName, Type comType, File efanFile)
+	abstract EfanComponent compile(Type componentType, TemplateSource templateSource)
 }
 
 internal const class ComponentCompilerImpl : ComponentCompiler {
 
 	@Inject	private const ComponentMeta					componentMeta
 	@Inject	private const EfanLibraries					efanLibraries
-	@Inject	private const TemplateConverters			templateConverters
 	@Inject	private const Registry						registry
 	@Inject private const EfanCompiler 					efanCompiler
 	@Inject private const ServiceStats					serviceStats
@@ -40,7 +37,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		this.serviceScopes = scopes
 	}
 
-	override EfanComponent compile(Str libName, Type comType, File efanFile) {
+	override EfanComponent compile(Type comType, TemplateSource templateSrc) {
 		init := componentMeta.findMethod(comType, InitRender#)
 		if (!allowedReturnTypes.any {(init?.returns ?: Void#).fits(it)} )
 			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(init, allowedReturnTypes))
@@ -116,10 +113,9 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			newField.addFacet(Inject#)
 		}
 		
-		efanSrc := templateConverters.convertTemplate(efanFile)
-		
 		try {
-			renderer := efanCompiler.compileWithModel(efanFile.normalize.uri, efanSrc, null, model) |Type efanType, EfanMetaData efanMeta -> BaseEfanImpl| {
+			renderer := efanCompiler.compileWithModel(templateSrc.loc, templateSrc.template, null, model) |Type efanType, EfanMetaData efanMeta -> BaseEfanImpl| {
+				libName := efanLibraries.library(comType).name
 				myefanMeta := clone(efanMeta) |plan| {
 					plan[EfanMetaData#templateId] 	= "\"${libName}::${comType.name}\""
 				}

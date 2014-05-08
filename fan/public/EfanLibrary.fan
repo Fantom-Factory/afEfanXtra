@@ -50,7 +50,7 @@ const mixin EfanLibrary {
 	** If the '@InitRender' method returns anything other than 'Void', 'null' or 'true', rendering is aborted and the 
 	** value returned.
 	Str renderComponent(Type comType, Obj?[] initArgs, |Obj?|? bodyFunc := null) {
-		component 	:= componentCache.getOrMake(name, comType)
+		component 	:= componentCache.getOrMake(comType)
 
 		renderBuf	:= (StrBuf?) null
 
@@ -99,7 +99,7 @@ const mixin EfanLibrary {
 	
 	@NoDoc
 	Obj? callMethod(Type comType, Obj?[] initArgs, |->Obj?| func) {
-		component 	:= componentCache.getOrMake(name, comType)
+		component 	:= componentCache.getOrMake(comType)
 		rendering	:= (BaseEfanImpl) component
 		return EfanCtxStack.withCtx(rendering.efanMetaData.templateId) |EfanCtxStackElement element->Obj?| {
 			ComponentCtx.push
