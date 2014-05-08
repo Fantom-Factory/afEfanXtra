@@ -1,5 +1,10 @@
 using afEfan::EfanErr
 
+@NoDoc @Deprecated { msg="Use TemplateDirectories instead." }
+const mixin EfanTemplateDirectories : TemplateDirectories {
+	override abstract File[] templateDirs()
+}
+
 ** (Service) - Contribute directories that may contain efan / slim templates.
 ** 
 ** By contributing to 'EfanTemplateDirectories' you can force 'efanXtra' to look in file system directories when 
@@ -28,13 +33,13 @@ using afEfan::EfanErr
 **   config.add(`etc/components/admin/`)
 ** 
 ** Note that directory uris need to end with a /slash/.
-const mixin EfanTemplateDirectories {
+const mixin TemplateDirectories {
 	
 	** The list of contributed directories.
 	abstract File[] templateDirs()
 }
 
-internal const class EfanTemplateDirectoriesImpl : EfanTemplateDirectories {
+internal const class TemplateDirectoriesImpl : EfanTemplateDirectories {
 	
 	override const File[] templateDirs
 	

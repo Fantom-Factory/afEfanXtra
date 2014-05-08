@@ -12,6 +12,7 @@ using afPlastic::PlasticCompiler
 const class EfanXtraModule {
 
 	internal static Void bind(ServiceBinder binder) {
+		// TODO: try without proxy, see if it speeds up?
 		binder.bind(ComponentFinder#)
 		binder.bind(ComponentCompiler#)
 		binder.bind(ComponentCache#)
@@ -23,7 +24,7 @@ const class EfanXtraModule {
 		binder.bind(EfanXtra#).withoutProxy
 		binder.bind(EfanTemplateConverters#)
 		binder.bind(EfanTemplateDirectories#)
-		binder.bind(EfanTemplateFinders#)
+		binder.bind(TemplateFinders#)
 		binder.bind(FandocToHtmlConverter#)
 	}
 	
@@ -35,22 +36,22 @@ const class EfanXtraModule {
 		}
 	}
 
-	@Contribute { serviceType=EfanTemplateFinders# }
-	internal static Void contributeEfanTemplateFinders(OrderedConfig config) {
+	@Contribute { serviceType=TemplateFinders# }
+	internal static Void contributeTemplateFinders(OrderedConfig config) {
 		config.addOrdered("FindByFacetValue", 			config.autobuild(FindEfanByFacetValue#))
 		config.addOrdered("FindByTypeNameOnFileSystem",	config.autobuild(FindEfanByTypeNameOnFileSystem#))
 		config.addOrdered("FindByTypeNameInPod", 		config.autobuild(FindEfanByTypeNameInPod#))
 	}	
 
 	@Contribute { serviceType=EfanTemplateConverters# }
-	internal static Void contributeEfanTemplateConverters(MappedConfig config, FandocToHtmlConverter fandocToHtml) {
+	internal static Void contributeTemplateConverters(MappedConfig config, FandocToHtmlConverter fandocToHtml) {
 		config["efan"] 	 = |File file -> Str| { file.readAllStr }
 		config["fandoc"] = |File file -> Str| { fandocToHtml.convert(file) }
 	}	
 
 	@Contribute { serviceType=ActorPools# }
 	static Void contributeActorPools(MappedConfig config) {
-		config["afEfanXtra.fileCache"] = ActorPool()
+		config["afEfanXtra.fileCache"] = ActorPool() { it.maxThreads = 5 }
 	}
 
 	@Contribute { serviceType=DependencyProviderSource# }

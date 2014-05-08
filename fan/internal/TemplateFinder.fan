@@ -2,7 +2,7 @@ using afIoc::Inject
 using afEfan::EfanErr
 
 @NoDoc
-const mixin EfanTemplateFinder {
+const mixin TemplateFinder {
 
 	** Return an EfanTemplateSource
 	abstract File? findTemplate(Type componentType)
@@ -12,9 +12,9 @@ const mixin EfanTemplateFinder {
 
 }
 
-internal const class FindEfanByTypeNameInPod : EfanTemplateFinder {
+internal const class FindEfanByTypeNameInPod : TemplateFinder {
 	
-	@Inject	private const EfanTemplateConverters	templateConverters
+	@Inject	private const TemplateConverters	templateConverters
 
 	new make(|This|in) { in(this) }
 	
@@ -44,10 +44,10 @@ internal const class FindEfanByTypeNameInPod : EfanTemplateFinder {
 	}
 }
 
-internal const class FindEfanByTypeNameOnFileSystem : EfanTemplateFinder {
+internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 	
-	@Inject	private const EfanTemplateConverters	templateConverters
-	@Inject	private const EfanTemplateDirectories	templateDirectories
+	@Inject	private const TemplateConverters	templateConverters
+	@Inject	private const TemplateDirectories	templateDirectories
 
 	new make(|This|in) { in(this) }
 	
@@ -84,7 +84,7 @@ internal const class FindEfanByTypeNameOnFileSystem : EfanTemplateFinder {
 }
 
 @NoDoc	// used by Pillow
-const class FindEfanByFacetValue : EfanTemplateFinder {
+const class FindEfanByFacetValue : TemplateFinder {
 	
 	override File? findTemplate(Type componentType) {
 		if (!componentType.hasFacet(EfanTemplate#))
