@@ -43,7 +43,7 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	}
 	
 	override EfanLibrary get(Str libraryName) {
-		librariesByName[libraryName] // FIXME: null
+		librariesByName[libraryName] ?: throw NotFoundErr(ErrMsgs.libraryNameNotFound(libraryName), librariesByName.keys)
 	}
 
 	override EfanLibrary[] all() {
@@ -51,7 +51,7 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	}
 
 	override EfanLibrary find(Type componentType) {
-		librariesByComType[componentType] ?: throw NotFoundErr(ErrMsgs.libraryNotFound(componentType), librariesByComType.keys)
+		librariesByComType[componentType] ?: throw NotFoundErr(ErrMsgs.libraryComTypeNotFound(componentType), librariesByComType.keys)
 	}
 	
 //	override Str:EfanLibrary libraries() { librariesF }
