@@ -8,52 +8,36 @@ using afIocConfig::Config
 @NoDoc
 const mixin ComponentCache {
 
-	// FIXME: remove libName from method -> push into compiler
-	abstract EfanComponent getOrMake(Str libName, Type componentType)
+	abstract EfanComponent getOrMake(Type componentType)
 
 }
 
 internal const class ComponentCacheImpl : ComponentCache {
 
-	@Config { id="afEfan.templateTimeout" }
-	@Inject	private const Duration 				templateTimeout
 	@Inject	private const TemplateFinders		templateFinders
-	@Inject	private const ComponentCompiler		compiler
-	
-//			private const SynchronizedFileMap	fileToComponent
-
+	@Inject	private const ComponentCompiler		compiler	
 			private const SynchronizedMap		typeToComponent
-			private const SynchronizedMap		typeToTemplateSrc
-			private const SynchronizedFileMap	fileCache
-			private const AtomicMap 			typeToFile
 
 	new make(ActorPools actorPools, |This|in) { 
 		in(this) 
-		typeToFile		= AtomicMap()
-//		fileToComponent	= SynchronizedFileMap(actorPools["afEfanXtra.fileCache"], templateTimeout)
-		typeToComponent	= SynchronizedMap(actorPools["afEfanXtra.fileCache"])
-		fileCache		= SynchronizedFileMap(actorPools["afEfanXtra.fileCache"])
+		typeToComponent	= SynchronizedMap(actorPools["afEfanXtra.componentCache"]) { it.keyType = Type#; it.valType = EfanComponent# }
 	}
 
-	override EfanComponent getOrMake(Str libName, Type componentType) {
-		templateFile := typeToFile.getOrAdd(componentType) {
-			templateFinders.findTemplate(componentType)
-		}
-		
-		templateSrc := (TemplateSrc) typeToTemplateSrc.getOrAdd(componentType) {
-//			TemplateSrcFactory stuff
-			9
-		}
-
-		component := typeToComponent.getOrAdd(componentType) {
-			compiler.compile(libName, componentType, templateFile)
+	override EfanComponent getOrMake(Type componentType) {
+		templateSrc := templateFinders.getOrFindTemplate(componentType)
+		component 	:= typeToComponent.getOrAdd(templateSrc) {
+			compiler.compile(componentType, templateSrc)
 		}		
 		
-		if (templateSrc.outOfDate) {
-			typeToComponent.lock.synchronized |->Obj| {
-				newCom := compiler.compile(libName, componentType, templateFile)
-				typeToComponent.map = typeToComponent.map.rw.set(componentType, newCom).toImmutable
-				return newCom
+		if (templateSrc.isModified) {
+			component = typeToComponent.lock.synchronized |->Obj| {
+				// double lock
+				if (!templateSrc.isModified)
+					return component
+				
+				newComponent := compiler.compile(componentType, templateSrc)
+				typeToComponent.map = typeToComponent.map.rw.set(componentType, newComponent).toImmutable
+				return newComponent
 			}
 		}
 
@@ -61,29 +45,3 @@ internal const class ComponentCacheImpl : ComponentCache {
 	}
 }
 
-// update TemplateFinders to return TemplateSrc, not File! Boo yakka!
-//const mixin TemplateSrcFactory {
-//}
-
-const mixin TemplateSrc {
-	abstract Str templateSrc()
-	abstract Uri templateLoc()
-	abstract Bool outOfDate()
-}
-
-const class TemplateSrcFile : TemplateSrc {
-	
-	private const TemplateConverters? templateConverters
-//	private const TemplateFinders?	templateFinders
-	
-	override Str templateSrc() {
-		""
-	}
-	override Uri templateLoc() {
-		``
-	}
-	override Bool outOfDate() {
-		true
-	}
-	
-}
