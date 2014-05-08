@@ -33,8 +33,12 @@ internal const class ErrMsgs {
 		"Template Dir `${templateDir.normalize}` is not a directory!"
 	}
 
-	static Str libraryNotFound(Type type) {
+	static Str libraryComTypeNotFound(Type type) {
 		"Could not find efan library for component type '${type.qname}'"
+	}
+
+	static Str libraryNameNotFound(Str name) {
+		"Could not find efan library with name '${name}'"
 	}
 
 	static Str componentMetaTooManyMethods(Type comType, Type facetType) {

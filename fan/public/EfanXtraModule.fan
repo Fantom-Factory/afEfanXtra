@@ -11,23 +11,21 @@ using afPlastic::PlasticCompiler
 @NoDoc
 const class EfanXtraModule {
 
-	// FIXME: add APP library - remove from pillow...? can't!
-	
 	internal static Void bind(ServiceBinder binder) {
 		// TODO: try without proxy, see if it speeds up?
-		binder.bind(ComponentFinder#)
-		binder.bind(ComponentCompiler#)
+		binder.bind(ComponentFinder#)		.withoutProxy
+		binder.bind(ComponentCompiler#)		.withoutProxy
 		binder.bind(ComponentCache#)
-		binder.bind(ComponentMeta#)
-		binder.bind(EfanLibraryCompiler#)
-		binder.bind(EfanLibraries#)
-		binder.bind(EfanXtraPrinter#)
+		binder.bind(ComponentMeta#)			.withoutProxy
+		binder.bind(EfanLibraryCompiler#)	.withoutProxy
+		binder.bind(EfanLibraries#)			.withoutProxy
+		binder.bind(EfanXtraPrinter#)		.withoutProxy
 		
 		binder.bind(EfanXtra#).withoutProxy
-		binder.bind(EfanTemplateConverters#, TemplateConvertersImpl#)
-		binder.bind(EfanTemplateDirectories#, TemplateDirectoriesImpl#)
-		binder.bind(TemplateFinders#)
-		binder.bind(FandocToHtmlConverter#)
+		binder.bind(EfanTemplateConverters#, TemplateConvertersImpl#)		.withoutProxy
+		binder.bind(EfanTemplateDirectories#, TemplateDirectoriesImpl#)		.withoutProxy
+		binder.bind(TemplateFinders#)		.withoutProxy
+		binder.bind(FandocToHtmlConverter#)	.withoutProxy
 	}
 	
 	@Build { serviceId="EfanCompiler" }

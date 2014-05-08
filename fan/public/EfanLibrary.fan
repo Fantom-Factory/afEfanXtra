@@ -48,7 +48,6 @@ const mixin EfanLibrary {
 	** The name of library - given when you contribute a pod to 'EfanLibraries'. 
 	abstract Str name
 	
-	// FIXME !
 	** The pod this library represents - given when you contribute a pod to 'EfanLibraries'.
 	abstract Pod pod
 	

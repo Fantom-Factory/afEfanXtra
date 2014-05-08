@@ -34,7 +34,6 @@ const mixin EfanTemplateConverters : TemplateConverters {
 ** That will convert all files with a '.slim' extension to an efan template.
 ** 
 ** @uses Mapped config of 'Str : |File->Str|' - file ext to func that converts the file to an efan template 
-// FIXME: make Str : |OutStream->Str|?
 const mixin TemplateConverters {
 
 	** Converts the given 'File' to an efan template Str.
