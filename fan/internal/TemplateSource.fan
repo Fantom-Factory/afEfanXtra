@@ -2,15 +2,19 @@ using concurrent
 using afIoc
 using afIocConfig
 
+@NoDoc
 const mixin TemplateSource {
 	
 	abstract Str template()
 	
-	abstract Uri loc()
+	abstract Uri location()
 	
 	abstract Bool isModified()
+
+	abstract DateTime LastModified()
 }
 
+@NoDoc
 const class TemplateSourceFile : TemplateSource {
 	@Inject	private const TemplateConverters templateConverters
 
@@ -34,7 +38,7 @@ const class TemplateSourceFile : TemplateSource {
 		return template
 	}
 
-	override Uri loc() {
+	override Uri location() {
 		templateFile.normalize.uri
 	}
 
@@ -44,6 +48,10 @@ const class TemplateSourceFile : TemplateSource {
 		if ((DateTime.now - ((DateTime) lastChecked.val)) < timeout)
 			return false
 		return templateFile.modified > ((DateTime) lastModified.val)
+	}
+
+	override DateTime LastModified() {
+		templateFile.modified
 	}
 
 	private Void updateTimestamp() {

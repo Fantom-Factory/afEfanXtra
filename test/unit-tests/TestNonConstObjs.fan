@@ -53,6 +53,7 @@ const mixin T_LogFields : EfanComponent {
 	Str render() { log.info("Hello!"); return "Wotever" }
 }
 
+@NoDoc
 class NonConstService {
 	override Str toStr() { "Non-Const Service!" }
 }

@@ -1,7 +1,8 @@
 using afIoc::Inject
 using afEfan
 
-** Use to manually render a component; an library instance exists for each contributed pod.
+** A library of efan components; use to manually render a component.
+** A library instance exists for each contributed pod.
 ** 
 ** As well as the generic 'renderComponent()' method, libraries also have render methods for each individual component. 
 ** Example, if you had a component:
@@ -47,10 +48,14 @@ const mixin EfanLibrary {
 	@NoDoc	@Inject abstract ComponentMeta	componentMeta
 	
 	** Renders the given efan component and returns the rendered Str. 
-	** If the '@InitRender' method returns anything other than 'Void', 'null' or 'true', rendering is aborted and the 
-	** value returned.
-	Str renderComponent(Type comType, Obj?[] initArgs, |Obj?|? bodyFunc := null) {
-		component 	:= componentCache.getOrMake(comType)
+	** All lifecycle methods are honoured - '@InitRender', '@BeginRender' and '@AfterRender'.
+	Str renderComponent(Type componentType, Obj?[]? initArgs := null) {
+		renderComponentWithBody(componentType, initArgs ?: Obj#.emptyList, null)
+	}
+
+	@NoDoc	// used by libraries
+	Str renderComponentWithBody(Type componentType, Obj?[] initArgs, |Obj?|? bodyFunc) {
+		component 	:= componentCache.getOrMake(componentType)
 
 		renderBuf	:= (StrBuf?) null
 
@@ -87,7 +92,7 @@ const mixin EfanLibrary {
 		return Str.defVal
 	}
 
-	** Utility method to check if a set of parameters fit the component's [@InitRender]`InitRender` method.
+	** Utility method to check if the given parameters will fit the component's [@InitRender]`InitRender` method.
 	Bool fitsInitRender(Type comType, Type[] paramTypes) {
 		initMethod := componentMeta.findMethod(comType, InitRender#)
 		if (initMethod == null) {

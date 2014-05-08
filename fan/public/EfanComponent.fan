@@ -1,6 +1,7 @@
 using afEfan::EfanRenderCtx
 using afEfan::EfanMetaData
 
+** Implement to define an 'efanXtra' component. 
 const mixin EfanComponent {
 
 	** Meta data about the compiled efan templates

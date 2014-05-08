@@ -1,18 +1,11 @@
 
-** [IocConfig]`http://repo.status302.com/doc/afIocConfig/` values as provided by 'efanXtra'. 
+** [IocConfig]`http://fantomfactory.org/pods/afIocConfig` values as provided by 'efanXtra'. 
 ** To change their value, override them in your 'AppModule'. Example:
 ** 
 ** pre>
-** using afIoc
-** using afIocConfig
-** using afEfanXtra
-**  
-** class AppModule {
-** 
-**   @Contribute { serviceType=ApplicationDefaults# } 
-**   static Void configureAppDefaults(MappedConfig config) {
+** @Contribute { serviceType=ApplicationDefaults# } 
+** static Void configureAppDefaults(MappedConfig config) {
 **     config[EfanXtraConfigIds.templateTimeout] = 1min
-**   }
 ** }
 ** <pre
 const mixin EfanXtraConfigIds {
