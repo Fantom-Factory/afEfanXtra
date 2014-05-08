@@ -114,7 +114,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		}
 		
 		try {
-			renderer := efanCompiler.compileWithModel(templateSrc.loc, templateSrc.template, null, model) |Type efanType, EfanMetaData efanMeta -> BaseEfanImpl| {
+			renderer := efanCompiler.compileWithModel(templateSrc.location, templateSrc.template, null, model) |Type efanType, EfanMetaData efanMeta -> BaseEfanImpl| {
 				libName := efanLibraries.library(comType).name
 				myefanMeta := clone(efanMeta) |plan| {
 					plan[EfanMetaData#templateId] 	= "\"${libName}::${comType.name}\""

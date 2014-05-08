@@ -35,11 +35,14 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 
 			// TODO: filter out Pillow pages, as you their @PageContext means you may not be able to render them anyway
 			initMethod	:= componentMeta.findMethod(comType, InitRender#)
+			
+			// bodyFunc is actually |->|? but for efan to make use of it-block syntax we define it as |Obj?|
+			// required because the whole bodyFunc syntax is based on it!
 			initSig 	:= componentMeta.methodSig (comType, InitRender#, "|Obj?|? bodyFunc := null")
 			
 			args := (initMethod != null && !initMethod.params.isEmpty) ? (initMethod.params.join(",") { it.name }) : "," 
 			body := "args := [${args}]\n"
-			body += "return renderComponent(${comType.qname}#, args, bodyFunc)\n"
+			body += "return renderComponentWithBody(${comType.qname}#, args, bodyFunc)\n"
 			
 			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)
 		}

@@ -43,7 +43,7 @@ const class EfanXtraModule {
 		config.addOrdered("FindByTypeNameInPod", 		config.autobuild(FindEfanByTypeNameInPod#))
 	}	
 
-	@Contribute { serviceType=EfanTemplateConverters# }
+	@Contribute { serviceType=TemplateConverters# }
 	internal static Void contributeTemplateConverters(MappedConfig config, FandocToHtmlConverter fandocToHtml) {
 		config["efan"] 	 = |File file -> Str| { file.readAllStr }
 		config["fandoc"] = |File file -> Str| { fandocToHtml.convert(file) }
