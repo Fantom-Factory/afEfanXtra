@@ -1,7 +1,6 @@
 using afEfan::EfanRenderCtx
 using afEfan::EfanMetaData
 
-@NoDoc
 const mixin EfanComponent {
 
 	** Meta data about the compiled efan templates

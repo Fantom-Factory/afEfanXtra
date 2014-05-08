@@ -42,11 +42,11 @@ internal const class ErrMsgs {
 	}
 
 	static Str componentMetaParamsDontFitMethod(Type[] types, Method method) {
-		"Param types [" + types.map { it.qname } + "] does not fit method signature: ${method.signature}"
+		stripSys("Param types [" + types.map { it.qname } + "] does not fit method signature: ${method.signature}")
 	}
 
 	static Str componentCompilerWrongReturnType(Method method, Type[] allowedReturnTypes) {
-		"Method '${method.returns.name} ${method.qname}' should return one of " + allowedReturnTypes.join(", ") { it.name }
+		stripSys("Method '${method.returns.name} ${method.qname}' should return one of " + allowedReturnTypes.join(", ") { it.name })
 	}
 
 	static Str alienAidComponentTypo(Str lib, Str comName) {
@@ -56,6 +56,10 @@ internal const class ErrMsgs {
 	static Str metaTypesDoNotFitMethod(Type? facetType, Method initMethod, Type?[] types) {
 		t := types.join(", ") { it?.signature ?: "" }
 		f := facetType != null ? "@${facetType.name} " : ""
-		return "${f}${initMethod.signature} can not be called with param types [${t}]"
+		return stripSys("${f}${initMethod.parent.qname} ${initMethod.signature} can not be called with param types [${t}]")
+	}
+	
+	private static Str stripSys(Str str) {
+		str.replace("sys::", "")
 	}
 }

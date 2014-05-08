@@ -1,9 +1,9 @@
 using afIoc
 
 // Maybe make this public - rename maybe?
-** (Service) - What you contribute your `EfanTemplateFinder` to.
+** (Service) - What you contribute your `TemplateFinder` to.
 @NoDoc
-const mixin EfanTemplateFinders {
+const mixin TemplateFinders {
 
 	// Maybe later this will return a templae source?
 	** Finds an efan template for the given efan component type.
@@ -11,12 +11,12 @@ const mixin EfanTemplateFinders {
 	
 }
 
-internal const class EfanTemplateFindersImpl : EfanTemplateFinders {
+internal const class TemplateFindersImpl : TemplateFinders {
 
-	@Inject	private const EfanTemplateConverters	templateConverters
-			private const EfanTemplateFinder[] 		finders
+	@Inject	private const TemplateConverters	templateConverters
+			private const TemplateFinder[] 		finders
 
-	new make(EfanTemplateFinder[] finders, |This|in) { 
+	new make(TemplateFinder[] finders, |This|in) { 
 		in(this) 
 		this.finders = finders.toImmutable
 	}

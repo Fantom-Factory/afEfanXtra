@@ -23,7 +23,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 
 	@Inject	private const ComponentMeta					componentMeta
 	@Inject	private const EfanLibraries					efanLibraries
-	@Inject	private const EfanTemplateConverters		templateConverters
+	@Inject	private const TemplateConverters			templateConverters
 	@Inject	private const Registry						registry
 	@Inject private const EfanCompiler 					efanCompiler
 	@Inject private const ServiceStats					serviceStats
