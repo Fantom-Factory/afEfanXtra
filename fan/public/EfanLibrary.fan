@@ -41,20 +41,42 @@ using afEfan
 **    
 const mixin EfanLibrary {
 
+	@NoDoc	@Inject abstract ComponentCache		componentCache
+	@NoDoc	@Inject abstract ComponentMeta		componentMeta
+	@NoDoc	@Inject	abstract ComponentFinder	componentFinder
+	
 	** The name of library - given when you contribute a pod to 'EfanLibraries'. 
 	abstract Str name
 	
-	@NoDoc	@Inject abstract ComponentCache	componentCache
-	@NoDoc	@Inject abstract ComponentMeta	componentMeta
+	// FIXME !
+	** The pod this library represents - given when you contribute a pod to 'EfanLibraries'.
+	abstract Pod pod
 	
+	** Returns the types of all the components in this library.
+	Type[] componentTypes() {
+		componentFinder.findComponentTypes(pod)
+	}
+	
+	// a public render method without the confusing 'bodyFunc' parameter
 	** Renders the given efan component and returns the rendered Str. 
 	** All lifecycle methods are honoured - '@InitRender', '@BeginRender' and '@AfterRender'.
 	Str renderComponent(Type componentType, Obj?[]? initArgs := null) {
-		renderComponentWithBody(componentType, initArgs ?: Obj#.emptyList, null)
+		_renderComponent(componentType, initArgs ?: Obj#.emptyList, null)
 	}
 
-	@NoDoc	// used by libraries
-	Str renderComponentWithBody(Type componentType, Obj?[] initArgs, |Obj?|? bodyFunc) {
+	** Utility method to check if the given parameters will fit the component's [@InitRender]`InitRender` method.
+	Bool fitsInitRender(Type comType, Type[] paramTypes) {
+		initMethod := componentMeta.findMethod(comType, InitRender#)
+		if (initMethod == null) {
+			return paramTypes.isEmpty
+		}
+		return ReflectUtils.paramTypesFitMethodSignature(paramTypes, initMethod)
+	}
+	
+	** Called by library render methods
+	** _Underscore_ 'cos there may be a component called 'Component' and we'd get a name clash
+	@NoDoc
+	Str _renderComponent(Type componentType, Obj?[] initArgs, |Obj?|? bodyFunc) {
 		component 	:= componentCache.getOrMake(componentType)
 
 		renderBuf	:= (StrBuf?) null
@@ -91,16 +113,6 @@ const mixin EfanLibrary {
 			return renderBuf.toStr
 		return Str.defVal
 	}
-
-	** Utility method to check if the given parameters will fit the component's [@InitRender]`InitRender` method.
-	Bool fitsInitRender(Type comType, Type[] paramTypes) {
-		initMethod := componentMeta.findMethod(comType, InitRender#)
-		if (initMethod == null) {
-			return paramTypes.isEmpty
-		}
-		return ReflectUtils.paramTypesFitMethodSignature(paramTypes, initMethod)
-	}
-	
 	
 	@NoDoc
 	Obj? callMethod(Type comType, Obj?[] initArgs, |->Obj?| func) {

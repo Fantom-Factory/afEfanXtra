@@ -4,8 +4,8 @@ using afEfan::EfanErr
 using afPlastic
 
 internal class EfanTest : Test {
-	Registry? 	reg
-	EfanXtra?	efanXtra
+	@Inject Registry? 	reg
+	@Inject EfanXtra?	efanXtra
 	
 	Void verifyEfanErrMsg(Str errMsg, |Obj| func) {
 		verifyErrTypeMsg(EfanErr#, errMsg, func)
@@ -28,8 +28,8 @@ internal class EfanTest : Test {
 	
 	override Void setup() {
 		try {
-			reg 		= RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#]).build.startup
-			efanXtra	= reg.dependencyByType(EfanXtra#)
+			reg = RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#]).build.startup
+			reg.injectIntoFields(this)
 			
 		} catch (PlasticCompilationErr pce) {
 			Env.cur.err.printLine(pce.print("Ooops", 50))
