@@ -1,6 +1,4 @@
 
 @NoDoc
 @EfanTemplate { uri=`etc/test/EfanComponentFile.efan` }
-const mixin TemplateFromFacetOnFile {
-
-}
+const mixin TemplateFromFacetOnFile : EfanComponent { }

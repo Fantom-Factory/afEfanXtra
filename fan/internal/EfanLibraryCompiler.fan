@@ -26,8 +26,10 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 
 		inject(model, EfanLibrary#componentCache)
 		inject(model, EfanLibrary#componentMeta)
+		inject(model, EfanLibrary#componentFinder)
 
 		model.overrideField(EfanLibrary#name, "\"${libName}\"", "throw Err(\"'name' is read only.\")")
+		model.overrideField(EfanLibrary#pod,  "Pod.find(\"${pod.name}\")", "throw Err(\"'pod' is read only.\")")
 
 		// add render methods
 		componentFinder.findComponentTypes(pod).each |comType| {	
@@ -42,7 +44,7 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 			
 			args := (initMethod != null && !initMethod.params.isEmpty) ? (initMethod.params.join(",") { it.name }) : "," 
 			body := "args := [${args}]\n"
-			body += "return renderComponentWithBody(${comType.qname}#, args, bodyFunc)\n"
+			body += "return _renderComponent(${comType.qname}#, args, bodyFunc)\n"
 			
 			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)
 		}

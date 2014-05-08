@@ -33,8 +33,8 @@ internal const class ErrMsgs {
 		"Template Dir `${templateDir.normalize}` is not a directory!"
 	}
 
-	static Str libraryNotFound(Pod pod) {
-		"Could not find efan library for pod '${pod.name}'"
+	static Str libraryNotFound(Type type) {
+		"Could not find efan library for component type '${type.qname}'"
 	}
 
 	static Str componentMetaTooManyMethods(Type comType, Type facetType) {
@@ -49,8 +49,8 @@ internal const class ErrMsgs {
 		stripSys("Method '${method.returns.name} ${method.qname}' should return one of " + allowedReturnTypes.join(", ") { it.name })
 	}
 
-	static Str alienAidComponentTypo(Str lib, Str comName) {
-		"\n  ALIEN-AID: Did you mean: ${lib}.render${comName}(...) ???"
+	static Str alienAidComponentTypo(Str libName, Str comName) {
+		"\n  ALIEN-AID: Did you mean: ${libName}.render${comName}(...) ???"
 	}
 
 	static Str metaTypesDoNotFitMethod(Type? facetType, Method initMethod, Type?[] types) {

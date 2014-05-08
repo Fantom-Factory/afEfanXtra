@@ -65,8 +65,8 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		model.extendMixin(EfanComponent#)
 		
 		// add 3rd party component libraries
-		efanLibraries.libraries.each |type, name| {
-			model.addField(type.typeof, name, null, null).addFacet(Inject#)
+		efanLibraries.all.each |lib| {
+			model.addField(lib.typeof, lib.name, null, null).addFacet(Inject#)			
 		}
 
 		// give callbacks a chance to add to our model
@@ -115,7 +115,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		
 		try {
 			renderer := efanCompiler.compileWithModel(templateSrc.location, templateSrc.template, null, model) |Type efanType, EfanMetaData efanMeta -> BaseEfanImpl| {
-				libName := efanLibraries.library(comType).name
+				libName := efanLibraries.find(comType).name
 				myefanMeta := clone(efanMeta) |plan| {
 					plan[EfanMetaData#templateId] 	= "\"${libName}::${comType.name}\""
 				}
@@ -130,20 +130,13 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			if (!matcher.matches)  
 				throw err
 
-			comName := matcher.group(1)
-			lib := efanLibraries.libraries.keys.find |lName| {
-				cName := efanLibraries.componentTypes(lName).find { it.name.equalsIgnoreCase(comName) }
-				// re-assign comName to cater for case sensitivity mistakes
-				if (cName != null) 
-					comName = cName.name
-				return (cName != null)
-			}
+			comName := matcher.group(1)			
+			actualComType := (Type?) efanLibraries.all.eachWhile |lib| {
+				lib.componentTypes.find { it.name.equalsIgnoreCase(comName) }
+			} ?: throw err
 			
-			if (lib == null)
-				throw err
-			
-			msg := ErrMsgs.alienAidComponentTypo(lib, comName)
-			throw err.withXtraMsg(msg)
+			lib := efanLibraries.find(actualComType)
+			throw err.withXtraMsg(ErrMsgs.alienAidComponentTypo(lib.name, actualComType.name))
 		}
 	}
 	

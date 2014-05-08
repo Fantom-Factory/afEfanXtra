@@ -11,6 +11,8 @@ using afPlastic::PlasticCompiler
 @NoDoc
 const class EfanXtraModule {
 
+	// FIXME: add APP library - remove from pillow...? can't!
+	
 	internal static Void bind(ServiceBinder binder) {
 		// TODO: try without proxy, see if it speeds up?
 		binder.bind(ComponentFinder#)

@@ -6,7 +6,7 @@ using afIocConfig::Config
 const class EfanXtraPrinter {
 	private const static Log log := Utils.getLog(EfanXtraPrinter#)
 
-	@Inject private	const EfanXtra 			efanXtra
+	@Inject private	const EfanLibraries		efanLibraries
 	@Inject private	const ComponentMeta		componentMeta
 	
 	@Config { id="afEfan.supressStartupLogging" }
@@ -19,22 +19,22 @@ const class EfanXtraPrinter {
 			return
 
 		details := "\n"
-		efanXtra.libraries.each |libName| {
-			details += libraryDetailsToStr(libName) { true }
+		efanLibraries.all.each |lib| {
+			details += libraryDetailsToStr(lib) { true }
 		}
 
 		log.info(details)		
 	}
 
-	Str libraryDetailsToStr(Str libName, |Type component->Bool| filter) {
+	Str libraryDetailsToStr(EfanLibrary lib, |Type component->Bool| filter) {
 		buf		 := StrBuf()
-		comTypes := efanXtra.componentTypes(libName).findAll(filter)
+		comTypes := lib.componentTypes.findAll(filter)
 		
 		maxName	 := (Int) comTypes.reduce(0) |size, component| { ((Int) size).max(component.name.toDisplayName.size) }
-		buf.add("\nefan Library: '${libName}' has ${comTypes.size} components:\n\n")
+		buf.add("\nefan Library: '${lib.name}' has ${comTypes.size} components:\n\n")
 
 		comTypes.each |comType| {
-			line := comType.name.toDisplayName.padl(maxName) + " : " + "${libName}." + componentMeta.methodDec(comType, InitRender#)
+			line := comType.name.toDisplayName.padl(maxName) + " : " + "${lib.name}." + componentMeta.methodDec(comType, InitRender#)
 			buf.add("  ${line}\n")
 		}
 		
