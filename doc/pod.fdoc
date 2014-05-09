@@ -1,16 +1,13 @@
 Overview [#overview]
 ********************
-'efanXtra' creates managed libraries of reusable [Embedded Fantom (efan)]`http://www.fantomfactory.org/pods/afEfan`
-components. Influenced by Java's [Tapestry 5]`http://tapestry.apache.org/index.html`, it pairs up Fantom classes and efan template
+'efanXtra' creates managed libraries of reusable [Embedded Fantom (efan)]`pod:afEfan` components.
+Influenced by Java's [Tapestry 5]`http://tapestry.apache.org/index.html`, it pairs up Fantom classes and efan template
 files to encapsulate model / view behaviour.
 
-'efanXtra' extends [afEfan]`http://www.fantomfactory.org/pods/afEfan`, is powered by
-[Ioc]`http://www.fantomfactory.org/pods/afIoc` and works great with [Slim]`http://www.fantomfactory.org/pods/afSlim`
-templates.
+'efanXtra' extends [efan]`pod:afEfan`, is powered by [IoC]`pod:afIoc` and works great with [Slim]`pod:afSlim` templates.
 
-'efanXtra' excels in a [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet` web environment, where URLs are
-automatically mapped to efan components (see [Pillow]`http://www.fantomfactory.org/pods/afPillow`), but is presented
-here context free for maximum reuse. Think email, code generation, blog posts, etc...
+'efanXtra' excels in a [BedSheet]`pod:afBedSheet` web environment, where URLs are automatically mapped to efan components
+(see [Pillow]`pod:afPillow`), but is presented here context free for maximum reuse. Think email, code generation, blog posts, etc...
 
 
 
@@ -67,7 +64,7 @@ class AppModule {
   }
 
   @Contribute { serviceType=EfanLibraries# }
-  static Void contributeEfanLibraries(MappedConfig config) {
+  static Void contributeEfanLibs(MappedConfig config) {
 
     // contribute all components in the pod as a library named 'app'
     config["app"] = AppModule#.pod
@@ -77,7 +74,7 @@ class AppModule {
 
 Then to render an efan component:
 
-  efanXtra.render(Overdue#, "Mr Smith")
+  efanXtra.component(Overdue#).renderTemplate("Mr Smith")
 
 Full example source code available on [BitBucket]`https://bitbucket.org/AlienFactory/afefanxtra/src/default/test/example/`.
 

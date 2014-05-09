@@ -5,15 +5,15 @@ using afIoc::Inject
 
 internal const class LibraryProvider : DependencyProvider {
 
-	@Inject private const EfanLibraries efanLibraries
+	@Inject private const EfanXtra efanXtra
 	
 	new make(|This|in) { in(this) }
 	
 	override Bool canProvide(InjectionCtx ctx) {
-		efanLibraries.all.any { it.typeof.fits(ctx.dependencyType) }
+		efanXtra.libraries.any { it.typeof.fits(ctx.dependencyType) }
 	}
 
 	override Obj? provide(InjectionCtx ctx) {
-		efanLibraries.all.find { it.typeof.fits(ctx.dependencyType) }
+		efanXtra.libraries.find { it.typeof.fits(ctx.dependencyType) }
 	}
 }

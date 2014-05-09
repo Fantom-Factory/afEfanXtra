@@ -3,19 +3,29 @@ using afEfan::EfanMetaData
 using afEfan::BaseEfanImpl
 using afIoc
 
-** Implement to define an 'efanXtra' component. 
+// EfanComponent will extend BaseEfanImpl. 
+** Extend to define an 'efanXtra' component.
 ** 
-** All your templates will implicitly extend this mixin.
+** Whereas 'efan' returns 'EfanRenderer' instances, 'efanXtra' returns 'EfanComponent' instances. 
 const mixin EfanComponent {
 
 	** Meta data about the compiled efan templates
 	abstract EfanMetaData efanMetaData
 
-	** The library this component belongs to.
-//	abstract EfanLibrary efanLibrary
-	
-	// FIXME: is renderBody needed? what's the relationship between this and EfanRenderer?
-	Str renderTemplate(Obj?[]? initArgs := null, |->|? bodyFunc := null) {
+	** The main render method. 'initArgs' are passed to the '@InitRender' lifecycle method.
+	** 
+	** In normal use, 'bodyFunc' is only passed from within a template.
+	** It is executed when 'renderBody()' is called. 
+	** Use it for enclosing content in *Layout* templates. Example:
+	** 
+	** pre>
+	** ...
+	** <%= app.rednerLayout() { %>
+	**   ... my body content ...
+	** <% } %>
+	** ...
+	** <pre
+	Str render(Obj?[]? initArgs := null, |->|? bodyFunc := null) {
 		component		:= (BaseEfanImpl) this
 		componentMeta	:= ComponentMeta()
 		
@@ -34,8 +44,18 @@ const mixin EfanComponent {
 				while (renderLoop) {
 
 					b4Ret	:= componentMeta.callMethod(BeforeRender#, component, [renderBufIn])
-					if (b4Ret != false)
-						component._af_render(null)
+					if (b4Ret != false) {
+						
+						// as this is a component, it will always be compiled (to add the library fields for starters!),
+						// but we don't always need to render a template.
+						userDefined := renderTemplate
+						if (userDefined != Str.defVal) {
+							// a cheeky back door to write to the template buffer
+							Type.of(this).field("_af_code").set(this, userDefined)
+						} else {
+							component._af_render(null)
+						}
+					}
 					
 					aftRet	:= componentMeta.callMethod(AfterRender#, component, [renderBufIn])
 					
@@ -54,20 +74,22 @@ const mixin EfanComponent {
 	}
 
 	** Call from within your template to render the body of the enclosing efan template. 
-	** Example, a simple 'layout.html' may be defined as: 
+	** Example, a simple 'layout' template may look like: 
 	** 
 	** pre>
 	** <html>
-	** <head>
-	**   <title><%= ctx.pageTitle %>
-	** </html>
 	** <body>
 	**     <%= renderBody() %>
+	** </body>
 	** </html>
 	** <pre
-	virtual Str renderBody() {
+	Str renderBody() {
 		EfanRenderCtx.renderBody(RenderBufStack.peek)
 		return Str.defVal
+	}
+	
+	virtual Str renderTemplate() {
+		Str.defVal
 	}
 
 	** Returns 'efanMetaData.templateId()'

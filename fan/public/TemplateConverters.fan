@@ -7,15 +7,15 @@ const mixin EfanTemplateConverters : TemplateConverters {
 	override abstract Bool canConvert(File file)	
 }
 
-** (Service) - Contribute functions that convert files to efan templates. 
+** (Service) - Contribute functions to convert files into efan templates. 
 ** 
-** Some templates, such as [afSlim]`http://repo.status302.com/doc/afSlim/#overview`, need to be 
-** pre-processed / converted to efan notation before they can be compiled into components. Do this
-** by contributing file converting functions to 'EfanTemplateConverters'. The functions are keyed 
-** off a file extension.
-**
-** Example, to use [afSlim]`http://repo.status302.com/doc/afSlim/#overview` templates add the 
-** following to your 'AppModule':
+** Some templates, such as [Slim]`http://fantomfactory.org/pods/afSlim` templates, need to be 
+** pre-processed / converted to efan notation before they can be compiled. To do this, a conversion 
+** function is looked up via the file extension. If no function is found, the file is assumed to be
+** an efan template and read in as a simple string.
+** 
+** For example, to use [Slim]`http://fantomfactory.org/pods/afSlim` templates add the following to 
+** your 'AppModule':
 ** 
 ** pre>
 ** using afIoc
@@ -24,14 +24,16 @@ const mixin EfanTemplateConverters : TemplateConverters {
 ** 
 ** class AppModule {
 ** 
-**   @Contribute { serviceType=EfanTemplateConverters# }
+**   @Contribute { serviceType=TemplateConverters# }
 **   static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
 **     config["slim"] = |File file -> Str| { slim.parseFromFile(file) }
 **   }
 ** }
 ** <pre
 ** 
-** That will convert all files with a '.slim' extension to an efan template.
+** This will convert all files with a '.slim' extension to an efan template.
+** 
+** By default, a function is supplied that converts all files with a '.fandoc' extension into HTML.
 ** 
 ** @uses Mapped config of 'Str : |File->Str|' - file ext to func that converts the file to an efan template 
 const mixin TemplateConverters {
@@ -59,9 +61,8 @@ internal const class TemplateConvertersImpl : EfanTemplateConverters {
 	}
 	
 	override Str convertTemplate(File templateFile) {
-		if (converters.containsKey(templateFile.ext))
-			return converters[templateFile.ext].call(templateFile)
-		throw EfanErr(ErrMsgs.templateConverterNotFound(templateFile))
+		// just read the file by default
+		converters[templateFile.ext]?.call(templateFile) ?: templateFile.readAllStr
 	}
 	
 	override Str[] extensions() {

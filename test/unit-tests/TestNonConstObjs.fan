@@ -31,26 +31,26 @@ internal class TestNonConstObjs : EfanTest {
 
 
 @NoDoc
-@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
+//@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
 const mixin T_NonConstFields : EfanComponent {
 	abstract StrBuf buf
 	@InitRender
-	Void initRender()	{ buf = StrBuf().add("Non-Const Field!") }
-	Str render() 		{ buf.toStr }
+	Void initRender()				{ buf = StrBuf().add("Non-Const Field!") }
+	override Str renderTemplate()	{ buf.toStr }
 }
 
 @NoDoc
-@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
+//@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
 const mixin T_NonConstService : EfanComponent {
 	@Inject abstract NonConstService service
-	Str render() { service.toStr }
+	override Str renderTemplate() { service.toStr }
 }
 
 @NoDoc
-@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
+//@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
 const mixin T_LogFields : EfanComponent {
 	@Inject abstract Log log
-	Str render() { log.info("Hello!"); return "Wotever" }
+	override Str renderTemplate() { log.info("Hello!"); return "Wotever" }
 }
 
 @NoDoc

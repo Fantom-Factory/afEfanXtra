@@ -6,7 +6,7 @@ using afIocConfig::Config
 const class EfanXtraPrinter {
 	private const static Log log := Utils.getLog(EfanXtraPrinter#)
 
-	@Inject private	const EfanLibraries		efanLibraries
+	@Inject private	const EfanXtra			efanXtra
 	@Inject private	const ComponentMeta		componentMeta
 	
 	@Config { id="afEfan.supressStartupLogging" }
@@ -19,7 +19,7 @@ const class EfanXtraPrinter {
 			return
 
 		details := "\n"
-		efanLibraries.all.each |lib| {
+		efanXtra.libraries.each |lib| {
 			details += libraryDetailsToStr(lib) { true }
 		}
 

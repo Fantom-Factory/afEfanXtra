@@ -6,7 +6,6 @@ using afIoc::ServiceScope
 using afPlastic
 using afEfan::EfanCompiler
 using afEfan::EfanErr
-using afEfan::EfanRenderer
 using afEfan::EfanMetaData
 using afEfan::EfanCompilationErr
 using afEfan::BaseEfanImpl
@@ -20,6 +19,7 @@ const mixin ComponentCompiler {
 internal const class ComponentCompilerImpl : ComponentCompiler {
 
 	@Inject	private const ComponentMeta					componentMeta
+	@Inject	private const EfanXtra						efanXtra
 	@Inject	private const EfanLibraries					efanLibraries
 	@Inject	private const Registry						registry
 	@Inject private const EfanCompiler 					efanCompiler
@@ -65,7 +65,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		model.extendMixin(EfanComponent#)
 		
 		// inject libraries
-		efanLibraries.all.each |lib| {
+		efanXtra.libraries.each |lib| {
 			model.addField(lib.typeof, lib.name, null, null).addFacet(Inject#)			
 		}
 
@@ -78,10 +78,8 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			if (field.isStatic)
 				return
 
-			if (field.parent == EfanRenderer#)
-				return
-
-			if (field.parent == EfanComponent#)
+			// ignore fields defined in 'the system' hierarchy
+			if (field.parent == BaseEfanImpl# || field.parent == EfanComponent#)
 				return
 
 			if (field.hasFacet(Inject#)) {
@@ -131,7 +129,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 				throw err
 
 			comName := matcher.group(1)			
-			actualComType := (Type?) efanLibraries.all.eachWhile |lib| {
+			actualComType := (Type?) efanXtra.libraries.eachWhile |lib| {
 				lib.componentTypes.find { it.name.equalsIgnoreCase(comName) }
 			} ?: throw err
 			

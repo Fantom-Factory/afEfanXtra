@@ -26,28 +26,24 @@ const class EfanXtraModule {
 		binder.bind(EfanTemplateDirectories#, TemplateDirectoriesImpl#)		.withoutProxy
 		binder.bind(TemplateFinders#)		.withoutProxy
 		binder.bind(FandocToHtmlConverter#)	.withoutProxy
+		
+		// rely on afBedSheet to set srcCodePadding in PlasticCompiler (to be picked up by EfanCompiler) 
+		binder.bind(EfanCompiler#)			.withoutProxy
 	}
 	
-	@Build { serviceId="EfanCompiler" }
-	internal static EfanCompiler buildEfanCompiler(IocConfigSource configSrc, PlasticCompiler plasticCompiler) {
-		// rely on afBedSheet to set srcCodePadding in PlasticCompiler (to be picked up by EfanCompiler) 
-		EfanCompiler(plasticCompiler) {
-			it.rendererClassName	= configSrc.get(EfanXtraConfigIds.rendererClassName, Str#)
-		}
-	}
-
 	@Contribute { serviceType=TemplateFinders# }
 	internal static Void contributeTemplateFinders(OrderedConfig config) {
 		config.addOrdered("FindByFacetValue", 			config.autobuild(FindEfanByFacetValue#))
 		config.addOrdered("FindByTypeNameOnFileSystem",	config.autobuild(FindEfanByTypeNameOnFileSystem#))
 		config.addOrdered("FindByTypeNameInPod", 		config.autobuild(FindEfanByTypeNameInPod#))
+		config.addOrdered("FindByRenderTemplateMethod", config.autobuild(FindEfanByRenderTemplateMethod#))
 	}	
 
 	@Contribute { serviceType=TemplateConverters# }
 	internal static Void contributeTemplateConverters(MappedConfig config, FandocToHtmlConverter fandocToHtml) {
 		config["efan"] 	 = |File file -> Str| { file.readAllStr }
 		config["fandoc"] = |File file -> Str| { fandocToHtml.convert(file) }
-	}	
+	}
 
 	@Contribute { serviceType=ActorPools# }
 	static Void contributeActorPools(MappedConfig config) {
@@ -62,7 +58,6 @@ const class EfanXtraModule {
 	@Contribute { serviceType=FactoryDefaults# }
 	internal static Void contributeFactoryDefaults(MappedConfig config) {
 		config[EfanXtraConfigIds.templateTimeout]		= 30sec
-		config[EfanXtraConfigIds.rendererClassName]		= "EfanComponentImpl"
 		config[EfanXtraConfigIds.supressStartupLogging]	= false
 	}
 	

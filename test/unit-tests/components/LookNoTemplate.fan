@@ -1,16 +1,16 @@
 
 @NoDoc
-@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
+//@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
 const mixin LookNoTemplate : EfanComponent {
-	Str render() {
+	override Str renderTemplate() {
 		"Hello!"
 	}
 }
 
 @NoDoc
-@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
+//@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
 const mixin LookNoTemplateAgain : EfanComponent {
-	Str render() {
+	override Str renderTemplate() {
 		"Hello! Me again!"
 	}
 }

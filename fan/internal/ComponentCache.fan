@@ -1,7 +1,6 @@
 using afConcurrent
 using afIoc
 using afPlastic::PlasticClassModel
-using afEfan::EfanRenderer
 using afIocConfig::Config
 
 ** Lazy cache of efan components.

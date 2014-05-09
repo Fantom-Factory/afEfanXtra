@@ -1,4 +1,3 @@
-using afEfan::EfanRenderer
 using afEfan::EfanCtxStack
 
 ** This class stores all the component variables. Note this is trickier than you may first think!
