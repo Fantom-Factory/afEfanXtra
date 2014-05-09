@@ -43,21 +43,19 @@ const mixin EfanComponent {
 				renderLoop := true
 				while (renderLoop) {
 
-					b4Ret	:= componentMeta.callMethod(BeforeRender#, component, [renderBufIn])
+					b4Ret := componentMeta.callMethod(BeforeRender#, component, [renderBufIn])
 					if (b4Ret != false) {
-						
-						// as this is a component, it will always be compiled (to add the library fields for starters!),
-						// but we don't always need to render a template.
-						userDefined := renderTemplate
-						if (userDefined != Str.defVal) {
-							// a cheeky back door to write to the template buffer
-							Type.of(this).field("_af_code").set(this, userDefined)
-						} else {
-							component._af_render(null)
-						}
+
+						// render the efan template, or whatever the user returns
+						templateStr := renderTemplate()
+
+						// if template rendering was overridden, we need to add it to the template buffer ourselves.
+						if (Type.of(this).method("renderTemplate").isOverride)
+							// a cheeky back door to the rendering buffer
+							Type.of(this).field("_af_code").set(this, templateStr)
 					}
-					
-					aftRet	:= componentMeta.callMethod(AfterRender#, component, [renderBufIn])
+
+					aftRet := componentMeta.callMethod(AfterRender#, component, [renderBufIn])
 					
 					renderLoop = (aftRet == false)
 				}
@@ -74,7 +72,7 @@ const mixin EfanComponent {
 	}
 
 	** Call from within your template to render the body of the enclosing efan template. 
-	** Example, a simple 'layout' template may look like: 
+	** Example, a simple 'layout' efan template may look like: 
 	** 
 	** pre>
 	** <html>
@@ -88,8 +86,14 @@ const mixin EfanComponent {
 		return Str.defVal
 	}
 	
+	** Renders the efan template. Not meant to be invoked by you, the user!
+	** 
+	** Override to bypass template rendering and return your own generated content.
+	** Useful for simple components.  
 	virtual Str renderTemplate() {
-		Str.defVal
+		component := (BaseEfanImpl) this
+		component._af_render(null)
+		return Str.defVal
 	}
 
 	** Returns 'efanMetaData.templateId()'

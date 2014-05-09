@@ -5,12 +5,15 @@ using afIocConfig
 @NoDoc
 const mixin TemplateSource {
 	
+	** Should update any modified timestamps
 	abstract Str template()
 	
+	** Uri for debug purposes
 	abstract Uri location()
 	
 	abstract Bool isModified()
 
+	** Used by Sitemap
 	abstract DateTime LastModified()
 }
 

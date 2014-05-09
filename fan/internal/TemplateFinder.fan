@@ -138,8 +138,7 @@ const class FindEfanByFacetValue : TemplateFinder {
 internal const class FindEfanByRenderTemplateMethod : TemplateFinder {
 	
 	override TemplateSource? findTemplate(Type componentType) {
-		renderMethod := componentType.method("renderTemplate")
-		return (renderMethod.parent == EfanComponent#) ? null : TemplateSourceNull(templates(componentType).first)
+		componentType.method("renderTemplate").isOverride ? TemplateSourceNull(templates(componentType).first) : null
 	}
 
 	override Uri[] templates(Type componentType) {
