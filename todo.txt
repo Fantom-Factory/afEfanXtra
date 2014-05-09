@@ -11,8 +11,6 @@ Make TemplateFinders public when no-longer file reliant - use EfanTemplateSource
 
 Add EfanTemlapteNameMapper / Matcher for *Page / *Component
 
-Make efan compilation optional - just have a render() method instead
-
 
 
 Naa - It's a Bad Idea

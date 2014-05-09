@@ -27,7 +27,7 @@ internal class EfanTest : Test {
 	}
 	
 	protected Str render(Type comType, Obj?[]? initArgs := null) {
-		efanXtra.component(comType).renderTemplate(initArgs)
+		efanXtra.component(comType).render(initArgs)
 	}
 	
 	override Void setup() {

@@ -8,7 +8,7 @@ class TestOverdue : Test {
 		registry  := (Registry) RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#]).build.startup
 		
 		efanXtra := (EfanXtra) registry.dependencyByType(EfanXtra#)
-		overdue	 := efanXtra.component(Overdue#).renderTemplate(["Mr Smith"])
+		overdue	 := efanXtra.component(Overdue#).render(["Mr Smith"])
 		
 		echo("[${overdue}]")
 		verifyEq(overdue, `test/example/letter.txt`.toFile.readAllStr)

@@ -3,6 +3,8 @@ using afIoc::NotFoundErr
 using afIoc::Registry
 using afEfan::EfanErr
 
+** (Service) - Contribute your library pods to this. 
+@NoDoc
 const mixin EfanLibraries {
 
 	** Returns the efan library with the given name. Throws 'ArgErr' if such a library does not exist.
@@ -52,19 +54,6 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	override EfanLibrary findFor(Type componentType) {
 		librariesByComType[componentType] ?: throw NotFoundErr(ErrMsgs.libraryComTypeNotFound(componentType), librariesByComType.keys)
 	}
-	
-//	override Str:EfanLibrary libraries() { librariesF }
-//
-//	override Type[] componentTypes(Str library) {
-//		componentFinder.findComponentTypes(libNameToPod[library])
-//	}
-//
-//	override EfanLibrary library(Type componentType) {
-//		libName := podToLibName[componentType.pod]
-//		if (libName == null)
-//			throw NotFoundErr(ErrMsgs.libraryNotFound(componentType.pod), podToLibName.keys)
-//		return librariesF[libName]
-//	}
 
 	internal static Str[] verifyLibNames(Str:Pod libraries) {
 		libraries.keys.each |libName| { if (!isFieldName(libName)) throw EfanErr(ErrMsgs.libraryNameNotValid(libName)) }

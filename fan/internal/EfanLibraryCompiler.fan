@@ -1,7 +1,6 @@
 using afIoc::Inject
 using afPlastic::PlasticCompiler
 using afPlastic::PlasticClassModel
-using afEfan::EfanRenderer
 using afEfan::EfanRenderCtx
 
 @NoDoc
@@ -10,7 +9,7 @@ const mixin EfanLibraryCompiler {
 }
 
 internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
-	private const static Log log := Utils.getLog(EfanLibraries#)
+	private const static Log log := Utils.getLog(EfanLibraryCompiler#)
 
 	@Inject private	const PlasticCompiler	plasticCompiler
 	@Inject private	const ComponentFinder	componentFinder
@@ -25,7 +24,6 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 		model.extendMixin(EfanLibrary#)
 
 		inject(model, EfanLibrary#componentCache)
-		inject(model, EfanLibrary#componentMeta)
 		inject(model, EfanLibrary#componentFinder)
 
 		model.overrideField(EfanLibrary#name, "\"${libName}\"", "throw Err(\"'name' is read only.\")")

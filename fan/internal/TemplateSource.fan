@@ -60,3 +60,15 @@ const class TemplateSourceFile : TemplateSource {
 	}
 }
 
+@NoDoc
+const class TemplateSourceNull : TemplateSource {
+
+	override const Uri 		location
+	override const Str 		template		:= Str.defVal
+	override const Bool 	isModified		:= false
+	override const DateTime	LastModified 	:= DateTime.now
+	
+	new make(Uri location) {
+		this.location = location
+	}
+}

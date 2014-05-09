@@ -3,23 +3,13 @@ using afEfan
 
 ** A library of efan components for a specific 'Pod'.
 ** 
-** As well as the generic 'renderComponent()' method, libraries also have render methods for each individual component. 
-** Example, if you had a component:
+** Libraries are created dynamically at runtime, and each one is injected into every efan component.
+** They give templates an easy means to render other components.
 ** 
-** pre>
-** const mixin CreamPie : EfanComponent {
-**   @InitRender
-**   Void initRender(Str x, Int y) { ... }
-** }
-** <pre
+** Libraries are created / defined by contributing to 'EfanLibraries' in your 'AppModule'. 
+** As a library represents all components in a specific 'pod', you contribute the 'pod' with a given name.
 ** 
-** Then the corresponding library would define:
-** 
-**   Obj renderCreamPie(Str x, Int y, |Obj?|? bodyFunc := null) { ... }
-** 
-** Each library is automatically injected into your efan components as a field. The field has the same name as the 
-** contribution. This allows you to group / namespace components in pods and distribute them as 3rd Party libraries. 
-** Example, if 'CreamPie' was in a pod called 'pies', then if the 'pies' 'AppModule' contained: 
+** Example, here the pod 'afPies' is contributed with the name 'pies':
 ** 
 ** pre>
 ** using afIoc
@@ -28,23 +18,40 @@ using afEfan
 ** class AppModule {
 **   @Contribute { serviceType=EfanLibraries# }
 **   static Void contributeEfanLibs(MappedConfig config) {
-**     config["pies"] = Pod.find("pies")
+**     config["pies"] = Pod.find("afPies")
 **   }
 ** }
 ** <pre
 ** 
-** Then any application that references the 'pies' pod automatically has the component 'pies.creamPie', which may be 
-** rendered with:
+** If the pod 'afPies' defines a component named 'CreamPie':
 ** 
-**   <% pies.renderCreamPie("cream", 7) %>
-**    
+** pre>
+** const mixin CreamPie : EfanComponent {
+**   @InitRender
+**   Void initRender(Str x, Int y) { ... }
+** }
+** <pre
+** 
+** Then the 'pies' library would dynamically define the method:
+** 
+**   Str renderCreamPie(Str x, Int y, |->|? bodyFunc := null) { ... }
+** 
+** Every library is injected into every efan component as a field. The field has the same name as 
+** the library contribution. 
+** This means that *any* component can render a 'creamPie' in it's template with the efan code:
+**
+**   <% pies.renderCreamPie("jam", 7) %>
+**  
+** This makes it very easy to nest / render components inside other components.
+** 
+** Libraries are a great way to group / namespace components in pods and distribute them as 
+** 3rd Party libraries.
 const mixin EfanLibrary {
 
 	@NoDoc	@Inject abstract ComponentCache		componentCache
-	@NoDoc	@Inject abstract ComponentMeta		componentMeta
 	@NoDoc	@Inject	abstract ComponentFinder	componentFinder
 	
-	** The name of library - given when you contribute a pod to 'EfanLibraries'. 
+	** The name of this library - given when you contribute a pod to 'EfanLibraries'. 
 	abstract Str name
 	
 	** The pod this library represents - given when you contribute a pod to 'EfanLibraries'.
@@ -54,31 +61,11 @@ const mixin EfanLibrary {
 	Type[] componentTypes() {
 		componentFinder.findComponentTypes(pod)
 	}
-
-	** Utility method to check if the given parameters will fit the component's [@InitRender]`InitRender` method.
-//	Bool fitsInitRender(Type comType, Type[] paramTypes) {
-//		initMethod := componentMeta.findMethod(comType, InitRender#)
-//		if (initMethod == null) {
-//			return paramTypes.isEmpty
-//		}
-//		return ReflectUtils.paramTypesFitMethodSignature(paramTypes, initMethod)
-//	}
 	
-	** Called by library render methods. 
+	** Called by library render methods --> app.renderMe() { _renderComponent(Me#) }
 	** _Underscore_ 'cos there may be a component called 'Component' and we'd get a name clash
 	@NoDoc
 	Str _renderComponent(Type componentType, Obj?[] initArgs, |Obj?|? bodyFunc) {
-		componentCache.getOrMake(componentType).renderTemplate(initArgs, (|->|?) bodyFunc)
-	}
-	
-	@NoDoc
-	Obj? callMethod(Type comType, Obj?[] initArgs, |->Obj?| func) {
-		component 	:= componentCache.getOrMake(comType)
-		rendering	:= (BaseEfanImpl) component
-		return EfanCtxStack.withCtx(rendering.efanMetaData.templateId) |EfanCtxStackElement element->Obj?| {
-			ComponentCtx.push
-			componentMeta.callMethod(InitRender#, component, initArgs)			
-			return func.call
-		}
+		componentCache.getOrMake(componentType).render(initArgs, (|->|?) bodyFunc)
 	}
 }

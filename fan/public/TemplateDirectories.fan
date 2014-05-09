@@ -7,7 +7,7 @@ const mixin EfanTemplateDirectories : TemplateDirectories {
 
 ** (Service) - Contribute directories that may contain efan / slim templates.
 ** 
-** By contributing to 'EfanTemplateDirectories' you can force 'efanXtra' to look in file system directories when 
+** By contributing to 'TemplateDirectories' you can force 'efanXtra' to look in specified directories when 
 ** searching for efan templates.
 ** 
 ** pre>
@@ -16,15 +16,18 @@ const mixin EfanTemplateDirectories : TemplateDirectories {
 ** 
 ** class AppModule {
 ** 
-**   @Contribute { serviceType=EfanTemplateDirectories# }
-**   static Void contributeEfanDirs(MappedConfig config) {
+**   @Contribute { serviceType=TemplateDirectories# }
+**   static Void contributeTemplateDirs(MappedConfig config) {
 **     config.add(`etc/components/`)
 **   }
 ** }
 ** <pre
 ** 
-** This has the advantage of, that during development, your pod doesn't need to be re-built and your application 
-** re-started just to see template changes. 
+** Templates could, of course, just be placed in resource directories inside your pod.
+** 
+** But hosting templates in directories external to the pod has the advantage of that during 
+** development, the pod does not need to be re-built and your application re-started just to see 
+** template changes. 
 ** 
 ** Note that directories are **not** searched recursively, if you place templates in both 'etc/components/' and 
 ** 'etc/components/admin/' then you would need to add them both:
@@ -32,7 +35,7 @@ const mixin EfanTemplateDirectories : TemplateDirectories {
 **   config.add(`etc/components/`)
 **   config.add(`etc/components/admin/`)
 ** 
-** Note that directory uris need to end with a /slash/.
+** Also, directory uris need to end with a /slash/.
 const mixin TemplateDirectories {
 	
 	** The list of contributed directories.

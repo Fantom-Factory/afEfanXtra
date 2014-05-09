@@ -1,6 +1,5 @@
-using afEfan::EfanRenderer
 
-** Use on a component to explicitly set a template file.
+** Place on component classes to explicitly use a named template file.
 ** By default, 'efanXtra' looks for an efan template with the same name as the component class. 
 @FacetMeta { inherited = true }
 facet class EfanTemplate {	
@@ -37,7 +36,7 @@ facet class InitRender { }
 **   @BeforeRender
 **   Bool? beforeRender(StrBuf output) { ... }
 ** 
-** If the method returns 'false' then rendering is skipped and @AfterRender is called.
+** If the method returns 'false' then rendering is skipped and '@AfterRender' is called.
 facet class BeforeRender { }
 
 ** Use to mark a component lifecycle method.
@@ -47,6 +46,6 @@ facet class BeforeRender { }
 **   @AfterRender
 **   Bool? afterRender(StrBuf output) { ... }
 ** 
-** If the method returns 'false' then the lifecyle returns back to @BeforeRender.
+** If the method returns 'false' then the lifecyle returns back to '@BeforeRender'.
 facet class AfterRender { }
 

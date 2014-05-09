@@ -14,10 +14,6 @@ const mixin EfanXtraConfigIds {
 	** Defaults to '30sec'
 	static const Str templateTimeout	:= "afEfan.templateTimeout"
 
-	** The class name given to compiled efan renderer instances.
-	** Defaults to 'EfanRendererImpl'
-	static const Str rendererClassName	:= "afEfan.rendererClassName"
-
 	** If 'true' then the useful component info at startup will not be logged.
 	** Defaults to 'false'
 	static const Str supressStartupLogging	:= "afEfan.supressStartupLogging"
