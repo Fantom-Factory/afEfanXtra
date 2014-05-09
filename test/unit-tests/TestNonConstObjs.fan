@@ -4,23 +4,23 @@ using afIocConfig
 internal class TestNonConstObjs : EfanTest {
 
 	Void testNonConstFields() {
-		text := efanXtra.render(T_NonConstFields#)
+		text := render(T_NonConstFields#)
 		verifyEq(text, "Non-Const Field!")
 	}
 
 	Void testNonConstService() {
-		text := efanXtra.render(T_NonConstService#)
+		text := render(T_NonConstService#)
 		verifyEq(text, "Non-Const Service!")
 	}
 
 	Void testLogFields() {
-		text := efanXtra.render(T_LogFields#)
+		text := render(T_LogFields#)
 		verifyEq(text, "Wotever")
 	}
 
 	override Void setup() {
-		reg 		= RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#, TestNonConstObjs#]).build.startup
-		efanXtra	= reg.dependencyByType(EfanXtra#)
+		reg	= RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#, TestNonConstObjs#]).build.startup
+		reg.injectIntoFields(this)
 	}
 
 	static Void bind(ServiceBinder binder) {

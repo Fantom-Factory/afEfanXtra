@@ -3,7 +3,6 @@ using afIoc::NotFoundErr
 using afIoc::Registry
 using afEfan::EfanErr
 
-@NoDoc
 const mixin EfanLibraries {
 
 	** Returns the efan library with the given name. Throws 'ArgErr' if such a library does not exist.
@@ -14,7 +13,7 @@ const mixin EfanLibraries {
 	abstract EfanLibrary[] all()
 
 	** Returns the library that contains the given *component* type.
-	abstract EfanLibrary find(Type componentType)
+	abstract EfanLibrary findFor(Type componentType)
 
 }	
 
@@ -50,7 +49,7 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 		librariesByName.vals
 	}
 
-	override EfanLibrary find(Type componentType) {
+	override EfanLibrary findFor(Type componentType) {
 		librariesByComType[componentType] ?: throw NotFoundErr(ErrMsgs.libraryComTypeNotFound(componentType), librariesByComType.keys)
 	}
 	

@@ -6,12 +6,12 @@ internal class TestEfanLibraries : EfanTest {
 	Void testLibNamesMustBeValid() {
 
 		verifyEfanErrMsg(ErrMsgs.libraryNameNotValid("Wot Ever")) {
-			libs := ["Wot Ever":EfanXtra#.pod]
+			libs := ["Wot Ever":Pod.of(this)]
 			EfanLibrariesImpl.verifyLibNames(libs)
 		}
 
 		verifyEfanErrMsg(ErrMsgs.libraryNameNotValid("69Dude")) {
-			libs := ["69Dude":EfanXtra#.pod]
+			libs := ["69Dude":Pod.of(this)]
 			EfanLibrariesImpl.verifyLibNames(libs)
 		}
 	}
