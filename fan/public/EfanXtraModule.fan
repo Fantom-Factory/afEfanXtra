@@ -12,7 +12,7 @@ using afPlastic::PlasticCompiler
 const class EfanXtraModule {
 
 	internal static Void bind(ServiceBinder binder) {
-		// .withoutProxy to add some speed
+		// .withoutProxy to add some speed performance
 		binder.bind(ComponentFinder#)		.withoutProxy
 		binder.bind(ComponentCompiler#)		.withoutProxy
 		binder.bind(ComponentCache#)
@@ -33,10 +33,11 @@ const class EfanXtraModule {
 	
 	@Contribute { serviceType=TemplateFinders# }
 	internal static Void contributeTemplateFinders(OrderedConfig config) {
+		// put renderTemplate() first, so you may temporarily override / disable templates. 
+		config.addOrdered("FindByRenderTemplateMethod", config.autobuild(FindEfanByRenderTemplateMethod#))
 		config.addOrdered("FindByFacetValue", 			config.autobuild(FindEfanByFacetValue#))
 		config.addOrdered("FindByTypeNameOnFileSystem",	config.autobuild(FindEfanByTypeNameOnFileSystem#))
 		config.addOrdered("FindByTypeNameInPod", 		config.autobuild(FindEfanByTypeNameInPod#))
-		config.addOrdered("FindByRenderTemplateMethod", config.autobuild(FindEfanByRenderTemplateMethod#))
 	}	
 
 	@Contribute { serviceType=TemplateConverters# }
