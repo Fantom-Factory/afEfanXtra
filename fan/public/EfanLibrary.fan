@@ -1,8 +1,7 @@
 using afIoc::Inject
 using afEfan
 
-** A library of efan components; use to manually render a component.
-** A library instance exists for each contributed pod.
+** A library of efan components for a specific 'Pod'.
 ** 
 ** As well as the generic 'renderComponent()' method, libraries also have render methods for each individual component. 
 ** Example, if you had a component:
@@ -55,62 +54,21 @@ const mixin EfanLibrary {
 	Type[] componentTypes() {
 		componentFinder.findComponentTypes(pod)
 	}
-	
-	// a public render method without the confusing 'bodyFunc' parameter
-	** Renders the given efan component and returns the rendered Str. 
-	** All lifecycle methods are honoured - '@InitRender', '@BeginRender' and '@AfterRender'.
-	Str renderComponent(Type componentType, Obj?[]? initArgs := null) {
-		_renderComponent(componentType, initArgs ?: Obj#.emptyList, null)
-	}
 
 	** Utility method to check if the given parameters will fit the component's [@InitRender]`InitRender` method.
-	Bool fitsInitRender(Type comType, Type[] paramTypes) {
-		initMethod := componentMeta.findMethod(comType, InitRender#)
-		if (initMethod == null) {
-			return paramTypes.isEmpty
-		}
-		return ReflectUtils.paramTypesFitMethodSignature(paramTypes, initMethod)
-	}
+//	Bool fitsInitRender(Type comType, Type[] paramTypes) {
+//		initMethod := componentMeta.findMethod(comType, InitRender#)
+//		if (initMethod == null) {
+//			return paramTypes.isEmpty
+//		}
+//		return ReflectUtils.paramTypesFitMethodSignature(paramTypes, initMethod)
+//	}
 	
-	** Called by library render methods
+	** Called by library render methods. 
 	** _Underscore_ 'cos there may be a component called 'Component' and we'd get a name clash
 	@NoDoc
 	Str _renderComponent(Type componentType, Obj?[] initArgs, |Obj?|? bodyFunc) {
-		component 	:= componentCache.getOrMake(componentType)
-
-		renderBuf	:= (StrBuf?) null
-
-		rendered 	:= RenderBufStack.push() |StrBuf renderBufIn -> Obj?| {
-			return EfanRenderCtx.renderEfan(renderBufIn, (BaseEfanImpl) component, (|->|?) bodyFunc) |->Obj?| {
-				ComponentCtx.push
-
-				initRet := componentMeta.callMethod(InitRender#, component, initArgs)
-				
-				// if init() returns false, cut rendering short
-				if (initRet == false)
-					return initRet
-
-				renderLoop := true
-				while (renderLoop) {
-
-					b4Ret	:= componentMeta.callMethod(BeforeRender#, component, [renderBufIn])
-					if (b4Ret != false)
-						((BaseEfanImpl) component)._af_render(null)
-					
-					aftRet	:= componentMeta.callMethod(AfterRender#, component, [renderBufIn])
-					
-					renderLoop = (aftRet == false)
-				}
-				
-				renderBuf = renderBufIn
-				return true
-			}
-		}
-
-		// if the stack is empty, return the result of rendering
-		if (rendered && (RenderBufStack.peek(false) == null))
-			return renderBuf.toStr
-		return Str.defVal
+		componentCache.getOrMake(componentType).renderTemplate(initArgs, (|->|?) bodyFunc)
 	}
 	
 	@NoDoc

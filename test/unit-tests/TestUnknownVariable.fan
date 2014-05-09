@@ -4,7 +4,7 @@ internal class TestUnknownVariable : EfanTest {
 	
 	Void testUnknownVariableErrHasAlienAid() {
 		try {
-			efanXtra.render(UnknownVariable#)
+			render(UnknownVariable#)
 			fail
 		} catch (EfanCompilationErr err) {
 			msg := (Str) err.msg

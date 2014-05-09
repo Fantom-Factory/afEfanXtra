@@ -64,7 +64,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		// give a more human ID - helpful for debugging
 		model.extendMixin(EfanComponent#)
 		
-		// add 3rd party component libraries
+		// inject libraries
 		efanLibraries.all.each |lib| {
 			model.addField(lib.typeof, lib.name, null, null).addFacet(Inject#)			
 		}
@@ -115,7 +115,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		
 		try {
 			renderer := efanCompiler.compileWithModel(templateSrc.location, templateSrc.template, null, model) |Type efanType, EfanMetaData efanMeta -> BaseEfanImpl| {
-				libName := efanLibraries.find(comType).name
+				libName := efanLibraries.findFor(comType).name
 				myefanMeta := clone(efanMeta) |plan| {
 					plan[EfanMetaData#templateId] 	= "\"${libName}::${comType.name}\""
 				}
@@ -135,7 +135,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 				lib.componentTypes.find { it.name.equalsIgnoreCase(comName) }
 			} ?: throw err
 			
-			lib := efanLibraries.find(actualComType)
+			lib := efanLibraries.findFor(actualComType)
 			throw err.withXtraMsg(ErrMsgs.alienAidComponentTypo(lib.name, actualComType.name))
 		}
 	}

@@ -4,7 +4,7 @@ using afIocConfig
 internal class TestIocConfig : EfanTest {
 
 	Void testCanInjectIocConfigValues() {
-		text := efanXtra.render(T_IocConfig#)
+		text := render(T_IocConfig#)
 		// I don't really care for the value, just that it gets injected.
 		verifyEq(text, "EfanComponentImpl")
 	}

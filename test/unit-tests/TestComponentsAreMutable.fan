@@ -3,7 +3,7 @@ using concurrent
 internal class TestComponentsAreMutable : EfanTest {
 	
 	Void testComponentsAreMutable() {
-		text := efanXtra.render(Mutable#).toStr
+		text := render(Mutable#)
 		verify(text.contains("All change please!"))
 	}
 }

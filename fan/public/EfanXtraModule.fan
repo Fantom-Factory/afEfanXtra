@@ -12,7 +12,7 @@ using afPlastic::PlasticCompiler
 const class EfanXtraModule {
 
 	internal static Void bind(ServiceBinder binder) {
-		// TODO: try without proxy, see if it speeds up?
+		// .withoutProxy to add some speed
 		binder.bind(ComponentFinder#)		.withoutProxy
 		binder.bind(ComponentCompiler#)		.withoutProxy
 		binder.bind(ComponentCache#)
@@ -21,7 +21,7 @@ const class EfanXtraModule {
 		binder.bind(EfanLibraries#)			.withoutProxy
 		binder.bind(EfanXtraPrinter#)		.withoutProxy
 		
-		binder.bind(EfanXtra#).withoutProxy
+		binder.bind(EfanXtra#)				.withoutProxy
 		binder.bind(EfanTemplateConverters#, TemplateConvertersImpl#)		.withoutProxy
 		binder.bind(EfanTemplateDirectories#, TemplateDirectoriesImpl#)		.withoutProxy
 		binder.bind(TemplateFinders#)		.withoutProxy

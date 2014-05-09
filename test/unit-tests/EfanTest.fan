@@ -4,8 +4,9 @@ using afEfan::EfanErr
 using afPlastic
 
 internal class EfanTest : Test {
-	@Inject Registry? 	reg
-	@Inject EfanXtra?	efanXtra
+	@Inject Registry? 		reg
+	@Inject EfanXtra?		efanXtra
+	@Inject EfanLibraries?	efanLibs
 	
 	Void verifyEfanErrMsg(Str errMsg, |Obj| func) {
 		verifyErrTypeMsg(EfanErr#, errMsg, func)
@@ -25,6 +26,9 @@ internal class EfanTest : Test {
 		throw Err("$errType not thrown")
 	}
 	
+	protected Str render(Type comType, Obj?[]? initArgs := null) {
+		efanXtra.component(comType).renderTemplate(initArgs)
+	}
 	
 	override Void setup() {
 		try {

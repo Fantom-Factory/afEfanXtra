@@ -4,7 +4,7 @@ internal class TestVarsInBody : EfanTest {
 	Void testVariablesAreAvailibleInBody() {
 		afEfan::EfanRenderer#.pod.log.level = LogLevel.debug
 		
-		text := efanXtra.render(Page2#).toStr
+		text := render(Page2#).toStr
 //		Env.cur.err.printLine("[${text}]")
 		verify(text.contains("'Judge Dredd'"), text)
 		
@@ -25,7 +25,7 @@ s := """page-start
 	
 	Void testNastyNesting() {
 //		afEfan::EfanRenderer#.pod.log.level = LogLevel.debug
-		text := efanXtra.render(Nested#, [3]).toStr
+		text := render(Nested#, [3]).toStr
 //		Env.cur.err.printLine("[${text}]")
 		
 		i1 := text.index("start-3")
