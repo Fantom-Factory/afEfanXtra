@@ -1,10 +1,5 @@
 using afEfan::EfanErr
 
-@NoDoc @Deprecated { msg="Use TemplateDirectories instead." }
-const mixin EfanTemplateDirectories : TemplateDirectories {
-	override abstract File[] templateDirs()
-}
-
 ** (Service) - Contribute directories that may contain efan / slim templates.
 ** 
 ** By contributing to 'TemplateDirectories' you can force 'efanXtra' to look in specified directories when 
@@ -42,7 +37,7 @@ const mixin TemplateDirectories {
 	abstract File[] templateDirs()
 }
 
-internal const class TemplateDirectoriesImpl : EfanTemplateDirectories {
+internal const class TemplateDirectoriesImpl : TemplateDirectories {
 	
 	override const File[] templateDirs
 	

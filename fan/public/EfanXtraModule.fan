@@ -22,8 +22,8 @@ const class EfanXtraModule {
 		binder.bind(EfanXtraPrinter#)		.withoutProxy
 		
 		binder.bind(EfanXtra#)				.withoutProxy
-		binder.bind(EfanTemplateConverters#, TemplateConvertersImpl#)		.withoutProxy
-		binder.bind(EfanTemplateDirectories#, TemplateDirectoriesImpl#)		.withoutProxy
+		binder.bind(TemplateConverters#)	.withoutProxy
+		binder.bind(TemplateDirectories#)	.withoutProxy
 		binder.bind(TemplateFinders#)		.withoutProxy
 		binder.bind(FandocToHtmlConverter#)	.withoutProxy
 		

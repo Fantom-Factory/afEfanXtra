@@ -1,12 +1,5 @@
 using afEfan::EfanErr
 
-@NoDoc @Deprecated { msg="Use TemplateConverters instead." }
-const mixin EfanTemplateConverters : TemplateConverters {
-	override abstract Str convertTemplate(File templateFile)
-	override abstract Str[] extensions()
-	override abstract Bool canConvert(File file)	
-}
-
 ** (Service) - Contribute functions to convert files into efan templates. 
 ** 
 ** Some templates, such as [Slim]`http://fantomfactory.org/pods/afSlim` templates, need to be 
@@ -51,7 +44,7 @@ const mixin TemplateConverters {
 	abstract Bool canConvert(File file)
 }
 
-internal const class TemplateConvertersImpl : EfanTemplateConverters {
+internal const class TemplateConvertersImpl : TemplateConverters {
 
 	private const Str:|File->Str| converters
 	
