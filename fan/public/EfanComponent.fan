@@ -1,6 +1,5 @@
 using afEfan::EfanRenderCtx
 using afEfan::EfanMetaData
-using afEfan::BaseEfanImpl
 using afIoc
 
 // EfanComponent will extend BaseEfanImpl. 
@@ -26,12 +25,13 @@ const mixin EfanComponent {
 	** ...
 	** <pre
 	Str render(Obj?[]? initArgs := null, |->|? bodyFunc := null) {
-		component		:= (BaseEfanImpl) this
+		component		:= this
 		componentMeta	:= ComponentMeta()
 		
+		// TODO: move this into model, keep this tidy
 		renderBuf	:= (StrBuf?) null
 		rendered 	:= RenderBufStack.push() |StrBuf renderBufIn -> Obj?| {
-			return EfanRenderCtx.renderEfan(renderBufIn, component, bodyFunc) |->Obj?| {
+			return EfanRenderCtx.renderEfan(efanMetaData, component, renderBufIn, bodyFunc) |->Obj?| {
 				ComponentCtx.push
 
 				initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
@@ -52,7 +52,7 @@ const mixin EfanComponent {
 						// if template rendering was overridden, we need to add it to the template buffer ourselves.
 						if (Type.of(this).method("renderTemplate").isOverride)
 							// a cheeky back door to the rendering buffer
-							Type.of(this).field("_af_code").set(this, templateStr)
+							Type.of(this).field("_efan_output").set(this, templateStr)
 					}
 
 					aftRet := componentMeta.callMethod(AfterRender#, component, [renderBufIn])
@@ -91,8 +91,7 @@ const mixin EfanComponent {
 	** Override to bypass template rendering and return your own generated content.
 	** Useful for simple components.  
 	virtual Str renderTemplate() {
-		component := (BaseEfanImpl) this
-		component._af_render(null)
+		this -> _efan_render()
 		return Str.defVal
 	}
 
