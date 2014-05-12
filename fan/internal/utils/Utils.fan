@@ -20,7 +20,7 @@ internal const class Utils {
 		return b.flip.in.readAllStr
 	}
 
-	static Obj cloneObj(Obj obj, |Field:Obj|? overridePlan := null) {
+	static Obj cloneObj(Obj obj, |Field:Obj?|? overridePlan := null) {
 		plan := Field:Obj[:]
 		obj.typeof.fields.each {
 			value := it.get(obj)

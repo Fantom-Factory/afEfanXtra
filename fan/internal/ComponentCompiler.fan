@@ -8,7 +8,6 @@ using afEfan::EfanCompiler
 using afEfan::EfanErr
 using afEfan::EfanMetaData
 using afEfan::EfanCompilationErr
-using afEfan::BaseEfanImpl
 
 ** (Service) -  
 @NoDoc
@@ -51,19 +50,19 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(after, allowedReturnTypes))
 
 		model := PlasticClassModel("${comType.name}Impl", true)
-		model.extendMixin(comType)
+		model.extend(comType)
 		
 		// use the component's pod - it's expected behaviour as you think of the component as being in the same pod
 		// (and not in some plastic generated-on-the-fly pod!)
 		model.usingPod(comType.pod)
 
+		model.addField(EfanMetaData#, "_efan_metaData")
+		model.overrideField(EfanComponent#efanMetaData, "_efan_metaData", """throw Err("efanMetaData is read only.")""")
+		
 		// create ctor for afIoc to instantiate	
 		// todo: add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
-		model.addCtor("makeWithIoc", "${EfanMetaData#.qname} efanMeta, |This|in", "in(this)\nthis._af_efanMetaData = efanMeta")
+		model.addCtor("makeWithIoc", "${EfanMetaData#.qname} efanMeta, |This|in", "in(this)\nthis._efan_metaData = efanMeta")
 
-		// give a more human ID - helpful for debugging
-		model.extendMixin(EfanComponent#)
-		
 		// inject libraries
 		efanXtra.libraries.each |lib| {
 			model.addField(lib.typeof, lib.name, null, null).addFacet(Inject#)			
@@ -79,7 +78,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 				return
 
 			// ignore fields defined in 'the system' hierarchy
-			if (field.parent == BaseEfanImpl# || field.parent == EfanComponent#)
+			if (field.parent == EfanComponent#)
 				return
 
 			if (field.hasFacet(Inject#)) {
@@ -112,14 +111,12 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		}
 		
 		try {
-			renderer := efanCompiler.compileWithModel(templateSrc.location, templateSrc.template, null, model) |Type efanType, EfanMetaData efanMeta -> BaseEfanImpl| {
-				libName := efanLibraries.findFor(comType).name
-				myefanMeta := clone(efanMeta) |plan| {
-					plan[EfanMetaData#templateId] 	= "\"${libName}::${comType.name}\""
-				}
-				return registry.autobuild(efanType, [myefanMeta])
-			}
-			return renderer
+			
+			classModel 	 := efanCompiler.parseTemplateIntoModel(templateSrc.location, templateSrc.template, model)
+			efanMetaData := efanCompiler.compileModel(templateSrc.location, templateSrc.template, model)
+			libName 	 := efanLibraries.findFor(comType).name
+			myEfanMeta	 := efanMetaData.clone([EfanMetaData#templateId : "${libName}::${comType.name}"])
+			return registry.autobuild(myEfanMeta.type, [myEfanMeta])
 			
 		} catch (EfanCompilationErr err) {
 			// try to help the user with silly typos and mistakes

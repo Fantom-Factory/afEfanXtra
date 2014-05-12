@@ -21,7 +21,7 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 		log.debug("Compiling Component Library '${libName}' for ${pod.name}")
 		model := PlasticClassModel("${libName.capitalize}EfanLibrary", true)
 
-		model.extendMixin(EfanLibrary#)
+		model.extend(EfanLibrary#)
 
 		inject(model, EfanLibrary#componentCache)
 		inject(model, EfanLibrary#componentFinder)
