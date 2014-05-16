@@ -111,7 +111,6 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		}
 		
 		try {
-			
 			classModel 	 := efanCompiler.parseTemplateIntoModel(templateSrc.location, templateSrc.template, model)
 			efanMetaData := efanCompiler.compileModel(templateSrc.location, templateSrc.template, model)
 			libName 	 := efanLibraries.findFor(comType).name
