@@ -30,9 +30,12 @@ internal const class ComponentCacheImpl : ComponentCache {
 		
 		if (templateSrc.isModified) {
 			component = typeToComponent.lock.synchronized |->Obj?| {
-				if (!templateSrc.isModified)	// double lock
+				if (!templateSrc.isModified) {	// double lock
+					templateSrc.checked			// need to update the last checked timestamp
 					return null					// can't return component, it's that dodgy wrapper again!
+				}
 				
+				templateSrc.checked
 				newComponent := compiler.compile(componentType, templateSrc)
 				typeToComponent.map = typeToComponent.map.rw.set(componentType, newComponent).toImmutable
 				return newComponent
