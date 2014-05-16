@@ -11,10 +11,18 @@ const mixin TemplateSource {
 	** Uri for debug purposes
 	abstract Uri location()
 	
+	** Should not update any internal state
 	abstract Bool isModified()
 
-	** Used by Sitemap
-	abstract DateTime LastModified()
+	abstract DateTime lastModified()	// for sitemap
+	
+	** leaky abstraction - called when last checked should be updated
+	abstract Void checked()
+	
+	@NoDoc @Deprecated // Used by Sitemap
+	DateTime LastModified() {
+		lastModified()
+	}
 }
 
 @NoDoc
@@ -25,19 +33,20 @@ const class TemplateSourceFile : TemplateSource {
 	@Config { id="afEfan.templateTimeout" }
 	private const Duration? timeout
 	private const File 		templateFile
-	private const AtomicRef	lastChecked		:= AtomicRef()
-	private const AtomicRef	lastModified	:= AtomicRef()	
+	private const AtomicRef	lastCheckedRef	:= AtomicRef()
+	private const AtomicRef	lastModifiedRef	:= AtomicRef()	
 
 	** pod files have last modified info too!
 	new make(File file, |This| in) {
 		in(this)
-		this.templateFile = file
-		updateTimestamp
+		this.templateFile			= file
+		this.lastCheckedRef.val		= DateTime.now
+		this.lastModifiedRef.val	= templateFile.modified
 	}
 	
 	override Str template() {
 		template := templateConverters.convertTemplate(templateFile)
-		updateTimestamp
+		lastModifiedRef.val = templateFile.modified
 		return template
 	}
 
@@ -46,20 +55,28 @@ const class TemplateSourceFile : TemplateSource {
 	}
 
 	override Bool isModified() {
-		if (timeout == null)
-			return true
-		if ((DateTime.now - ((DateTime) lastChecked.val)) < timeout)
-			return false
-		return templateFile.modified > ((DateTime) lastModified.val)
+		isTimedOut && isModifyed 
 	}
 
-	override DateTime LastModified() {
-		templateFile.modified
+	override Void checked() {
+		this.lastCheckedRef.val	= DateTime.now		
 	}
 
-	private Void updateTimestamp() {
-		lastChecked.val  = DateTime.now
-		lastModified.val = templateFile.modified
+	override DateTime lastModified() {
+		lastModifiedRef.val
+	}
+	private	DateTime lastChecked() {
+		lastCheckedRef.val
+	}
+	
+	private Bool isTimedOut() {
+		timeout == null
+			? true
+			: (DateTime.now - lastChecked) > timeout
+	}
+	
+	private Bool isModifyed() {
+		templateFile.modified > lastModified
 	}
 }
 
@@ -69,7 +86,8 @@ const class TemplateSourceNull : TemplateSource {
 	override const Uri 		location
 	override const Str 		template		:= Str.defVal
 	override const Bool 	isModified		:= false
-	override const DateTime	LastModified 	:= DateTime.now
+	override const DateTime	lastModified 	:= DateTime.now
+	override 	   Void		checked()		{ }
 	
 	new make(Uri location) {
 		this.location = location
