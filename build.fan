@@ -27,7 +27,7 @@ class Build : BuildPod {
 			"afIoc 1.6.0+", 
 			"afIocConfig 1.0.4+", 
 			"afEfan 1.4.0+", 
-			"afPlastic 1.0.11+"
+			"afPlastic 1.0.10+"
 		]
 
 		srcDirs = [`test/unit-tests/`, `test/unit-tests/internal/`, `test/unit-tests/internal/utils/`, `test/unit-tests/components/`, `test/example/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]

@@ -1,6 +1,4 @@
-using afEfan::EfanRenderCtx
-using afEfan::EfanMetaData
-using afIoc
+using afEfan
 
 // EfanComponent will extend BaseEfanImpl. 
 ** Extend to define an 'efanXtra' component.
@@ -9,7 +7,7 @@ using afIoc
 const mixin EfanComponent {
 
 	** Meta data about the compiled efan templates
-	abstract EfanMetaData efanMetaData
+	abstract EfanTemplateMeta templateMeta
 
 	** The main render method. 'initArgs' are passed to the '@InitRender' lifecycle method.
 	** 
@@ -31,7 +29,7 @@ const mixin EfanComponent {
 		// TODO: move this into model, keep this tidy
 		renderBuf	:= (StrBuf?) null
 		rendered 	:= RenderBufStack.push() |StrBuf renderBufIn -> Obj?| {
-			return EfanRenderCtx.renderEfan(efanMetaData, component, renderBufIn, bodyFunc) |->Obj?| {
+			return EfanRenderer.renderTemplate(templateMeta, component, renderBufIn, bodyFunc) |->Obj?| {
 				ComponentCtx.push
 
 				initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
@@ -82,7 +80,7 @@ const mixin EfanComponent {
 	** </html>
 	** <pre
 	Str renderBody() {
-		EfanRenderCtx.renderBody(RenderBufStack.peek)
+		EfanRenderer.renderBody(RenderBufStack.peek)
 		return Str.defVal
 	}
 	
@@ -95,6 +93,7 @@ const mixin EfanComponent {
 		return Str.defVal
 	}
 
-	** Returns 'efanMetaData.templateId()'
-	override Str toStr() { efanMetaData.templateId }
+	** Returns 'efanTemplateMeta.templateId()'
+	@NoDoc
+	override Str toStr() { templateMeta.templateId }
 }

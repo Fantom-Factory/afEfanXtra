@@ -1,7 +1,7 @@
 using concurrent
 using afIoc
 using afIocConfig
-using afEfan::EfanCompiler
+using afEfan::EfanEngine
 using afPlastic::PlasticCompiler
 
 
@@ -13,22 +13,22 @@ const class EfanXtraModule {
 
 	internal static Void bind(ServiceBinder binder) {
 		// .withoutProxy to add some speed performance
-		binder.bind(ComponentFinder#)		.withoutProxy
-		binder.bind(ComponentCompiler#)		.withoutProxy
-		binder.bind(ComponentCache#)
-		binder.bind(ComponentMeta#)			.withoutProxy
-		binder.bind(EfanLibraryCompiler#)	.withoutProxy
-		binder.bind(EfanLibraries#)			.withoutProxy
-		binder.bind(EfanXtraPrinter#)		.withoutProxy
+		binder.bind(ComponentFinder#)
+		binder.bind(ComponentCompiler#)
+		binder.bind(ComponentCache#)		// (needs proxy)
+		binder.bind(ComponentMeta#)
+		binder.bind(EfanLibraryCompiler#)
+		binder.bind(EfanLibraries#)
+		binder.bind(EfanXtraPrinter#)
 		
-		binder.bind(EfanXtra#)				.withoutProxy
-		binder.bind(TemplateConverters#)	.withoutProxy
-		binder.bind(TemplateDirectories#)	.withoutProxy
-		binder.bind(TemplateFinders#)		.withoutProxy
-		binder.bind(FandocToHtmlConverter#)	.withoutProxy
-		
+		binder.bind(EfanXtra#)
+		binder.bind(TemplateConverters#)
+		binder.bind(TemplateDirectories#)
+		binder.bind(TemplateFinders#)
+		binder.bind(FandocToHtmlConverter#)
+
 		// rely on afBedSheet to set srcCodePadding in PlasticCompiler (to be picked up by EfanCompiler) 
-		binder.bind(EfanCompiler#)			.withoutProxy
+		binder.bind(EfanEngine#)
 	}
 	
 	@Contribute { serviceType=TemplateFinders# }

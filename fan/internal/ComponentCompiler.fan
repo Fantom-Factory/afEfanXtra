@@ -1,13 +1,6 @@
-using afIoc::Inject
-using afIoc::Registry
-using afIoc::ServiceStats
-using afIoc::ServiceStat
-using afIoc::ServiceScope
 using afPlastic
-using afEfan::EfanCompiler
-using afEfan::EfanErr
-using afEfan::EfanMetaData
-using afEfan::EfanCompilationErr
+using afIoc
+using afEfan
 
 ** (Service) -  
 @NoDoc
@@ -21,7 +14,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 	@Inject	private const EfanXtra						efanXtra
 	@Inject	private const EfanLibraries					efanLibraries
 	@Inject	private const Registry						registry
-	@Inject private const EfanCompiler 					efanCompiler
+	@Inject private const EfanEngine 					efanEngine
 	@Inject private const ServiceStats					serviceStats
 			private const |Type, PlasticClassModel|[]	compilerCallbacks
 	static	private const Type[]						allowedReturnTypes 	:= [Void#, Bool#]
@@ -56,12 +49,12 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		// (and not in some plastic generated-on-the-fly pod!)
 		model.usingPod(comType.pod)
 
-		model.addField(EfanMetaData#, "_efan_metaData")
-		model.overrideField(EfanComponent#efanMetaData, "_efan_metaData", """throw Err("efanMetaData is read only.")""")
+		model.addField(EfanTemplateMeta#, "_efan_templateMeta")
+		model.overrideField(EfanComponent#templateMeta, "_efan_templateMeta", """throw Err("templateMeta is read only.")""")
 		
 		// create ctor for afIoc to instantiate	
 		// todo: add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
-		model.addCtor("makeWithIoc", "${EfanMetaData#.qname} efanMeta, |This|in", "in(this)\nthis._efan_metaData = efanMeta")
+		model.addCtor("makeWithIoc", "${EfanTemplateMeta#.qname} efanMeta, |This|in", "in(this)\nthis._efan_templateMeta = efanMeta")
 
 		// inject libraries
 		efanXtra.libraries.each |lib| {
@@ -111,10 +104,10 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		}
 		
 		try {
-			classModel 	 := efanCompiler.parseTemplateIntoModel(templateSrc.location, templateSrc.template, model)
-			efanMetaData := efanCompiler.compileModel(templateSrc.location, templateSrc.template, model)
+			classModel 	 := efanEngine.parseTemplateIntoModel(templateSrc.location, templateSrc.template, model)
+			efanMetaData := efanEngine.compileModel(templateSrc.location, templateSrc.template, model)
 			libName 	 := efanLibraries.findFor(comType).name
-			myEfanMeta	 := efanMetaData.clone([EfanMetaData#templateId : "${libName}::${comType.name}"])
+			myEfanMeta	 := efanMetaData.clone([EfanTemplateMeta#templateId : "${libName}::${comType.name}"])
 			return registry.autobuild(myEfanMeta.type, [myEfanMeta])
 			
 		} catch (EfanCompilationErr err) {
@@ -132,9 +125,5 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			lib := efanLibraries.findFor(actualComType)
 			throw err.withXtraMsg(ErrMsgs.alienAidComponentTypo(lib.name, actualComType.name))
 		}
-	}
-	
-	private static EfanMetaData clone(EfanMetaData efanMeta, |Field:Obj?|? overridePlan := null) {
-		Utils.cloneObj(efanMeta, overridePlan)
 	}
 }

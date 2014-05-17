@@ -34,7 +34,7 @@ internal const class EfanXtraImpl : EfanXtra {
 	
 	override Obj? callMethod(Type comType, Obj?[] initArgs, |->Obj?| func) {
 		component 	:= componentCache.getOrMake(comType)
-		return EfanCtxStack.withCtx(component.efanMetaData.templateId) |EfanCtxStackElement element->Obj?| {
+		return EfanRenderingStack.withCtx(component.templateMeta.templateId) |Obj element->Obj?| {
 			ComponentCtx.push
 			componentMeta.callMethod(InitRender#, component, initArgs)			
 			return func.call
