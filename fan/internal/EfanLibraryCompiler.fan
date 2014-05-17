@@ -1,7 +1,6 @@
 using afIoc::Inject
 using afPlastic::PlasticCompiler
 using afPlastic::PlasticClassModel
-using afEfan::EfanRenderCtx
 
 @NoDoc
 const mixin EfanLibraryCompiler {

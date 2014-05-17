@@ -1,4 +1,4 @@
-using afEfan::EfanCtxStack
+using afEfan
 
 ** This class stores all the component variables. Note this is trickier than you may first think!
 ** 
@@ -29,11 +29,11 @@ class ComponentCtx {
 	// ---- static methods ----
 
 	static ComponentCtx peek() {
-		EfanCtxStack.peek.ctx["efanXtra.componentCtx"]
+		EfanRenderingStack.peek.ctx["efanXtra.componentCtx"]
 	}
 	
 	static Void push() {
-		EfanCtxStack.peek.ctx["efanXtra.componentCtx"] = ComponentCtx()
+		EfanRenderingStack.peek.ctx["efanXtra.componentCtx"] = ComponentCtx()
 	}
 	
 	Void main(Str[] args) {
