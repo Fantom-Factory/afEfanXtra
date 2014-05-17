@@ -33,6 +33,8 @@ Quick Start [#quickStart]
 *************************
 Overdue.efan:
 pre>
+syntax: jade
+
 Dear <%= userName %>,
 
 It appears the following rented DVDs are overdue:
@@ -46,6 +48,8 @@ Please return them at your convenience.
 
 Overdue.fan:
 pre>
+syntax: fantom
+
 using afIoc
 using afEfanXtra
 
@@ -73,6 +77,8 @@ const mixin Overdue : EfanComponent {
 
 AppModule.fan:
 pre>
+syntax: fantom
+
 using afIoc
 
 class AppModule {
@@ -141,6 +147,8 @@ If you wish the template to have a different name to the Fantom class, you can s
 [@EfanTemplate]`EfanTemplate` facet. Example:
 
 pre>
+syntax: fantom
+
   @EfanTemplate { uri=`fan://acmePod/templates/Notice.efan` }
   const mixin Overdue : EfanComponent {
     ...
@@ -155,6 +163,8 @@ Components are organised by libraries. A library encompasses all components with
 To use your efan components effectively, you should add your application pod as a library. Do this in your 'AppModule':
 
 pre>
+syntax: fantom
+
 using afIoc
 using afEfanXtra
 
@@ -244,6 +254,8 @@ Efan components can store state! Components may be 'const' and they may be 'mixi
 can be accessed and used by the rendering template. Taking the [Overdue]`#overview` component as an example:
 
 pre>
+syntax: fantom
+
 using afEfanXtra
 
 const mixin Overdue : EfanComponent {
@@ -271,6 +283,8 @@ Use with Slim [#useSlim]
 and 'efanXtra' will automatically pick up component templates with the extension '.slim':
 
 pre>
+syntax: fantom
+
 using afIoc
 using afSlim
 using afEfanXtra
