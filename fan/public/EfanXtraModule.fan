@@ -58,7 +58,7 @@ const class EfanXtraModule {
 
 	@Contribute { serviceType=FactoryDefaults# }
 	internal static Void contributeFactoryDefaults(MappedConfig config) {
-		config[EfanXtraConfigIds.templateTimeout]		= 30sec
+		config[EfanXtraConfigIds.templateTimeout]		= 5sec
 		config[EfanXtraConfigIds.supressStartupLogging]	= false
 	}
 	

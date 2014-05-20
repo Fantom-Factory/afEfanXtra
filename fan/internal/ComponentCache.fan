@@ -24,10 +24,10 @@ internal const class ComponentCacheImpl : ComponentCache {
 
 	override EfanComponent getOrMake(Type componentType) {
 		templateSrc := templateFinders.getOrFindTemplate(componentType)
-		component 	:= typeToComponent.getOrAdd(templateSrc) {
+		component 	:= typeToComponent.getOrAdd(componentType) {
 			compiler.compile(componentType, templateSrc)
 		}		
-		
+
 		if (templateSrc.isModified) {
 			component = typeToComponent.lock.synchronized |->Obj?| {
 				if (!templateSrc.isModified) {	// double lock

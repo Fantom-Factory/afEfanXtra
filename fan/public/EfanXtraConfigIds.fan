@@ -11,7 +11,7 @@
 const mixin EfanXtraConfigIds {
 
 	** The time before the file system is checked for template updates.
-	** Defaults to '30sec'
+	** Defaults to '5sec'
 	static const Str templateTimeout	:= "afEfan.templateTimeout"
 
 	** If 'true' then the useful component info at startup will not be logged.
