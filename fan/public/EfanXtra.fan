@@ -21,6 +21,7 @@ internal const class EfanXtraImpl : EfanXtra {
 	@Inject	private const ComponentCache	componentCache
 	@Inject private const ComponentMeta		componentMeta
 	@Inject	private const EfanLibraries 	efanLibraries
+	@Inject	private const ComponentCtxMgr	comCtxMgr
 	
 	new make(|This|in) { in(this) }
 
@@ -35,7 +36,7 @@ internal const class EfanXtraImpl : EfanXtra {
 	override Obj? callMethod(Type comType, Obj?[] initArgs, |->Obj?| func) {
 		component 	:= componentCache.getOrMake(comType)
 		return EfanRenderingStack.withCtx(component.templateMeta.templateId) |Obj element->Obj?| {
-			ComponentCtx.push
+			comCtxMgr.createNew
 			componentMeta.callMethod(InitRender#, component, initArgs)			
 			return func.call
 		}

@@ -26,11 +26,11 @@ const mixin EfanComponent {
 		component		:= this
 		componentMeta	:= ComponentMeta()
 		
-		// TODO: move this into model, keep this tidy
+		// TODO: move this into library, keep this tidy
 		renderBuf	:= (StrBuf?) null
 		rendered 	:= RenderBufStack.push() |StrBuf renderBufIn -> Obj?| {
 			return EfanRenderer.renderTemplate(templateMeta, component, renderBufIn, bodyFunc) |->Obj?| {
-				ComponentCtx.push
+				this->_efan_comCtxMgr->createNew
 
 				initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
 				

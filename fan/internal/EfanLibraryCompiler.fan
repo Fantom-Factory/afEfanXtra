@@ -37,12 +37,12 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 			
 			// bodyFunc is actually |->|? but for efan to make use of it-block syntax we define it as |Obj?|
 			// required because the whole bodyFunc syntax is based on it!
-			initSig 	:= componentMeta.methodSig (comType, InitRender#, "|Obj?|? bodyFunc := null")
+			initSig 	:= componentMeta.methodSig (comType, InitRender#, "|Obj?|? _efanXtra_bodyFunc := null")
 			
 			args := (initMethod != null && !initMethod.params.isEmpty) ? (initMethod.params.join(",") { it.name }) : "," 
-			body := "args := [${args}]\n"
+			body := "_efanXtra_args := [${args}]\n"	// avoid name clashes
 			// FIXME: call render directly on the component?
-			body += "return _renderComponent(${comType.qname}#, args, bodyFunc)\n"
+			body += "return _renderComponent(${comType.qname}#, _efanXtra_args, _efanXtra_bodyFunc)\n"
 			
 			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)
 		}

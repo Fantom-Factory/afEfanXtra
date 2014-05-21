@@ -17,6 +17,7 @@ const class EfanXtraModule {
 		binder.bind(ComponentCompiler#)
 		binder.bind(ComponentCache#)		// (needs proxy)
 		binder.bind(ComponentMeta#)
+		binder.bind(ComponentCtxMgr#)
 		binder.bind(EfanLibraryCompiler#)
 		binder.bind(EfanLibraries#)
 		binder.bind(EfanXtraPrinter#)
