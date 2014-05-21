@@ -54,11 +54,13 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		
 		// create ctor for afIoc to instantiate	
 		// todo: add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
-		model.addCtor("makeWithIoc", "${EfanTemplateMeta#.qname} efanMeta, |This|in", "in(this)\nthis._efan_templateMeta = efanMeta")
+		model.addCtor("makeWithIoc", "${EfanTemplateMeta#.qname} templateMeta, |This|in", "in(this)\nthis._efan_templateMeta = templateMeta")
+
+		model.addField(ComponentCtxMgr#, "_efan_comCtxMgr").addFacet(Inject#)
 
 		// inject libraries
 		efanXtra.libraries.each |lib| {
-			model.addField(lib.typeof, lib.name, null, null).addFacet(Inject#)			
+			model.addField(lib.typeof, lib.name).addFacet(Inject#)			
 		}
 
 		// give callbacks a chance to add to our model
@@ -80,12 +82,13 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 				// solely by service type...
 				if (serviceScopes[field.type] == ServiceScope.perThread) {
 					regRequired = true
-					model.overrideField(field, """_af_registry.dependencyByType(${field.type}#)""", """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")				
+					model.overrideField(field, """_efan_registry.dependencyByType(${field.type}#)""", """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")				
 					return
 				}
+
 				// Inject all other services into the field. That way we don't loose the context, @Config, @ServiceId, 
 				// Log dependency injection, etc...   
-				injectFieldName := "_af_inject${field.name.capitalize}"
+				injectFieldName := "_efan_inject${field.name.capitalize}"
 				// @see http://fantom.org/sidewalk/topic/2186#c14112
 				newField := model.addField(field.type, injectFieldName)
 				field.facets.each { newField.addFacetClone(it) }
@@ -93,13 +96,13 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			}
 
 			if (!model.hasField(field.name)) {
-				newField := model.overrideField(field, """afEfanXtra::ComponentCtx.peek.getVariable("${field.name}")""", """afEfanXtra::ComponentCtx.peek.setVariable("${field.name}", it)""")
+				newField := model.overrideField(field, """_efan_comCtxMgr.peek.getVariable("${field.name}")""", """_efan_comCtxMgr.peek.setVariable("${field.name}", it)""")
 				field.facets.each { newField.addFacetClone(it) }
 			}
 		}
 
 		if (regRequired) {
-			newField := model.addField(Registry#, "_af_registry")
+			newField := model.addField(Registry#, "_efan_registry")
 			newField.addFacet(Inject#)
 		}
 		

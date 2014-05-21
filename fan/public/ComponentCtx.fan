@@ -1,3 +1,5 @@
+using afConcurrent
+using afIoc
 using afEfan
 
 ** This class stores all the component variables. Note this is trickier than you may first think!
@@ -25,19 +27,27 @@ class ComponentCtx {
 	override Str toStr() {
 		stash.toStr
 	}
-	
-	// ---- static methods ----
+}
 
-	static ComponentCtx peek() {
+@NoDoc
+const class ComponentCtxMgr {
+	private const LocalRef			injectedCtx
+	
+	new make(ThreadLocalManager	threadLocalMgr) {
+		injectedCtx = threadLocalMgr.createRef("efanXtra.componentCtx")
+	}
+	
+	ComponentCtx peek() {
 		EfanRenderingStack.peek.ctx["efanXtra.componentCtx"]
 	}
 	
-	static Void push() {
-		EfanRenderingStack.peek.ctx["efanXtra.componentCtx"] = ComponentCtx()
+	Void createNew() {
+		ctx := injectedCtx.isMapped ? injectedCtx.val : ComponentCtx() 
+		EfanRenderingStack.peek.ctx["efanXtra.componentCtx"] = ctx
+		injectedCtx.cleanUp
 	}
-	
-	Void main(Str[] args) {
-		echo(this.typeof.pod.version)
+
+	Void inject(ComponentCtx ctx) {
+		injectedCtx.val = ctx
 	}
-	
 }
