@@ -11,7 +11,9 @@ const class ComponentRenderer {
 	
 	new make(ThreadLocalManager threadLocalMgr, |This|in) {
 		in(this)
-		this.renderBufRef = threadLocalMgr.createRef("afEfanXtra.renderBuf") |->StrBuf| { StrBuf(1024) }
+		// TODO: afIoc-1.6.2
+		tempRef := threadLocalMgr.createRef("afEfanXtra.renderBuf")
+		this.renderBufRef = LocalRef(tempRef.name) |->StrBuf| { StrBuf(1024) }
 	}
 
 	Obj? runInCtx(EfanComponent component, |->Obj?| func) {
