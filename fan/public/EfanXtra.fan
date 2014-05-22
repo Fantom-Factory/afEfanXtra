@@ -11,7 +11,7 @@ const mixin EfanXtra {
 	abstract EfanLibrary[] libraries()
 
 	** A hook to call a component methods within the context of the given @InitRender arguments.
-	@NoDoc // exposed for Pillow
+	@NoDoc @Deprecated // exposed for Pillow
 	abstract Obj? callMethod(Type comType, Obj?[] initArgs, |->Obj?| func)
 	
 }
