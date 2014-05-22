@@ -3,6 +3,7 @@ using afEfan
 using afConcurrent
 
 ** This is here just to keep EfanComponent tidy, really.
+@NoDoc
 const class ComponentRenderer {
 	
 	@Inject private const ComponentCtxMgr	componentCtxMgr
