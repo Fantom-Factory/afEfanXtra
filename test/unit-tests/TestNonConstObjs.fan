@@ -31,7 +31,6 @@ internal class TestNonConstObjs : EfanTest {
 
 
 @NoDoc
-//@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
 const mixin T_NonConstFields : EfanComponent {
 	abstract StrBuf buf
 	@InitRender
@@ -40,14 +39,12 @@ const mixin T_NonConstFields : EfanComponent {
 }
 
 @NoDoc
-//@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
 const mixin T_NonConstService : EfanComponent {
 	@Inject abstract NonConstService service
 	override Str renderTemplate() { service.toStr }
 }
 
 @NoDoc
-//@EfanTemplate { uri=`fan://afEfanXtra/res/viaRenderMethod.efan`}
 const mixin T_LogFields : EfanComponent {
 	@Inject abstract Log log
 	override Str renderTemplate() { log.info("Hello!"); return "Wotever" }

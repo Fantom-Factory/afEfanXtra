@@ -56,6 +56,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		// todo: add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
 		model.addCtor("makeWithIoc", "${EfanTemplateMeta#.qname} templateMeta, |This|in", "in(this)\nthis._efan_templateMeta = templateMeta")
 
+		model.addField(ComponentRenderer#, "_efan_renderer").addFacet(Inject#)
 		model.addField(ComponentCtxMgr#, "_efan_comCtxMgr").addFacet(Inject#)
 
 		// inject libraries
@@ -88,7 +89,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 
 				// Inject all other services into the field. That way we don't loose the context, @Config, @ServiceId, 
 				// Log dependency injection, etc...   
-				injectFieldName := "_efan_inject${field.name.capitalize}"
+				injectFieldName := "_ioc_${field.name}"
 				// @see http://fantom.org/sidewalk/topic/2186#c14112
 				newField := model.addField(field.type, injectFieldName)
 				field.facets.each { newField.addFacetClone(it) }

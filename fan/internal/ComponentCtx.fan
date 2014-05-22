@@ -31,23 +31,11 @@ class ComponentCtx {
 
 @NoDoc
 const class ComponentCtxMgr {
-	private const LocalRef			injectedCtx
-	
-	new make(ThreadLocalManager	threadLocalMgr) {
-		injectedCtx = threadLocalMgr.createRef("efanXtra.componentCtx")
-	}
-	
 	ComponentCtx peek() {
 		EfanRenderingStack.peek.ctx["efanXtra.componentCtx"]
 	}
 	
 	Void createNew() {
-		ctx := injectedCtx.isMapped ? injectedCtx.val : ComponentCtx() 
-		EfanRenderingStack.peek.ctx["efanXtra.componentCtx"] = ctx
-		injectedCtx.cleanUp
-	}
-
-	Void inject(ComponentCtx ctx) {
-		injectedCtx.val = ctx
+		EfanRenderingStack.peek.ctx["efanXtra.componentCtx"] = ComponentCtx()
 	}
 }
