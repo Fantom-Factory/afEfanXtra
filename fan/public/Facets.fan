@@ -24,7 +24,7 @@ facet class Abstract { }
 ** Use to mark a component lifecycle method. Init render methods may take any number of parameters. Example:
 ** 
 **   @InitRender
-**   Obj? initRender(Str x, Int y) { ... }
+**   Bool? initRender(Str x, Int y) { ... }
 ** 
 ** Param types may be nullable.
 facet class InitRender { }
