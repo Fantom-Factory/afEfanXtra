@@ -23,11 +23,12 @@ class Build : BuildPod {
 			"concurrent 1.0",
 			"fandoc 1.0",
 			
-			"afConcurrent 1.0.4+",
-			"afIoc 1.6.0+", 
-			"afIocConfig 1.0.6+", 
-			"afEfan 1.4.0.1+", 
-			"afPlastic 1.0.12+"
+			"afBeanUtils 1.0.0+",
+			"afConcurrent 1.0.6+",
+			"afPlastic 1.0.14+",
+			"afIoc 1.6.4+", 
+			"afIocConfig 1.0.8+",			
+			"afEfan 1.4.0.1+"
 		]
 
 		srcDirs = [`test/unit-tests/`, `test/unit-tests/internal/`, `test/unit-tests/internal/utils/`, `test/unit-tests/components/`, `test/example/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]

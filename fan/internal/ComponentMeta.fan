@@ -1,4 +1,3 @@
-using afIoc::NotFoundErr
 using afEfan::EfanErr
 
 @NoDoc
@@ -8,7 +7,7 @@ const class ComponentMeta {
 		methods := comType.methods.findAll { it.hasFacet(facetType) }
 
 		if (methods.size > 1)
-			throw NotFoundErr(ErrMsgs.componentMetaTooManyMethods(comType, facetType), methods.map { it.name })
+			throw ArgNotFoundErr(ErrMsgs.componentMetaTooManyMethods(comType, facetType), methods.map { it.name })
 
 		if (methods.size == 1)
 			return methods.first

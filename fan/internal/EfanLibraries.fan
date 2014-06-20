@@ -1,5 +1,4 @@
 using afIoc::Inject
-using afIoc::NotFoundErr
 using afIoc::Registry
 using afEfan::EfanErr
 
@@ -44,7 +43,7 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	}
 	
 	override EfanLibrary get(Str libraryName) {
-		librariesByName[libraryName] ?: throw NotFoundErr(ErrMsgs.libraryNameNotFound(libraryName), librariesByName.keys)
+		librariesByName[libraryName] ?: throw ArgNotFoundErr(ErrMsgs.libraryNameNotFound(libraryName), librariesByName.keys)
 	}
 
 	override EfanLibrary[] all() {
@@ -52,7 +51,7 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	}
 
 	override EfanLibrary findFor(Type componentType) {
-		librariesByComType[componentType] ?: throw NotFoundErr(ErrMsgs.libraryComTypeNotFound(componentType), librariesByComType.keys)
+		librariesByComType[componentType] ?: throw ArgNotFoundErr(ErrMsgs.libraryComTypeNotFound(componentType), librariesByComType.keys)
 	}
 
 	internal static Str[] verifyLibNames(Str:Pod libraries) {

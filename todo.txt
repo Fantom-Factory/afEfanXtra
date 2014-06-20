@@ -1,6 +1,12 @@
 
-For 1.1.4
+For 1.1.6
 =========
+Move timeout to efanXtra
+	templateTimeout	:= iocEnv.isProd ? 30sec : 2sec 
+	config[EfanXtraConfigIds.templateTimeout] = templateTimeout
+
+I know this places a dependency on afIocEnv, but it's the right place for it.
+
 
 
 For Future
