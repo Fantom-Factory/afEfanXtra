@@ -1,11 +1,12 @@
 using afIoc
 using afIocConfig
+using afIocEnv
 using concurrent::Actor
 
 class TestOverdue : Test {
 	
 	Void testOverdue() {
-		registry  := (Registry) RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#]).build.startup
+		registry  := (Registry) RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#, IocEnvModule#]).build.startup
 		
 		efanXtra := (EfanXtra) registry.dependencyByType(EfanXtra#)
 		overdue	 := efanXtra.component(Overdue#).render(["Mr Smith"])
