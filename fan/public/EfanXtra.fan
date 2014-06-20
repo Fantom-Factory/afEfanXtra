@@ -9,11 +9,6 @@ const mixin EfanXtra {
 	
 	** Returns all 'EfanLibrary' instances.
 	abstract EfanLibrary[] libraries()
-
-	** A hook to call a component methods within the context of the given @InitRender arguments.
-	@NoDoc @Deprecated // exposed for Pillow
-	abstract Obj? callMethod(Type comType, Obj?[] initArgs, |->Obj?| func)
-	
 }
 
 internal const class EfanXtraImpl : EfanXtra {
@@ -31,14 +26,5 @@ internal const class EfanXtraImpl : EfanXtra {
 	
 	override EfanLibrary[] libraries() {
 		efanLibraries.all
-	}
-	
-	override Obj? callMethod(Type comType, Obj?[] initArgs, |->Obj?| func) {
-		component 	:= componentCache.getOrMake(comType)
-		return EfanRenderingStack.withCtx(component.templateMeta.templateId) |Obj element->Obj?| {
-			comCtxMgr.createNew
-			componentMeta.callMethod(InitRender#, component, initArgs)			
-			return func.call
-		}
 	}
 }

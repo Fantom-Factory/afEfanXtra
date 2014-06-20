@@ -9,15 +9,9 @@ const class EfanXtraPrinter {
 	@Inject private	const EfanXtra			efanXtra
 	@Inject private	const ComponentMeta		componentMeta
 	
-	@Config { id="afEfan.supressStartupLogging" }
-	@Inject private const Bool				supressStartupLogging
-	
 	new make(|This| in) { in(this) }
 
 	Void logLibraries() {
-		if (supressStartupLogging)
-			return
-
 		details := "\n"
 		efanXtra.libraries.each |lib| {
 			details += libraryDetailsToStr(lib) { true }
