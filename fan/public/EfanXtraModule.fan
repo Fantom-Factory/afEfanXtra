@@ -53,8 +53,8 @@ const class EfanXtraModule {
 		config["afEfanXtra.componentCache"] = ActorPool() { it.maxThreads = 5 }
 	}
 
-	@Contribute { serviceType=DependencyProviderSource# }
-	internal static Void contributeDependencyProviderSource(OrderedConfig config) {
+	@Contribute { serviceType=DependencyProviders# }
+	internal static Void contributeDependencyProviders(OrderedConfig config) {
 		config.add(config.autobuild(LibraryProvider#))
 	}	
 
