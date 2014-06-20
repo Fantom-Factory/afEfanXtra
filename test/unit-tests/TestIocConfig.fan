@@ -6,7 +6,7 @@ internal class TestIocConfig : EfanTest {
 	Void testCanInjectIocConfigValues() {
 		text := render(T_IocConfig#)
 		// I don't really care for the value, just that it gets injected.
-		verifyEq(text, "5sec")
+		verifyEq(text, "2sec")
 	}
 }
 

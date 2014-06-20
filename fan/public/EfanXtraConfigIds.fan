@@ -8,7 +8,7 @@
 **     config[EfanXtraConfigIds.templateTimeout] = 1min
 ** }
 ** <pre
-const mixin EfanXtraConfigIds {
+const class EfanXtraConfigIds {
 
 	** The time before the file system is checked for template updates.
 	** 
