@@ -1,9 +1,9 @@
 using concurrent
 using afIoc
 using afIocConfig
+using afIocEnv
 using afEfan::EfanEngine
 using afPlastic::PlasticCompiler
-
 
 ** The [IoC]`http://www.fantomfactory.org/pods/afIoc` module class.
 ** 
@@ -12,7 +12,6 @@ using afPlastic::PlasticCompiler
 const class EfanXtraModule {
 
 	internal static Void bind(ServiceBinder binder) {
-		// .withoutProxy to add some speed performance
 		binder.bind(ComponentFinder#)
 		binder.bind(ComponentCompiler#)
 		binder.bind(ComponentCache#)		// (needs proxy)
@@ -50,7 +49,7 @@ const class EfanXtraModule {
 
 	@Contribute { serviceType=ActorPools# }
 	static Void contributeActorPools(MappedConfig config) {
-		config["afEfanXtra.componentCache"] = ActorPool() { it.maxThreads = 5 }
+		config["afEfanXtra.componentCache"] = ActorPool() { it.name = "afEfanXtra.componentCache"; it.maxThreads = 5 }
 	}
 
 	@Contribute { serviceType=DependencyProviders# }
@@ -59,14 +58,13 @@ const class EfanXtraModule {
 	}	
 
 	@Contribute { serviceType=FactoryDefaults# }
-	internal static Void contributeFactoryDefaults(MappedConfig config) {
-		config[EfanXtraConfigIds.templateTimeout]		= 5sec
-		config[EfanXtraConfigIds.supressStartupLogging]	= false
+	internal static Void contributeFactoryDefaults(MappedConfig config, IocEnv env) {
+		config[EfanXtraConfigIds.templateTimeout] = env.isProd ? 2min : 2sec
 	}
 	
 	@Contribute { serviceType=RegistryStartup# }
 	internal static Void contributeRegistryStartup(OrderedConfig conf, EfanXtraPrinter efanPrinter) {
-		conf.add |->| {
+		conf.addOrdered("afEfanXtra.logLibraries") |->| {
 			efanPrinter.logLibraries
 		}
 	}

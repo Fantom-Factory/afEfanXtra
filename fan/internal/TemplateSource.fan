@@ -18,11 +18,6 @@ const mixin TemplateSource {
 	
 	** leaky abstraction - called when last checked should be updated
 	abstract Void checked()
-	
-	@NoDoc @Deprecated // Used by Sitemap
-	DateTime LastModified() {
-		lastModified()
-	}
 }
 
 @NoDoc
