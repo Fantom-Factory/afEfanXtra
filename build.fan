@@ -5,13 +5,13 @@ class Build : BuildPod {
 	new make() {
 		podName = "afEfanXtra"
 		summary = "A library for creating reusable Embedded Fantom (efan) components"
-		version = Version("1.1.8")
+		version = Version("1.1.9")
 
 		meta = [
 			"proj.name"		: "efanXtra",
 			"afIoc.module"	: "afEfanXtra::EfanXtraModule",
 			"tags"			: "templating",
-			"repo.private"	: "false"
+			"repo.private"	: "true"
 		]
 
 		index = [

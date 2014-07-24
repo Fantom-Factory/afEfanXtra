@@ -76,7 +76,7 @@ class AppModule {
   }
 
   @Contribute { serviceType=EfanLibraries# }
-  static Void contributeEfanLibs(MappedConfig config) {
+  static Void contributeEfanLibs(Configuration config) {
 
     // contribute all components in the pod as a library named 'app'
     config["app"] = AppModule#.pod
@@ -139,7 +139,7 @@ using afEfanXtra
 class AppModule {
 
   @Contribute { serviceType=EfanLibraries# }
-  static Void contributeEfanLibs(MappedConfig config) {
+  static Void contributeEfanLibs(Configuration config) {
 
     // contribute all components in this pod as a library called 'app'
     config["app"] = AppModule#.pod
@@ -234,7 +234,7 @@ class AppModule {
   }
 
   @Contribute { serviceType=TemplateConverters# }
-  internal static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
+  internal static Void contributeSlimTemplates(Configuration config, Slim slim) {
     config["slim"] = |File file -> Str| { slim.parseFromFile(file) }
   }
 }
