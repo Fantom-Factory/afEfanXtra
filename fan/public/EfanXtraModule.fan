@@ -33,38 +33,38 @@ const class EfanXtraModule {
 	}
 	
 	@Contribute { serviceType=TemplateFinders# }
-	internal static Void contributeTemplateFinders(OrderedConfig config) {
+	internal static Void contributeTemplateFinders(Configuration config) {
 		// put renderTemplate() first, so you may temporarily override / disable templates. 
-		config.addOrdered("FindByRenderTemplateMethod", config.autobuild(FindEfanByRenderTemplateMethod#))
-		config.addOrdered("FindByFacetValue", 			config.autobuild(FindEfanByFacetValue#))
-		config.addOrdered("FindByTypeNameOnFileSystem",	config.autobuild(FindEfanByTypeNameOnFileSystem#))
-		config.addOrdered("FindByTypeNameInPod", 		config.autobuild(FindEfanByTypeNameInPod#))
+		config["afEfanXtra.findByRenderTemplateMethod"] = config.autobuild(FindEfanByRenderTemplateMethod#)
+		config["afEfanXtra.findByFacetValue"]			= config.autobuild(FindEfanByFacetValue#)
+		config["afEfanXtra.findByTypeNameOnFileSystem"] = config.autobuild(FindEfanByTypeNameOnFileSystem#)
+		config["afEfanXtra.findByTypeNameInPod"]		= config.autobuild(FindEfanByTypeNameInPod#)
 	}	
 
 	@Contribute { serviceType=TemplateConverters# }
-	internal static Void contributeTemplateConverters(MappedConfig config, FandocToHtmlConverter fandocToHtml) {
+	internal static Void contributeTemplateConverters(Configuration config, FandocToHtmlConverter fandocToHtml) {
 		config["efan"] 	 = |File file -> Str| { file.readAllStr }
 		config["fandoc"] = |File file -> Str| { fandocToHtml.convert(file) }
 	}
 
 	@Contribute { serviceType=ActorPools# }
-	static Void contributeActorPools(MappedConfig config) {
+	static Void contributeActorPools(Configuration config) {
 		config["afEfanXtra.componentCache"] = ActorPool() { it.name = "afEfanXtra.componentCache"; it.maxThreads = 5 }
 	}
 
 	@Contribute { serviceType=DependencyProviders# }
-	internal static Void contributeDependencyProviders(OrderedConfig config) {
-		config.add(config.autobuild(LibraryProvider#))
+	internal static Void contributeDependencyProviders(Configuration config) {
+		config["afEfanXtra.libraryProvider"] = config.autobuild(LibraryProvider#)
 	}	
 
 	@Contribute { serviceType=FactoryDefaults# }
-	internal static Void contributeFactoryDefaults(MappedConfig config, IocEnv env) {
+	internal static Void contributeFactoryDefaults(Configuration config, IocEnv env) {
 		config[EfanXtraConfigIds.templateTimeout] = env.isProd ? 2min : 2sec
 	}
 	
 	@Contribute { serviceType=RegistryStartup# }
-	internal static Void contributeRegistryStartup(OrderedConfig conf, EfanXtraPrinter efanPrinter) {
-		conf.addOrdered("afEfanXtra.logLibraries") |->| {
+	internal static Void contributeRegistryStartup(Configuration config, EfanXtraPrinter efanPrinter) {
+		config["afEfanXtra.logLibraries"] = |->| {
 			efanPrinter.logLibraries
 		}
 	}

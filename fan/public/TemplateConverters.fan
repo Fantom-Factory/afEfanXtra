@@ -18,7 +18,7 @@ using afEfan::EfanErr
 ** class AppModule {
 ** 
 **   @Contribute { serviceType=TemplateConverters# }
-**   static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
+**   static Void contributeSlimTemplates(Configuration config, Slim slim) {
 **     config["slim"] = |File file -> Str| { slim.parseFromFile(file) }
 **   }
 ** }
@@ -28,7 +28,7 @@ using afEfan::EfanErr
 ** 
 ** By default, a function is supplied that converts all files with a '.fandoc' extension into HTML.
 ** 
-** @uses Mapped config of 'Str : |File->Str|' - file ext to func that converts the file to an efan template 
+** @uses Configuration of 'Str : |File->Str|' - file ext to func that converts the file to an efan template 
 const mixin TemplateConverters {
 
 	** Converts the given 'File' to an efan template Str.

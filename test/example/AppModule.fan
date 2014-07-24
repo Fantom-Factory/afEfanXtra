@@ -10,7 +10,7 @@ class EfanAppModule {
 
 	// contribute all components in our pod as a library named 'app' 
 	@Contribute { serviceType=EfanLibraries# }
-	static Void contributeEfanLibraries(MappedConfig config) {
+	static Void contributeEfanLibraries(Configuration config) {
 		config["app"] = EfanAppModule#.pod
 	}
 	
