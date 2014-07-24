@@ -88,7 +88,7 @@ class AppModule {
   }
 
   @Contribute { serviceType=EfanLibraries# }
-  static Void contributeEfanLibs(MappedConfig config) {
+  static Void contributeEfanLibs(Configuration config) {
 
     // contribute all components in the pod as a library named 'app'
     config["app"] = AppModule#.pod
@@ -171,7 +171,7 @@ using afEfanXtra
 class AppModule {
 
   @Contribute { serviceType=EfanLibraries# }
-  static Void contributeEfanLibs(MappedConfig config) {
+  static Void contributeEfanLibs(Configuration config) {
 
     // contribute all components in this pod as a library called 'app'
     config["app"] = AppModule#.pod
@@ -296,7 +296,7 @@ class AppModule {
   }
 
   @Contribute { serviceType=TemplateConverters# }
-  internal static Void contributeSlimTemplates(MappedConfig config, Slim slim) {
+  internal static Void contributeSlimTemplates(Configuration config, Slim slim) {
     config["slim"] = |File file -> Str| { slim.parseFromFile(file) }
   }
 }
@@ -306,9 +306,13 @@ class AppModule {
 
 Release Notes [#releaseNotes]
 *****************************
+v1.1.8 [#v1.1.8]
+----------------
+ - Chg: Updated to use [IoC 1.7.0]`pod:afIoc`.
+
 v1.1.6 [#v1.1.6]
 ----------------
- - Chg: Updated to use [IoC 1.6.4]`pod:afIoC`, added dependency on [IoC Env 1.0.6]`pod:afIocEnv`
+ - Chg: Updated to use [IoC 1.6.4]`pod:afIoc`, added dependency on [IoC Env 1.0.6]`pod:afIocEnv`
  - Chg: 'EfanXtraConfigIds.templateTimeout' now defaults to '2min' in production environments, and '2sec' otherwise.
  - Chg: Removed 'EfanXtraConfigIds.supressStartupLogging'. To suppress the startup log, remove the 'RegistryStartup' contribution 'afEfanXtra.logLibraries'.
 

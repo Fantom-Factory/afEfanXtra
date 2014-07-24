@@ -17,7 +17,7 @@ using afEfan
 ** 
 ** class AppModule {
 **   @Contribute { serviceType=EfanLibraries# }
-**   static Void contributeEfanLibs(MappedConfig config) {
+**   static Void contributeEfanLibs(Configuration config) {
 **     config["pies"] = Pod.find("afPies")
 **   }
 ** }

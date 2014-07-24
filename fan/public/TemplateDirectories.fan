@@ -12,7 +12,7 @@ using afEfan::EfanErr
 ** class AppModule {
 ** 
 **   @Contribute { serviceType=TemplateDirectories# }
-**   static Void contributeTemplateDirs(MappedConfig config) {
+**   static Void contributeTemplateDirs(Configuration config) {
 **     config.add(`etc/components/`)
 **   }
 ** }
