@@ -306,6 +306,10 @@ class AppModule {
 
 Release Notes [#releaseNotes]
 *****************************
+v1.1.10 [#v1.1.10]
+------------------
+ - Bug: Bodged release - updated to [IoC 1.7.2]`pod:afIoc`.
+
 v1.1.8 [#v1.1.8]
 ----------------
  - Chg: Updated to use [IoC 1.7.0]`pod:afIoc`.
