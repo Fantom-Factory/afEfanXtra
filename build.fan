@@ -5,13 +5,13 @@ class Build : BuildPod {
 	new make() {
 		podName = "afEfanXtra"
 		summary = "A library for creating reusable Embedded Fantom (efan) components"
-		version = Version("1.1.11")
+		version = Version("1.1.12")
 
 		meta = [
 			"proj.name"		: "efanXtra",
 			"afIoc.module"	: "afEfanXtra::EfanXtraModule",
 			"tags"			: "templating",
-			"repo.private"	: "true"
+			"repo.private"	: "false"
 		]
 
 		index = [
@@ -26,13 +26,13 @@ class Build : BuildPod {
 			"afBeanUtils 1.0.2+",
 			"afConcurrent 1.0.6+",
 			"afPlastic 1.0.16+",
-			"afIoc 1.7.2+", 
-			"afIocConfig 1.0.12+",
-			"afIocEnv 1.0.10+",
+			"afIoc 1.7.6+", 
+			"afIocConfig 1.0.14+",
+			"afIocEnv 1.0.10.1+",
 			"afEfan 1.4.0.1+"
 		]
 
-		srcDirs = [`test/unit-tests/`, `test/unit-tests/internal/`, `test/unit-tests/internal/utils/`, `test/unit-tests/components/`, `test/example/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
+		srcDirs = [`test/unit-tests/`, `test/unit-tests/components/`, `test/example/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
 		resDirs = [`doc/lifecycle.png`, `test/example/`, `test/unit-tests/components/`]
 	}
 }

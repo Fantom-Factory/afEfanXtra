@@ -1,3 +1,5 @@
+using afBeanUtils::ArgNotFoundErr
+using afBeanUtils::ReflectUtils
 using afEfan::EfanErr
 
 @NoDoc
@@ -26,7 +28,7 @@ const class ComponentMeta {
 		
 		// Wot no type inference from List.map? - see http://fantom.org/sidewalk/topic/2217
 		types := (Type?[]) args.map { it?.typeof }
-		if (!ReflectUtils.paramTypesFitMethodSignature(types, method))
+		if (!ReflectUtils.argTypesFitMethod(types, method))
 			throw EfanErr(ErrMsgs.metaTypesDoNotFitMethod(facetType, method, types))
 
 		return method.callOn(instance, args)
