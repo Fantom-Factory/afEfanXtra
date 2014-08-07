@@ -1,3 +1,4 @@
+using afBeanUtils::ArgNotFoundErr
 using afIoc::Inject
 using afIoc::Registry
 using afEfan::EfanErr
