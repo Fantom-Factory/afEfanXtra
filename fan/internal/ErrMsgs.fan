@@ -37,6 +37,10 @@ internal const class ErrMsgs {
 		"Could not find efan library with name '${name}'"
 	}
 
+	static Str libraryPodNotFound(Pod pod) {
+		"Could not find efan library for pod '${pod.name}'"
+	}
+
 	static Str componentMetaTooManyMethods(Type comType, Type facetType) {
 		"${comType.qname} should only have ONE method annotated with @${facetType.name}"
 	}

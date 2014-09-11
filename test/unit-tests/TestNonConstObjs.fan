@@ -19,12 +19,12 @@ internal class TestNonConstObjs : EfanTest {
 	}
 
 	override Void setup() {
-		reg	= RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#, TestNonConstObjs#]).build.startup
+		reg	= RegistryBuilder().addModules([EfanAppModule#, ConfigModule#, TestNonConstObjs#]).build.startup
 		reg.injectIntoFields(this)
 	}
 
-	static Void bind(ServiceBinder binder) {
-		binder.bind(NonConstService#)
+	static Void defineServices(ServiceDefinitions defs) {
+		defs.add(NonConstService#)
 	}
 }
 

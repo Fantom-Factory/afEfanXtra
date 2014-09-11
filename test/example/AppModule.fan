@@ -4,8 +4,8 @@ using afIoc
 @SubModule { modules=[EfanXtraModule#]} 
 class EfanAppModule {
 	
-	static Void bind(ServiceBinder binder) {
-		binder.bind(DvdService#)
+	static Void defineServices(ServiceDefinitions defs) {
+		defs.add(DvdService#)
 	}
 
 	// contribute all components in our pod as a library named 'app' 

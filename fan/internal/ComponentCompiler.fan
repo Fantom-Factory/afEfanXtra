@@ -11,11 +11,9 @@ const mixin ComponentCompiler {
 internal const class ComponentCompilerImpl : ComponentCompiler {
 
 	@Inject	private const ComponentMeta					componentMeta
-	@Inject	private const EfanXtra						efanXtra
 	@Inject	private const EfanLibraries					efanLibraries
 	@Inject	private const Registry						registry
 	@Inject private const EfanEngine 					efanEngine
-	@Inject private const ServiceStats					serviceStats
 			private const |Type, PlasticClassModel|[]	compilerCallbacks
 	static	private const Type[]						allowedReturnTypes 	:= [Void#, Bool#]
 			private const Type:ServiceScope				serviceScopes
@@ -25,7 +23,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		this.compilerCallbacks = compilerCallbacks
 		
 		scopes := [:]
-		serviceStats.stats.each { scopes[it.serviceType] = it.scope }
+		registry.serviceDefinitions.each { scopes[it.serviceType] = it.serviceScope }
 		this.serviceScopes = scopes
 	}
 
@@ -56,12 +54,12 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		// todo: add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
 		model.addCtor("makeWithIoc", "${EfanTemplateMeta#.qname} templateMeta, |This|in", "in(this)\nthis._efan_templateMeta = templateMeta")
 
-		model.addField(ComponentRenderer#, "_efan_renderer").addFacet(Inject#)
-		model.addField(ComponentCtxMgr#, "_efan_comCtxMgr").addFacet(Inject#)
+		model.addField(ComponentRenderer#,	"_efan_renderer" ).addFacet(Inject#)
+		model.addField(ComponentCtxMgr#,	"_efan_comCtxMgr").addFacet(Inject#)
 
 		// inject libraries
-		efanXtra.libraries.each |lib| {
-			model.addField(lib.typeof, lib.name).addFacet(Inject#)			
+		efanLibraries.all.each |lib| {
+			model.addField(lib.typeof, lib.name).addFacet(Inject#, ["id":lib.name.toCode])			
 		}
 
 		// give callbacks a chance to add to our model
@@ -122,7 +120,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 				throw err
 
 			comName := matcher.group(1)			
-			actualComType := (Type?) efanXtra.libraries.eachWhile |lib| {
+			actualComType := (Type?) efanLibraries.all.eachWhile |lib| {
 				lib.componentTypes.find { it.name.equalsIgnoreCase(comName) }
 			} ?: throw err
 			

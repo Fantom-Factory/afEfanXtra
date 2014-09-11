@@ -5,15 +5,19 @@ using afIoc::Inject
 
 internal const class LibraryProvider : DependencyProvider {
 
-	@Inject private const EfanXtra efanXtra
+	@Inject private const EfanLibraries efanLibs
 	
 	new make(|This|in) { in(this) }
 	
 	override Bool canProvide(InjectionCtx ctx) {
-		efanXtra.libraries.any { it.typeof.fits(ctx.dependencyType) }
+		// Reuse the @Inject facet for field injection
+		// Don't quiz, create services unless we have to
+		ctx.injectionKind.isFieldInjection && ctx.field.hasFacet(Inject#) && ctx.dependencyType.fits(EfanLibrary#)
 	}
 
 	override Obj? provide(InjectionCtx ctx) {
-		efanXtra.libraries.find { it.typeof.fits(ctx.dependencyType) }
+		ctx.log("Injecting Log for ${ctx.injectingIntoType.qname}")
+		libName	:= ((Inject?) ctx.fieldFacets.findType(Inject#).first).id
+		return efanLibs[libName]
 	}
 }
