@@ -1,6 +1,6 @@
 using afEfan
 
-** Extend to define an 'efanXtra' component.
+** Implement to define an 'efanXtra' component.
 ** 
 ** Whereas 'efan' has 'EfanRenderer' instances, 'efanXtra' has 'EfanComponent' instances. 
 const mixin EfanComponent {

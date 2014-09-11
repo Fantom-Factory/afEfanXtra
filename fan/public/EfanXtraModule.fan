@@ -11,25 +11,25 @@ using afPlastic::PlasticCompiler
 @NoDoc
 const class EfanXtraModule {
 
-	internal static Void bind(ServiceBinder binder) {
-		binder.bind(ComponentFinder#)
-		binder.bind(ComponentCompiler#)
-		binder.bind(ComponentCache#)		// (needs proxy)
-		binder.bind(ComponentMeta#)
-		binder.bind(ComponentCtxMgr#)
-		binder.bind(ComponentRenderer#)
-		binder.bind(EfanLibraryCompiler#)
-		binder.bind(EfanLibraries#)
-		binder.bind(EfanXtraPrinter#)
+	static Void defineServices(ServiceDefinitions defs) {
+		defs.add(ComponentFinder#)
+		defs.add(ComponentCompiler#)
+		defs.add(ComponentCache#).withProxy
+		defs.add(ComponentMeta#)
+		defs.add(ComponentCtxMgr#)
+		defs.add(ComponentRenderer#)
+		defs.add(EfanLibraryCompiler#)
+		defs.add(EfanLibraries#)
+		defs.add(EfanXtraPrinter#)
 		
-		binder.bind(EfanXtra#)
-		binder.bind(TemplateConverters#)
-		binder.bind(TemplateDirectories#)
-		binder.bind(TemplateFinders#)
-		binder.bind(FandocToHtmlConverter#)
+		defs.add(EfanXtra#).withProxy
+		defs.add(TemplateConverters#)
+		defs.add(TemplateDirectories#)
+		defs.add(TemplateFinders#)
+		defs.add(FandocToHtmlConverter#)
 
 		// rely on afBedSheet to set srcCodePadding in PlasticCompiler (to be picked up by EfanCompiler) 
-		binder.bind(EfanEngine#)
+		defs.add(EfanEngine#)
 	}
 	
 	@Contribute { serviceType=TemplateFinders# }
@@ -49,12 +49,12 @@ const class EfanXtraModule {
 
 	@Contribute { serviceType=ActorPools# }
 	static Void contributeActorPools(Configuration config) {
-		config["afEfanXtra.componentCache"] = ActorPool() { it.name = "afEfanXtra.componentCache"; it.maxThreads = 5 }
+		config["afEfanXtra.caches"] = ActorPool() { it.name = "afEfanXtra.componentCache"; it.maxThreads = 5 }
 	}
 
 	@Contribute { serviceType=DependencyProviders# }
 	internal static Void contributeDependencyProviders(Configuration config) {
-		config["afEfanXtra.libraryProvider"] = config.autobuild(LibraryProvider#)
+		config.set("afEfanXtra.libraryProvider", config.autobuild(LibraryProvider#)).before("afIoc.serviceProvider")
 	}	
 
 	@Contribute { serviceType=FactoryDefaults# }

@@ -6,29 +6,31 @@ using afIocConfig::Config
 const class EfanXtraPrinter {
 	private const static Log log := Utils.getLog(EfanXtraPrinter#)
 
-	@Inject private	const EfanXtra			efanXtra
-	@Inject private	const ComponentMeta		componentMeta
+	@Inject private	const EfanLibraries		efanLibs
+	@Inject private	const ComponentFinder	comFinder
+	@Inject private	const ComponentMeta		comMeta
 	
 	new make(|This| in) { in(this) }
 
 	Void logLibraries() {
 		details := "\n"
-		efanXtra.libraries.each |lib| {
-			details += libraryDetailsToStr(lib) { true }
+		efanLibs.names.each |libName| {
+			details += libraryDetailsToStr(libName) { true }
 		}
 
-		log.info(details)		
+		log.info(details)
 	}
 
-	Str libraryDetailsToStr(EfanLibrary lib, |Type component->Bool| filter) {
+	Str libraryDetailsToStr(Str libName, |Type component->Bool| filter) {
+		libPod := efanLibs.pod(libName)
 		buf		 := StrBuf()
-		comTypes := lib.componentTypes.findAll(filter)
+		comTypes := comFinder.findComponentTypes(libPod).findAll(filter)
 		
 		maxName	 := (Int) comTypes.reduce(0) |size, component| { ((Int) size).max(component.name.toDisplayName.size) }
-		buf.add("\nefan Library: '${lib.name}' has ${comTypes.size} components:\n\n")
+		buf.add("\nefan Library: '${libName}' has ${comTypes.size} components:\n\n")
 
 		comTypes.each |comType| {
-			line := comType.name.toDisplayName.padl(maxName) + " : " + "${lib.name}." + componentMeta.methodDec(comType, InitRender#)
+			line := comType.name.toDisplayName.padl(maxName) + " : " + "${libName}." + comMeta.methodDec(comType, InitRender#)
 			buf.add("  ${line}\n")
 		}
 		

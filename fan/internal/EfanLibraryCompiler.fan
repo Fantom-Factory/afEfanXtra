@@ -32,7 +32,7 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 		componentFinder.findComponentTypes(pod).each |comType| {	
 			log.debug("  - found component ${comType.name}")
 
-			// TODO: filter out Pillow pages, as you their @PageContext means you may not be able to render them anyway
+			// TODO: filter out Pillow pages, as their @PageContext means you may not be able to render them anyway
 			initMethod	:= componentMeta.findMethod(comType, InitRender#)
 			
 			// bodyFunc is actually |->|? but for efan to make use of it-block syntax we define it as |Obj?|

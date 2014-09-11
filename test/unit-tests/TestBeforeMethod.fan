@@ -10,13 +10,12 @@ internal class TestBeforeMethod : EfanTest {
 
 	Void testBeforeTrueOkay() {
 		try {
-		text := render(T_BeforeTrueOkay#)
-		verifyEq(text, "Hello!")
+			text := render(T_BeforeTrueOkay#)
+			verifyEq(text, "Hello!")
 			
 		} catch(Err e) {
-						q:=Utils.traceErr(e, 100)
+			q:=Utils.traceErr(e, 100)
 			Env.cur.err.printLine(q)
-
 		}
 	}
 

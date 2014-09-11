@@ -19,7 +19,7 @@ internal const class ComponentCacheImpl : ComponentCache {
 
 	new make(ActorPools actorPools, |This|in) { 
 		in(this) 
-		typeToComponent	= SynchronizedMap(actorPools["afEfanXtra.componentCache"]) { it.keyType = Type#; it.valType = EfanComponent# }
+		typeToComponent	= SynchronizedMap(actorPools["afEfanXtra.caches"]) { it.keyType = Type#; it.valType = EfanComponent# }
 	}
 
 	override EfanComponent getOrMake(Type componentType) {

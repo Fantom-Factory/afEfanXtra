@@ -1,5 +1,5 @@
 using afIoc
-using afIocConfig::IocConfigModule
+using afIocConfig::ConfigModule
 using afIocEnv
 using afEfan::EfanErr
 using afPlastic
@@ -33,7 +33,7 @@ internal class EfanTest : Test {
 	
 	override Void setup() {
 		try {
-			reg = RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#, IocEnvModule#]).build.startup
+			reg = RegistryBuilder().addModules([EfanAppModule#, ConfigModule#, IocEnvModule#]).build.startup
 			reg.injectIntoFields(this)
 			
 		} catch (PlasticCompilationErr pce) {
