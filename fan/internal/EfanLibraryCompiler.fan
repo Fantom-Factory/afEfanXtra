@@ -32,7 +32,6 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 		componentFinder.findComponentTypes(pod).each |comType| {	
 			log.debug("  - found component ${comType.name}")
 
-			// TODO: filter out Pillow pages, as their @PageContext means you may not be able to render them anyway
 			initMethod	:= componentMeta.findMethod(comType, InitRender#)
 			
 			// bodyFunc is actually |->|? but for efan to make use of it-block syntax we define it as |Obj?|
@@ -41,7 +40,6 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 			
 			args := (initMethod != null && !initMethod.params.isEmpty) ? (initMethod.params.join(",") { it.name }) : "," 
 			body := "_efanXtra_args := [${args}]\n"	// avoid name clashes
-			// FIXME: call render directly on the component?
 			body += "return _renderComponent(${comType.qname}#, _efanXtra_args, _efanXtra_bodyFunc)\n"
 			
 			model.addMethod(Str#, "render" + comType.name.capitalize, initSig, body)

@@ -308,9 +308,9 @@ Release Notes [#releaseNotes]
 *****************************
 v1.1.14 [#v1.1.14]
 ------------------
- - New: Added a couple of methods to 'EfanXtra'.
+ - New: Added a couple of library methods to 'EfanXtra'.
  - Chg: Updated to [IoC 2.0.0]`pod:afIoc`.
- - Chg: Renamed '@EfanTemplate' -> '@EfanLocation'.
+ - Chg: Renamed '@EfanTemplate' -> '@EfanLocation'. (Breaking change.)
  - Chg: Internal work to lazily compile 'EfanLibraries'.
 
 v1.1.12 [#v1.1.12]
