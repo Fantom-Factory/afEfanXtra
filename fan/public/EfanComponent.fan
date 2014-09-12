@@ -22,7 +22,7 @@ const mixin EfanComponent {
 	** ...
 	** <pre
 	Str render(Obj?[]? initArgs := null, |->|? bodyFunc := null) {
-		this -> _efan_renderer->render(this, initArgs, bodyFunc)
+		((ComponentRenderer)(this -> _efan_renderer)).render(this, initArgs, bodyFunc)
 	}
 
 	** Call from within your template to render the body of the enclosing efan template. 
@@ -36,7 +36,7 @@ const mixin EfanComponent {
 	** </html>
 	** <pre
 	Str renderBody() {
-		this -> _efan_renderer->renderBody(this)
+		((ComponentRenderer)(this -> _efan_renderer)).renderBody(this)
 	}
 	
 	** Renders the efan template. Not meant to be invoked by you, the user!
