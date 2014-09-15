@@ -1,4 +1,4 @@
 
 @NoDoc
-@EfanLocation { url=`/test/unit-tests/components/EfanComponentPodLocal.efan` } 
+@TemplateLocation { url=`/test/unit-tests/components/EfanComponentPodLocal.efan` } 
 const mixin TemplateFromFacetInPodLocal : EfanComponent { }

@@ -306,6 +306,10 @@ class AppModule {
 
 Release Notes [#releaseNotes]
 *****************************
+v1.1.16 [#v1.1.16]
+------------------
+ - Chg: Renamed '@EfanLocation' -> '@TemplateLocation'. (Oops!)
+
 v1.1.14 [#v1.1.14]
 ------------------
  - New: Added a couple of library methods to 'EfanXtra'.
