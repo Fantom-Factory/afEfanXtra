@@ -75,7 +75,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			if (field.parent == EfanComponent#)
 				return
 
-			if (field.hasFacet(Inject#)) {
+			if (field.hasFacet(Inject#) || field.hasFacet(Autobuild#)) {
 				// Have calls to threaded / non-const services call through to the registry, so they're not actually 
 				// held in the efan component. This'll work for 95% of use cases where the service can be identified
 				// solely by service type...
