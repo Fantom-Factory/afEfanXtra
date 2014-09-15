@@ -94,10 +94,10 @@ const class FindEfanByFacetValue : TemplateFinder {
 	new make(|This|in) { in(this) }
 	
 	override TemplateSource? findTemplate(Type componentType) {
-		if (!componentType.hasFacet(EfanLocation#))
+		if (!componentType.hasFacet(TemplateLocation#))
 			return null
 		
-		comFacet	 := (EfanLocation) Type#.method("facet").callOn(componentType, [EfanLocation#])	// Stoopid F4
+		comFacet	 := (TemplateLocation) Type#.method("facet").callOn(componentType, [TemplateLocation#])	// Stoopid F4
 		templateFile := findFile(componentType, comFacet.url)
 		return templateFile == null ? null : registry.autobuild(TemplateSourceFile#, [templateFile])
 	}
