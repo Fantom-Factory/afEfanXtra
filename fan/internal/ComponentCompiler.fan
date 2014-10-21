@@ -71,6 +71,10 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			if (field.isStatic)
 				return
 
+			// check if field already catered for by a callback
+			if (model.hasField(field.name))
+				return
+
 			// ignore fields defined in 'the system' hierarchy
 			if (field.parent == EfanComponent#)
 				return
@@ -95,7 +99,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			}
 
 			if (!model.hasField(field.name)) {
-				newField := model.overrideField(field, """_efan_comCtxMgr.peek.getVariable("${field.name}")""", """_efan_comCtxMgr.peek.setVariable("${field.name}", it)""")
+				newField := model.overrideField(field, "_efan_comCtxMgr.peek.getVariable(${field.name.toCode})", "_efan_comCtxMgr.peek.setVariable(${field.name.toCode}, it)")
 				field.facets.each { newField.addFacetClone(it) }
 			}
 		}
