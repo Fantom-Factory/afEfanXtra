@@ -308,6 +308,7 @@ Release Notes [#releaseNotes]
 *****************************
 v1.1.18 [#v1.1.18]
 ------------------
+ - Chg: Advanced API change to accomodate @Inject'ed threaded services.
  - Bug: efanXtra now honours the '@Autobuild' facet.
 
 v1.1.16 [#v1.1.16]
