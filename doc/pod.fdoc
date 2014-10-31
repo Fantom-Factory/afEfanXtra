@@ -19,7 +19,7 @@ Install '@{project.name}' with the Fantom Repository Manager ( [fanr]`docFanr::T
 
 To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
 
-  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}+"]
+  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}"]
 
 
 
