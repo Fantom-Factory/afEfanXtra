@@ -3,7 +3,7 @@ using fandoc::DocElem
 using fandoc::Doc
 using fandoc::FandocParser
 
-** A basic Fandoc to HTML converter, so '.fandoc' files may be used a efan templates. If you don't wish .fandoc to be 
+** A basic Fandoc to HTML converter, so '.fandoc' files may be used as efan templates. If you don't wish .fandoc to be 
 ** converted into HTML (or want more conversion control), override the contribution:
 ** 
 **   @Contribute { serviceType=TemplateConverters# }

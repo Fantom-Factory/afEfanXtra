@@ -14,7 +14,7 @@ Install `efanXtra` with the Fantom Repository Manager ( [fanr](http://fantom.org
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afEfanXtra 1.1+"]
+    depends = ["sys 1.0", ..., "afEfanXtra 1.1"]
 
 ## Documentation 
 

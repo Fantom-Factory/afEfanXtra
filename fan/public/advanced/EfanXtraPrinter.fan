@@ -1,5 +1,4 @@
 using afIoc::Inject
-using afIocConfig::Config
 
 ** Used by afPillow
 @NoDoc
