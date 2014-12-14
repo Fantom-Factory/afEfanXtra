@@ -134,22 +134,22 @@ anywhere in a pod resource dir. For example, if you were to create a component c
 
 For 'efanXtra' to find your template file, be sure to add '/fan/components/' as a 'resDir' in your 'build.fan'.
 
+  resDirs = [`doc/`, `res/`, `res/components/`]
+
 > **ALIEN-AID:** Note resource directories in your 'build.fan' are NOT nested. Adding 'res/' will NOT add
 > '/res/components/' - '/res/components/' would need to be added separately. Example:
-
-  resDirs = [`doc/`, `res/`, `res/components/`]
 
 You can also contribute to `TemplateDirectories` to keep template files on the file system. This can be very handy
 for development, as templates on the file system don't require the pod to be re-build (or the application re-started) when
 they change.
 
 If you wish the template to have a different name to the Fantom class, you can set an explicit 'Uri' with the
-[@EfanTemplate]`EfanTemplate` facet. Example:
+[@TemplateLocation]`TemplateLocation` facet. Example:
 
 pre>
 syntax: fantom
 
-  @EfanTemplate { uri=`fan://acmePod/templates/Notice.efan` }
+  @TemplateLocation { url=`fan://acmePod/templates/Notice.efan` }
   const mixin Overdue : EfanComponent {
     ...
   }
