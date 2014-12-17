@@ -11,7 +11,7 @@ class Build : BuildPod {
 			"proj.name"		: "efanXtra",
 			"afIoc.module"	: "afEfanXtra::EfanXtraModule",
 			"tags"			: "templating",
-			"repo.private"	: "true"
+			"repo.private"	: "false"
 		]
 
 		index = [

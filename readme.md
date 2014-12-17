@@ -113,16 +113,16 @@ By default, efan template files should have the same name as the mixin ( but wit
 
 For `efanXtra` to find your template file, be sure to add `/fan/components/` as a `resDir` in your `build.fan`.
 
-> **ALIEN-AID:** Note resource directories in your `build.fan` are NOT nested. Adding `res/` will NOT add `/res/components/` - `/res/components/` would need to be added separately. Example:
-
     resDirs = [`doc/`, `res/`, `res/components/`]
+
+> **ALIEN-AID:** Note resource directories in your `build.fan` are NOT nested. Adding `res/` will NOT add `/res/components/` - `/res/components/` would need to be added separately. Example:
 
 You can also contribute to [TemplateDirectories](http://repo.status302.com/doc/afEfanXtra/TemplateDirectories.html) to keep template files on the file system. This can be very handy for development, as templates on the file system don't require the pod to be re-build (or the application re-started) when they change.
 
-If you wish the template to have a different name to the Fantom class, you can set an explicit `Uri` with the [@EfanTemplate](http://repo.status302.com/doc/afEfanXtra/EfanTemplate.html) facet. Example:
+If you wish the template to have a different name to the Fantom class, you can set an explicit `Uri` with the [@TemplateLocation](http://repo.status302.com/doc/afEfanXtra/TemplateLocation.html) facet. Example:
 
 ```
-  @EfanTemplate { uri=`fan://acmePod/templates/Notice.efan` }
+  @TemplateLocation { url=`fan://acmePod/templates/Notice.efan` }
   const mixin Overdue : EfanComponent {
     ...
   }

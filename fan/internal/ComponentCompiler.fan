@@ -86,20 +86,34 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 				// so they're not actually held in the efan component. 
 				if (serviceScopes[field.type] != ServiceScope.perApplication) {
 					regRequired = true
-					model.overrideField(field, """injectCtx := afIoc::InjectionCtx.makeFromField(this, Field.findField(${field.qname.toCode}));\n return _efan_dependencyProviders.provideDependency(injectCtx, true)""", """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")				
+					// TODO: I'm not sure why I can't just declare a normal '_efan_comCtxMgr.peek' var, copy the facets over and let IoC inject the dependency? 
+					model.overrideField(field, 
+						"if (_efan_comCtxMgr.peek.hasVariable(${field.qname.toCode})) {
+						 	return _efan_comCtxMgr.peek.getVariable(${field.qname.toCode})
+						 }
+						 injectCtx := afIoc::InjectionCtx.makeFromField(this, Field.findField(${field.qname.toCode}));
+						 var := _efan_dependencyProviders.provideDependency(injectCtx, true)
+						 _efan_comCtxMgr.peek.setVariable(${field.qname.toCode}, var)
+						 return var", 
+						"_efan_comCtxMgr.peek.setVariable(${field.qname.toCode}, it)"
+					)
 					return
 				}
 
-				// Inject all other services into the field. It looks nicer! 
-				injectFieldName := "_ioc_${field.name}"
-				// need to copy facets to field in subclass - see http://fantom.org/sidewalk/topic/2186#c14112
-				newField := model.addField(field.type, injectFieldName)
-				field.facets.each { newField.addFacetClone(it) }
-				model.overrideField(field, injectFieldName, """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")
+				if (serviceScopes[field.type] == ServiceScope.perApplication) {
+					// Inject all other services into the field. It looks nicer! 
+					injectFieldName := "_ioc_${field.name}"
+					// need to copy facets to field in subclass - see http://fantom.org/sidewalk/topic/2186#c14112
+					newField := model.addField(field.type, injectFieldName)
+					field.facets.each { newField.addFacetClone(it) }
+					model.overrideField(field, injectFieldName, """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")
+					return
+				}
 			}
 
 			if (!model.hasField(field.name)) {
-				newField := model.overrideField(field, "_efan_comCtxMgr.peek.getVariable(${field.name.toCode})", "_efan_comCtxMgr.peek.setVariable(${field.name.toCode}, it)")
+				newField := model.overrideField(field, "_efan_comCtxMgr.peek.getVariable(${field.qname.toCode})", "_efan_comCtxMgr.peek.setVariable(${field.qname.toCode}, it)")
+				// need to copy facets to field in subclass - see http://fantom.org/sidewalk/topic/2186#c14112
 				field.facets.each { newField.addFacetClone(it) }
 			}
 		}
