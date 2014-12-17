@@ -24,6 +24,10 @@ class ComponentCtx {
 		stash[name]
 	}
 
+	Bool hasVariable(Str name) {
+		stash.containsKey(name)
+	}
+
 	override Str toStr() {
 		stash.toStr
 	}
