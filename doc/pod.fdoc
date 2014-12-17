@@ -306,6 +306,10 @@ class AppModule {
 
 Release Notes [#releaseNotes]
 *****************************
+v1.1.20 [#v1.1.20]
+------------------
+ - Chg: Better handling of threaded services / dependency provided objects injected into components.
+
 v1.1.18 [#v1.1.18]
 ------------------
  - Chg: Advanced API change to accomodate @Inject'ed threaded services.

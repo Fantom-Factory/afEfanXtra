@@ -19,6 +19,9 @@ internal class TestNonConstObjs : EfanTest {
 	}
 
 	override Void setup() {
+		Pod.find("afIoc")		.log.level = LogLevel.warn
+		Pod.find("afEfanXtra")	.log.level = LogLevel.warn
+
 		reg	= RegistryBuilder().addModules([EfanAppModule#, ConfigModule#, TestNonConstObjs#]).build.startup
 		reg.injectIntoFields(this)
 	}
