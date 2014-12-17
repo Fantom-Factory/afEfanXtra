@@ -32,6 +32,9 @@ internal class EfanTest : Test {
 	}
 	
 	override Void setup() {
+		Pod.find("afIoc")		.log.level = LogLevel.warn
+		Pod.find("afEfanXtra")	.log.level = LogLevel.warn
+
 		try {
 			reg = RegistryBuilder().addModules([EfanAppModule#, ConfigModule#, IocEnvModule#]).build.startup
 			reg.injectIntoFields(this)

@@ -13,6 +13,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 	@Inject	private const ComponentMeta					componentMeta
 	@Inject	private const EfanLibraries					efanLibraries
 	@Inject	private const Registry						registry
+	@Inject	private const DependencyProviders			dependencyProviders
 	@Inject private const EfanEngine 					efanEngine
 			private const |Type, PlasticClassModel|[]	compilerCallbacks
 	static	private const Type[]						allowedReturnTypes 	:= [Void#, Bool#]
@@ -79,20 +80,19 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			if (field.parent == EfanComponent#)
 				return
 
-			if (field.hasFacet(Inject#) || field.hasFacet(Autobuild#)) {
-				// Have calls to threaded / non-const services call through to the registry, so they're not actually 
-				// held in the efan component. This'll work for 95% of use cases where the service can be identified
-				// solely by service type...
-				if (serviceScopes[field.type] == ServiceScope.perThread) {
+			injectionCtx := InjectionCtx.makeFromField(null, field) { it.injectingIntoType = field.parent }
+			if (dependencyProviders.canProvideDependency(injectionCtx)) {
+				// Have calls to threaded / non-const services / dependency provided objs call through to the registry, 
+				// so they're not actually held in the efan component. 
+				if (serviceScopes[field.type] != ServiceScope.perApplication) {
 					regRequired = true
-					model.overrideField(field, """_efan_registry.dependencyByType(${field.type}#)""", """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")				
+					model.overrideField(field, """injectCtx := afIoc::InjectionCtx.makeFromField(this, Field.findField(${field.qname.toCode}));\n return _efan_dependencyProviders.provideDependency(injectCtx, true)""", """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")				
 					return
 				}
 
-				// Inject all other services into the field. That way we don't loose the context, @Config, @ServiceId, 
-				// Log dependency injection, etc...   
+				// Inject all other services into the field. It looks nicer! 
 				injectFieldName := "_ioc_${field.name}"
-				// @see http://fantom.org/sidewalk/topic/2186#c14112
+				// need to copy facets to field in subclass - see http://fantom.org/sidewalk/topic/2186#c14112
 				newField := model.addField(field.type, injectFieldName)
 				field.facets.each { newField.addFacetClone(it) }
 				model.overrideField(field, injectFieldName, """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")
@@ -105,7 +105,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		}
 
 		if (regRequired) {
-			newField := model.addField(Registry#, "_efan_registry")
+			newField := model.addField(DependencyProviders#, "_efan_dependencyProviders")
 			newField.addFacet(Inject#)
 		}
 		
