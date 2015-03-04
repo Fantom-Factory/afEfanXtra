@@ -80,7 +80,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			if (field.parent == EfanComponent#)
 				return
 
-			injectionCtx := InjectionCtx.makeFromField(null, field) { it.injectingIntoType = field.parent }
+			injectionCtx := InjectionCtx.makeFromField(null, field) { it.targetType = field.parent }
 			if (dependencyProviders.canProvideDependency(injectionCtx)) {
 				// Have calls to threaded / non-const services / dependency provided objs call through to the registry, 
 				// so they're not actually held in the efan component. 

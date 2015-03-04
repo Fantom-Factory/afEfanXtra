@@ -16,7 +16,7 @@ internal const class LibraryProvider : DependencyProvider {
 	}
 
 	override Obj? provide(InjectionCtx ctx) {
-		ctx.log("Injecting Log for ${ctx.injectingIntoType.qname}")
+		ctx.log("Injecting Log for ${ctx.targetType.qname}")
 		libName	:= ((Inject?) ctx.fieldFacets.findType(Inject#).first).id
 		return efanLibs[libName]
 	}
