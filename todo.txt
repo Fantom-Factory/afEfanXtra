@@ -1,0 +1,21 @@
+
+For 1.1.8
+=========
+
+
+
+For Future
+==========
+Have render methods return Void...???
+
+Make TemplateFinders public ???
+
+Add EfanTemlapteNameMapper / Matcher for *Page / *Component
+
+
+
+Naa - It's a Bad Idea
+=====================
+
+Don't have events / method callers in efanXtra - it should be purely templating 
+ - by all means have hooks to call methods but no more

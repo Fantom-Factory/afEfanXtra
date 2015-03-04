@@ -1,0 +1,12 @@
+Dear Mr Smith,
+
+It appears the following rented DVDs are overdue:
+
+    Aliens, Robocop, Starship Troopers
+
+Please return them at your convenience.
+
+Yours faithfully,
+
+The Management
+
