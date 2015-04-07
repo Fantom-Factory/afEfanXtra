@@ -98,7 +98,7 @@ class AppModule {
 
 Then to render an efan component:
 
-  efanXtra.component(Overdue#).render("Mr Smith")
+  efanXtra.component(Overdue#).render(["Mr Smith"])
 
 Full example source code available on [BitBucket]`https://bitbucket.org/AlienFactory/afefanxtra/src/default/test/example/`.
 
