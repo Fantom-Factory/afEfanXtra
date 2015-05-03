@@ -54,7 +54,7 @@ const class EfanXtraModule {
 
 	@Contribute { serviceType=DependencyProviders# }
 	internal static Void contributeDependencyProviders(Configuration config) {
-		config.set("afEfanXtra.libraryProvider", config.autobuild(LibraryProvider#)).before("afIoc.serviceProvider")
+		config["afEfanXtra.libraryProvider"] = config.autobuild(LibraryProvider#)
 	}	
 
 	@Contribute { serviceType=FactoryDefaults# }
