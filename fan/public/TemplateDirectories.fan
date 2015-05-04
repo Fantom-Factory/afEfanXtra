@@ -18,10 +18,8 @@ using afEfan::EfanErr
 ** }
 ** <pre
 ** 
-** Templates could, of course, just be placed in resource directories inside your pod.
-** 
-** But hosting templates in directories external to the pod has the advantage of that during 
-** development, the pod does not need to be re-built and your application re-started just to see 
+** Hosting templates on the file system has the advantage that, during development, 
+** the pod does not need to be re-built and your application re-started just to see 
 ** template changes. 
 ** 
 ** Note that directories are **not** searched recursively, if you place templates in both 'etc/components/' and 
@@ -30,7 +28,7 @@ using afEfan::EfanErr
 **   config.add(`etc/components/`)
 **   config.add(`etc/components/admin/`)
 ** 
-** Also, directory uris need to end with a /slash/.
+** Also, directory URIs need to end with a /slash/.
 const mixin TemplateDirectories {
 	
 	** The list of contributed directories.
