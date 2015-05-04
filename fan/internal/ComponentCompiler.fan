@@ -86,7 +86,8 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 				// so they're not actually held in the efan component. 
 				if (serviceScopes[field.type] != ServiceScope.perApplication) {
 					regRequired = true
-					// TODO: I'm not sure why I can't just declare a normal '_efan_comCtxMgr.peek' var, copy the facets over and let IoC inject the dependency? 
+					// we can't just declare a normal '_efan_comCtxMgr.peek' var, copy the facets over and let IoC inject the dependency
+					// because when the type gets autobuild, there is no render ctx on the thread
 					model.overrideField(field, 
 						"if (_efan_comCtxMgr.peek.hasVariable(${field.qname.toCode})) {
 						 	return _efan_comCtxMgr.peek.getVariable(${field.qname.toCode})
