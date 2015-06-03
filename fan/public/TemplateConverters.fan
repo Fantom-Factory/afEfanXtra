@@ -11,16 +11,18 @@ using afEfan::EfanErr
 ** your 'AppModule':
 ** 
 ** pre>
+** syntax: fantom
+** 
 ** using afIoc
 ** using afSlim
 ** using afEfanXtra
 ** 
 ** class AppModule {
 ** 
-**   @Contribute { serviceType=TemplateConverters# }
-**   static Void contributeSlimTemplates(Configuration config, Slim slim) {
-**     config["slim"] = |File file -> Str| { slim.parseFromFile(file) }
-**   }
+**     @Contribute { serviceType=TemplateConverters# }
+**     static Void contributeSlimTemplates(Configuration config, Slim slim) {
+**         config["slim"] = |File file -> Str| { slim.parseFromFile(file) }
+**     }
 ** }
 ** <pre
 ** 
