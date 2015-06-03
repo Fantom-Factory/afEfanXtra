@@ -29,6 +29,7 @@ const mixin EfanComponent {
 	** Example, a simple 'layout' efan template may look like: 
 	** 
 	** pre>
+	** syntax: html
 	** <html>
 	** <body>
 	**     <%= renderBody() %>

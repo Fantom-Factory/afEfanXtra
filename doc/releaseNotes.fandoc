@@ -1,0 +1,127 @@
+Release Notes
+*************
+
+v1.1.20
+=======
+ - Chg: Better handling of threaded services / dependency provided objects injected into components.
+
+v1.1.18
+=======
+ - Chg: Advanced API change to accomodate @Inject'ed threaded services.
+ - Bug: efanXtra now honours the '@Autobuild' facet.
+
+v1.1.16
+=======
+ - Chg: Renamed '@EfanLocation' -> '@TemplateLocation'. (Oops!)
+
+v1.1.14
+=======
+ - New: Added a couple of library methods to 'EfanXtra'.
+ - Chg: Updated to [IoC 2.0.0]`pod:afIoc`.
+ - Chg: Renamed '@EfanTemplate' -> '@EfanLocation'. (Breaking change.)
+ - Chg: Internal work to lazily compile 'EfanLibraries'.
+
+v1.1.12
+=======
+ - Chg: Removed 'ArgNotFoundErr' in favour of the one in [Bean Utils]`pod:afBeanUtils`.
+ - Chg: Updated to [IoC 1.7.6]`pod:afIoc`.
+
+v1.1.10
+=======
+ - Bug: Bodged release - updated to [IoC 1.7.2]`pod:afIoc`.
+
+v1.1.8
+======
+ - Chg: Updated to use [IoC 1.7.0]`pod:afIoc`.
+
+v1.1.6
+======
+ - Chg: Updated to use [IoC 1.6.4]`pod:afIoc`, added dependency on [IoC Env 1.0.6]`pod:afIocEnv`
+ - Chg: 'EfanXtraConfigIds.templateTimeout' now defaults to '2min' in production environments, and '2sec' otherwise.
+ - Chg: Removed 'EfanXtraConfigIds.supressStartupLogging'. To suppress the startup log, remove the 'RegistryStartup' contribution 'afEfanXtra.logLibraries'.
+
+v1.1.4
+======
+ - Chg: Updated to use [Concurrent 1.0.4]`pod:afConcurrent`.
+ - Chg: (Internal) Created 'ComponentRenderer'.
+ - Bug: Could not re-compile components.
+
+v1.1.2
+======
+ - Chg: Updated to use [efan 1.4.0]`pod:afIoc`.
+
+v1.1.0
+======
+ - New: Template files are optional! Small components may just override 'renderTemplate()' instead.
+ - Chg: Overhauled and tidied up the public API and documentation. (Breaking change.)
+ - Chg: Type checks involving Lists and Maps are more lenient when calling lifecycle methods.
+
+v1.0.14
+=======
+ - Chg: Updated to use [IoC 1.6.0]`pod:afIoc` and [Concurrent 1.0.0]`pod:afConcurrent`.
+
+v1.0.12
+=======
+ - Chg: Components may now have threaded services injected into them!
+
+v1.0.10
+=======
+ - New: Added 'EfanLibraries.callMethod()' hook for [Pillow]`pod:afPillow`.
+ - Chg: Components automatically 'use' the pod that the component mixin was defined in.
+ - Chg: 'ComponentCompiler' callbacks now take the component type.
+ - Chg: 'FindEfanByFacetValue' is public for use by [Pillow]`pod:afPillow`.
+ - Chg: Render methods are searched for on the component *instance*, not just the mixin. This is so it may still be called if it's added dynamically.
+
+v1.0.8
+======
+ - New: 'fandoc' files may be used as efan templates!
+
+v1.0.6
+======
+ - Chg: Upgraded to [Ioc 1.5.0]`pod:afIoc`.
+ - Chg: Upgraded to [Ioc Config 1.0.0]`pod:afIocConfig`.
+
+v1.0.4
+======
+ - Chg: '@InitMethods' may now only return 'Void' or 'Bool'. Throw
+ [BedSheet's]`pod:afBedSheet` 'ReProcessErr' if you wish to perform a different action.
+ - Chg: Multiple components may now share the same template file.
+
+v1.0.2
+======
+ - Chg: Overhauled API documentation.
+ - Chg: Tweaked some method signatures with correct nullable types.
+
+v1.0.0
+======
+ - New: Introduced component lifecycle methods: [@InitRender]`InitRender`, [@BeforeRender]`BeforeRender`
+   & [AfterRender]`AfterRender`.
+ - New: Added '@Abstract' facet to mark base components.
+ - Chg: Template rendering is held in a single mutable 'StrBuf' so it may be manipulated by lifecycle methods.
+ - Chg: Components are now defined by extending 'EfanComponent', not by annotating with a '@Component' facet.
+ - Chg: Renamed to 'efanXtra' (from 'efanExtra').
+
+v0.0.8
+======
+ - New: Added 'EfanTemplateDirectories' service which scans external directories for efan templates.
+ - New: Compilation err msgs are updated with code hints should a simple component rendering typo be spotted. (ALIEN-AID)
+
+v0.0.6
+======
+ - New: Fields may be annotated with *any* facet, not just '@Inject'. Think '@Config'!!!
+ - Chg: Updated to efan-1.3.2
+ - Chg: Better Err msgs if component template not found.
+
+v0.0.4
+======
+ - New: Component templates can be specified via the '@Component.template' field.
+ - New: Added a contributable 'EfanTemplateFinders' service.
+ - New: Ability to suppress startup log messages.
+ - New: Added compiler hooks (mainly for [Pillow]`pod:afPillow`).
+ - New: 'efanXtra.component()' returns component instances.
+ - Chg: '@Component' facet is inherited.
+
+v0.0.2
+======
+ - New: Preview Release
+
