@@ -13,6 +13,8 @@ facet class TemplateLocation {
 
 ** Place on 'abstract' base components to tell 'efanExta' not to treat it as a component. Example:
 ** 
+**   syntax: fantom
+** 
 **   using afEfanExtra
 ** 
 **   @Abstract
@@ -22,6 +24,8 @@ facet class TemplateLocation {
 facet class Abstract { }
 
 ** Use to mark a component lifecycle method. Init render methods may take any number of parameters. Example:
+** 
+**   syntax: fantom
 ** 
 **   @InitRender
 **   Bool? initRender(Str x, Int y) { ... }
@@ -33,6 +37,8 @@ facet class InitRender { }
 ** Before render methods may optionally define a 'StrBuf' parameter. 
 ** You can use this to change any part of the current rendering.
 ** 
+**   syntax: fantom
+** 
 **   @BeforeRender
 **   Bool? beforeRender(StrBuf output) { ... }
 ** 
@@ -42,6 +48,8 @@ facet class BeforeRender { }
 ** Use to mark a component lifecycle method.
 ** After render methods may optionally define a 'StrBuf' parameter. 
 ** You can use this to change any part of the current rendering.
+** 
+**   syntax: fantom
 ** 
 **   @AfterRender
 **   Bool? afterRender(StrBuf output) { ... }

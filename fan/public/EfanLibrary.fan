@@ -12,6 +12,7 @@ using afEfan
 ** Example, here the pod 'afPies' is contributed with the name 'pies':
 ** 
 ** pre>
+** syntax: fantom
 ** using afIoc
 ** using afEfanExtra
 ** 
@@ -26,6 +27,7 @@ using afEfan
 ** If the pod 'afPies' defines a component named 'CreamPie':
 ** 
 ** pre>
+** syntax: fantom
 ** const mixin CreamPie : EfanComponent {
 **   @InitRender
 **   Void initRender(Str x, Int y) { ... }
@@ -34,6 +36,7 @@ using afEfan
 ** 
 ** Then the 'pies' library would dynamically define the method:
 ** 
+**   syntax: fantom
 **   Str renderCreamPie(Str x, Int y, |->|? bodyFunc := null) { ... }
 ** 
 ** Every library is injected into every efan component as a field. The field has the same name as 
