@@ -1,8 +1,10 @@
 
-** [IocConfig]`http://fantomfactory.org/pods/afIocConfig` values as provided by 'efanXtra'. 
+** [IocConfig]`pod:afIocConfig` values as provided by 'efanXtra'. 
 ** To change their value, override them in your 'AppModule'. Example:
 ** 
 ** pre>
+** syntax: fantom
+** 
 ** @Contribute { serviceType=ApplicationDefaults# } 
 ** static Void configureAppDefaults(Configuration config) {
 **     config[EfanXtraConfigIds.templateTimeout] = 1min

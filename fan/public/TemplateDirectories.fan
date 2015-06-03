@@ -6,15 +6,17 @@ using afEfan::EfanErr
 ** searching for efan templates.
 ** 
 ** pre>
+** syntax: fantom
+** 
 ** using afIoc
 ** using afEfanXtra
 ** 
 ** class AppModule {
 ** 
-**   @Contribute { serviceType=TemplateDirectories# }
-**   static Void contributeTemplateDirs(Configuration config) {
-**     config.add(`etc/components/`)
-**   }
+**     @Contribute { serviceType=TemplateDirectories# }
+**     static Void contributeTemplateDirs(Configuration config) {
+**         config.add(`etc/components/`)
+**     }
 ** }
 ** <pre
 ** 
@@ -24,6 +26,8 @@ using afEfan::EfanErr
 ** 
 ** Note that directories are **not** searched recursively, if you place templates in both 'etc/components/' and 
 ** 'etc/components/admin/' then you would need to add them both:
+** 
+**   syntax: fantom
 ** 
 **   config.add(`etc/components/`)
 **   config.add(`etc/components/admin/`)
