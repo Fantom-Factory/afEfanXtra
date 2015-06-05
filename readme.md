@@ -187,7 +187,7 @@ This allows you to render components from within templates by calling `<libName>
 
 Components can be thought of as having a lifecycle for the duration of their render. Components can be made aware of the lifecycle by annotating callback methods with lifecycle facets. The lifecycle, and all state held in the component, only exists for the duration of the render.
 
-![efanXtra Component Lifecycle](lifecycle.png)
+![efanXtra Component Lifecycle](http://pods.fantomfactory.org/pods/afEfanXtra/doc/lifecycle.png)
 
 ### @InitRender
 
