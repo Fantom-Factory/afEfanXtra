@@ -1,12 +1,12 @@
 Overview
 ********
-'efanXtra' creates managed libraries of reusable [Embedded Fantom (efan)]`pod:afEfan` components.
+efanXtra creates managed libraries of reusable [Embedded Fantom (efan)]`pod:afEfan` components.
 Influenced by Java's [Tapestry 5]`http://tapestry.apache.org/index.html`, it pairs up Fantom classes and efan template
 files to encapsulate model / view behaviour.
 
-'efanXtra' extends [efan]`pod:afEfan`, is powered by [IoC]`pod:afIoc` and works great with [Slim]`pod:afSlim` templates.
+efanXtra extends [efan]`pod:afEfan`, is powered by [IoC]`pod:afIoc` and works great with [Slim]`pod:afSlim` templates.
 
-'efanXtra' excels in a [BedSheet]`pod:afBedSheet` web environment, where URLs are automatically mapped to efan components
+efanXtra excels in a [BedSheet]`pod:afBedSheet` web environment, where URLs are automatically mapped to efan components
 (see [Pillow]`pod:afPillow`), but is presented here context free for maximum reuse. Think email, code generation, blog posts, etc...
 
 

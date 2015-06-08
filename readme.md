@@ -6,11 +6,11 @@
 
 ## Overview
 
-`efanXtra` creates managed libraries of reusable [Embedded Fantom (efan)](http://pods.fantomfactory.org/pods/afEfan) components. Influenced by Java's [Tapestry 5](http://tapestry.apache.org/index.html), it pairs up Fantom classes and efan template files to encapsulate model / view behaviour.
+efanXtra creates managed libraries of reusable [Embedded Fantom (efan)](http://pods.fantomfactory.org/pods/afEfan) components. Influenced by Java's [Tapestry 5](http://tapestry.apache.org/index.html), it pairs up Fantom classes and efan template files to encapsulate model / view behaviour.
 
-`efanXtra` extends [efan](http://pods.fantomfactory.org/pods/afEfan), is powered by [IoC](http://pods.fantomfactory.org/pods/afIoc) and works great with [Slim](http://pods.fantomfactory.org/pods/afSlim) templates.
+efanXtra extends [efan](http://pods.fantomfactory.org/pods/afEfan), is powered by [IoC](http://pods.fantomfactory.org/pods/afIoc) and works great with [Slim](http://pods.fantomfactory.org/pods/afSlim) templates.
 
-`efanXtra` excels in a [BedSheet](http://pods.fantomfactory.org/pods/afBedSheet) web environment, where URLs are automatically mapped to efan components (see [Pillow](http://pods.fantomfactory.org/pods/afPillow)), but is presented here context free for maximum reuse. Think email, code generation, blog posts, etc...
+efanXtra excels in a [BedSheet](http://pods.fantomfactory.org/pods/afBedSheet) web environment, where URLs are automatically mapped to efan components (see [Pillow](http://pods.fantomfactory.org/pods/afPillow)), but is presented here context free for maximum reuse. Think email, code generation, blog posts, etc...
 
 ## Install
 
