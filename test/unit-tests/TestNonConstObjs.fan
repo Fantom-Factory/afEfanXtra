@@ -1,33 +1,47 @@
 using afIoc
 using afIocConfig
+using afPlastic::PlasticModule
+using afConcurrent::ConcurrentModule
 
 internal class TestNonConstObjs : EfanTest {
 
 	Void testNonConstFields() {
-		text := render(T_NonConstFields#)
-		verifyEq(text, "Non-Const Field!")
+		reg.rootScope.createChildScope("thread") {
+			text := render(T_NonConstFields#)
+			verifyEq(text, "Non-Const Field!")
+		}
+	}
+
+	Void testConstService() {
+		text := render(T_ConstService#)
+		verifyEq(text, "Const Service!")
 	}
 
 	Void testNonConstService() {
-		text := render(T_NonConstService#)
-		verifyEq(text, "Non-Const Service!")
+		reg.rootScope.createChildScope("thread") {
+			text := render(T_NonConstService#)
+			verifyEq(text, "Non-Const Service!")
+		}
 	}
 
 	Void testLogFields() {
-		text := render(T_LogFields#)
-		verifyEq(text, "Wotever")
+		reg.rootScope.createChildScope("thread") {
+			text := render(T_LogFields#)
+			verifyEq(text, "Wotever")
+		}
 	}
 
 	override Void setup() {
 		Pod.find("afIoc")		.log.level = LogLevel.warn
 		Pod.find("afEfanXtra")	.log.level = LogLevel.warn
 
-		reg	= RegistryBuilder().addModules([EfanAppModule#, ConfigModule#, TestNonConstObjs#]).build.startup
-		reg.injectIntoFields(this)
-	}
-
-	static Void defineServices(ServiceDefinitions defs) {
-		defs.add(NonConstService#)
+		reg	= RegistryBuilder() {
+			addModules([EfanAppModule#, IocConfigModule#, IocConfigModule#, ConcurrentModule#, PlasticModule#])
+			addService(MyConstService#).withScope("root")
+			addService(MyNonConstService#).withScope("thread")
+			addScope("thread")
+		}.build
+		reg.rootScope.inject(this)
 	}
 }
 
@@ -42,8 +56,14 @@ const mixin T_NonConstFields : EfanComponent {
 }
 
 @NoDoc
+const mixin T_ConstService : EfanComponent {
+	@Inject abstract MyConstService service
+	override Str renderTemplate() { service.toStr }
+}
+
+@NoDoc
 const mixin T_NonConstService : EfanComponent {
-	@Inject abstract NonConstService service
+	@Inject abstract MyNonConstService service
 	override Str renderTemplate() { service.toStr }
 }
 
@@ -54,6 +74,11 @@ const mixin T_LogFields : EfanComponent {
 }
 
 @NoDoc
-class NonConstService {
+class MyNonConstService {
 	override Str toStr() { "Non-Const Service!" }
+}
+
+@NoDoc
+const class MyConstService {
+	override Str toStr() { "Const Service!" }
 }

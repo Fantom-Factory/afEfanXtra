@@ -14,7 +14,8 @@ const mixin ComponentCache {
 internal const class ComponentCacheImpl : ComponentCache {
 
 	@Inject	private const TemplateFinders		templateFinders
-	@Inject	private const ComponentCompiler		compiler	
+	@Inject	private const ComponentCompiler		compiler
+	@Inject	private const |->Scope|				scope
 			private const SynchronizedMap		typeToComponent
 
 	new make(ActorPools actorPools, |This|in) { 
@@ -24,8 +25,9 @@ internal const class ComponentCacheImpl : ComponentCache {
 
 	override EfanComponent getOrMake(Type componentType) {
 		templateSrc := templateFinders.getOrFindTemplate(componentType)
+		activeScope	:= scope()	// need to pass the active scope into the sync'ed Actors
 		component 	:= typeToComponent.getOrAdd(componentType) {
-			compiler.compile(componentType, templateSrc)
+			compiler.compile(activeScope, componentType, templateSrc)
 		}		
 
 		if (templateSrc.isModified) {
@@ -36,7 +38,7 @@ internal const class ComponentCacheImpl : ComponentCache {
 				}
 				
 				templateSrc.checked
-				newComponent := compiler.compile(componentType, templateSrc)
+				newComponent := compiler.compile(activeScope, componentType, templateSrc)
 				typeToComponent.map = typeToComponent.map.rw.set(componentType, newComponent).toImmutable
 				return newComponent
 			} ?: component

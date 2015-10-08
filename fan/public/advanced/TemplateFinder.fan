@@ -16,7 +16,7 @@ const mixin TemplateFinder {
 
 internal const class FindEfanByTypeNameInPod : TemplateFinder {	
 	@Inject	private const TemplateConverters	templateConverters
-	@Inject	private const Registry				registry
+	@Inject	private const Scope					scope
 
 	new make(|This|in) { in(this) }
 	
@@ -34,7 +34,7 @@ internal const class FindEfanByTypeNameInPod : TemplateFinder {
 
 			return false
 		}
-		return templateUri == null ? null : registry.autobuild(TemplateSourceFile#, [templateUri.get])
+		return templateUri == null ? null : scope.build(TemplateSourceFile#, [templateUri.get])
 	}
 	
 	override Uri[] templates(Type componentType) {
@@ -50,7 +50,7 @@ internal const class FindEfanByTypeNameInPod : TemplateFinder {
 internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 	@Inject	private const TemplateConverters	templateConverters
 	@Inject	private const TemplateDirectories	templateDirectories
-	@Inject	private const Registry				registry
+	@Inject	private const Scope					scope
 
 	new make(|This|in) { in(this) }
 	
@@ -70,7 +70,7 @@ internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 				return false
 			}
 		}
-		return templateFile == null ? null : registry.autobuild(TemplateSourceFile#, [templateFile])
+		return templateFile == null ? null : scope.build(TemplateSourceFile#, [templateFile])
 	}
 
 	override Uri[] templates(Type componentType) {
@@ -89,7 +89,7 @@ internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 
 @NoDoc	// used by Pillow
 const class FindEfanByFacetValue : TemplateFinder {
-	@Inject	private const Registry	registry
+	@Inject	private const Scope	scope
 
 	new make(|This|in) { in(this) }
 	
@@ -99,7 +99,7 @@ const class FindEfanByFacetValue : TemplateFinder {
 		
 		comFacet	 := (TemplateLocation) Type#.method("facet").callOn(componentType, [TemplateLocation#])	// Stoopid F4
 		templateFile := findFile(componentType, comFacet.url)
-		return templateFile == null ? null : registry.autobuild(TemplateSourceFile#, [templateFile])
+		return templateFile == null ? null : scope.build(TemplateSourceFile#, [templateFile])
 	}
 	
 	static File? findFile(Type componentType, Uri? efanUri) {

@@ -1,8 +1,8 @@
 using afBeanUtils::ArgNotFoundErr
 using afConcurrent::SynchronizedMap
-using afIoc::ActorPools
+using afConcurrent::ActorPools
 using afIoc::Inject
-using afIoc::Registry
+using afIoc::Scope
 using afEfan::EfanErr
 
 ** (Service) - Contribute your library pods to this. 
@@ -28,7 +28,7 @@ const mixin EfanLibraries {
 }	
 
 internal const class EfanLibrariesImpl : EfanLibraries {
-	@Inject	private	const Registry				registry
+	@Inject	private	const Scope					scope
 	@Inject	private	const ComponentFinder		componentFinder
 	@Inject	private	const EfanLibraryCompiler	libraryCompiler
 			private const Str:Pod 				pods
@@ -64,7 +64,7 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 		libsByName.getOrAdd(pod) |key->EfanLibrary| {
 			name := pods.eachWhile |p, name->Str?| { p == pod ? name : null } ?: throw ArgNotFoundErr(ErrMsgs.libraryPodNotFound(pod), pods.vals)
 			type := libraryCompiler.compileLibrary(name, pod)
-			return registry.autobuild(type)
+			return scope.build(type)
 		}
 	}	
 	internal static Str[] verifyLibNames(Str:Pod libraries) {

@@ -51,8 +51,8 @@ using afEfan
 ** 3rd Party libraries.
 const mixin EfanLibrary {
 
-	@NoDoc	@Inject abstract ComponentCache		componentCache
-	@NoDoc	@Inject	abstract ComponentFinder	componentFinder
+	@NoDoc	abstract ComponentCache		componentCache
+	@NoDoc	abstract ComponentFinder	componentFinder
 	
 	** The name of this library - given when you contribute a pod to 'EfanLibraries'. 
 	abstract Str name
