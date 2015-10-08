@@ -1,13 +1,15 @@
 using afIoc
-using afIocConfig::ConfigModule
+using afIocConfig::IocConfigModule
 using afIocEnv
 using afEfan::EfanErr
-using afPlastic
+using afPlastic::PlasticModule
+using afPlastic::PlasticCompilationErr
+using afConcurrent::ConcurrentModule
 
 internal class EfanTest : Test {
-	@Inject Registry? 		reg
-	@Inject EfanXtra?		efanXtra
-	@Inject EfanLibraries?	efanLibs
+	@Inject internal Registry? 		reg
+	@Inject internal EfanXtra?		efanXtra
+	@Inject internal EfanLibraries?	efanLibs
 	
 	Void verifyEfanErrMsg(Str errMsg, |Obj| func) {
 		verifyErrTypeMsg(EfanErr#, errMsg, func)
@@ -36,11 +38,11 @@ internal class EfanTest : Test {
 		Pod.find("afEfanXtra")	.log.level = LogLevel.warn
 
 		try {
-			reg = RegistryBuilder().addModules([EfanAppModule#, ConfigModule#, IocEnvModule#]).build.startup
-			reg.injectIntoFields(this)
+			reg = RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#, IocEnvModule#, ConcurrentModule#, PlasticModule#]).build
+			reg.rootScope.inject(this)
 			
 		} catch (PlasticCompilationErr pce) {
-			Env.cur.err.printLine(pce.print("Ooops", 50))
+			Env.cur.err.printLine(pce.snippetStr)
 			throw pce
 		}
 	}

@@ -10,9 +10,9 @@ const class ComponentRenderer {
 	@Inject private const ComponentMeta		componentMeta
 			private const LocalRef			renderBufRef
 	
-	new make(ThreadLocalManager threadLocalMgr, |This|in) {
+	new make(LocalRefManager LocalRefMgr, |This|in) {
 		in(this)
-		this.renderBufRef = threadLocalMgr.createRef("afEfanXtra.renderBuf") |->StrBuf| { StrBuf(1024) }
+		this.renderBufRef = LocalRefMgr.createRef("afEfanXtra.renderBuf") |->StrBuf| { StrBuf(1024) }
 	}
 
 	Obj? runInCtx(EfanComponent component, |->Obj?| func) {

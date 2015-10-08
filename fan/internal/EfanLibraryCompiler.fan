@@ -51,8 +51,7 @@ internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
 	
 	private Void inject(PlasticClassModel model, Field field) {
 		injectFieldName := "_af_inject${field.name.capitalize}"
-		newField := model.addField(field.type, injectFieldName)
-		field.facets.each { newField.addFacetClone(it) }
+		newField := model.addField(field.type, injectFieldName).addFacet(Inject#)
 		model.overrideField(field, injectFieldName, """throw Err("You can not set @Inject'ed fields: ${field.qname}")""")
 	}
 }

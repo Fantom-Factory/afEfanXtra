@@ -1,4 +1,5 @@
 using concurrent
+using afConcurrent
 using afIoc
 using afIocConfig
 using afIocEnv
@@ -11,34 +12,33 @@ using afPlastic::PlasticCompiler
 @NoDoc
 const class EfanXtraModule {
 
-	static Void defineServices(ServiceDefinitions defs) {
-		defs.add(ComponentFinder#)
-		defs.add(ComponentCompiler#)
-		defs.add(ComponentCache#).withProxy
-		defs.add(ComponentMeta#)
-		defs.add(ComponentCtxMgr#)
-		defs.add(ComponentRenderer#)
-		defs.add(EfanLibraryCompiler#)
-		defs.add(EfanLibraries#)
-		defs.add(EfanXtraPrinter#)
+	static Void defineServices(RegistryBuilder defs) {
+		defs.addService(ComponentFinder#)		.withRootScope
+		defs.addService(ComponentCompiler#)		.withRootScope
+		defs.addService(ComponentCache#)		.withRootScope	//.withProxy
+		defs.addService(ComponentMeta#)			.withRootScope
+		defs.addService(ComponentCtxMgr#)		.withRootScope
+		defs.addService(ComponentRenderer#)		.withRootScope
+		defs.addService(EfanLibraryCompiler#)	.withRootScope
+		defs.addService(EfanLibraries#)			.withRootScope
+		defs.addService(EfanXtraPrinter#)		.withRootScope
 		
-		defs.add(EfanXtra#).withProxy
-		defs.add(TemplateConverters#)
-		defs.add(TemplateDirectories#)
-		defs.add(TemplateFinders#)
-		defs.add(FandocToHtmlConverter#)
+		defs.addService(EfanXtra#)				.withRootScope	//.withProxy
+		defs.addService(TemplateConverters#)	.withRootScope
+		defs.addService(TemplateDirectories#)	.withRootScope
+		defs.addService(TemplateFinders#)		.withRootScope
+		defs.addService(FandocToHtmlConverter#)	.withRootScope
 
-		// rely on afBedSheet to set srcCodePadding in PlasticCompiler (to be picked up by EfanCompiler) 
-		defs.add(EfanEngine#)
+		defs.addService(EfanEngine#)			.withRootScope
 	}
 	
 	@Contribute { serviceType=TemplateFinders# }
 	internal static Void contributeTemplateFinders(Configuration config) {
 		// put renderTemplate() first, so you may temporarily override / disable templates. 
-		config["afEfanXtra.findByRenderTemplateMethod"] = config.autobuild(FindEfanByRenderTemplateMethod#)
-		config["afEfanXtra.findByFacetValue"]			= config.autobuild(FindEfanByFacetValue#)
-		config["afEfanXtra.findByTypeNameOnFileSystem"] = config.autobuild(FindEfanByTypeNameOnFileSystem#)
-		config["afEfanXtra.findByTypeNameInPod"]		= config.autobuild(FindEfanByTypeNameInPod#)
+		config["afEfanXtra.findByRenderTemplateMethod"] = config.build(FindEfanByRenderTemplateMethod#)
+		config["afEfanXtra.findByFacetValue"]			= config.build(FindEfanByFacetValue#)
+		config["afEfanXtra.findByTypeNameOnFileSystem"] = config.build(FindEfanByTypeNameOnFileSystem#)
+		config["afEfanXtra.findByTypeNameInPod"]		= config.build(FindEfanByTypeNameInPod#)
 	}	
 
 	@Contribute { serviceType=TemplateConverters# }
@@ -54,7 +54,7 @@ const class EfanXtraModule {
 
 	@Contribute { serviceType=DependencyProviders# }
 	internal static Void contributeDependencyProviders(Configuration config) {
-		config["afEfanXtra.libraryProvider"] = config.autobuild(LibraryProvider#)
+		config["afEfanXtra.libraryProvider"] = config.build(LibraryProvider#)
 	}	
 
 	@Contribute { serviceType=FactoryDefaults# }
@@ -62,8 +62,7 @@ const class EfanXtraModule {
 		config[EfanXtraConfigIds.templateTimeout] = env.isProd ? 2min : 2sec
 	}
 	
-	@Contribute { serviceType=RegistryStartup# }
-	internal static Void contributeRegistryStartup(Configuration config, EfanXtraPrinter efanPrinter) {
+	internal static Void onRegistryStartup(Configuration config, EfanXtraPrinter efanPrinter) {
 		config["afEfanXtra.logLibraries"] = |->| {
 			efanPrinter.logLibraries
 		}

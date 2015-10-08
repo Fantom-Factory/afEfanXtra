@@ -2,10 +2,10 @@ using afIoc
 
 @NoDoc
 @SubModule { modules=[EfanXtraModule#]} 
-class EfanAppModule {
+const class EfanAppModule {
 	
-	static Void defineServices(ServiceDefinitions defs) {
-		defs.add(DvdService#)
+	static Void defineServices(RegistryBuilder defs) {
+		defs.addService(DvdService#)
 	}
 
 	// contribute all components in our pod as a library named 'app' 
