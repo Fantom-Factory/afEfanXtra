@@ -35,7 +35,7 @@ class Build : BuildPod {
 			"afEfan       1.4.2  - 1.4"
 		]
 
-		srcDirs = [`test/unit-tests/`, `test/unit-tests/components/`, `test/example/`, `fan/`, `fan/public/`, `fan/public/advanced/`, `fan/internal/`, `fan/internal/utils/`]
+		srcDirs = [`test/unit-tests/`, `test/unit-tests/components/`, `test/example/`, `fan/`, `fan/public/`, `fan/public/advanced/`, `fan/internal/`]
 		resDirs = [`doc/`, `test/example/`, `test/unit-tests/components/`]
 	}
 }
