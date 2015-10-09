@@ -8,7 +8,7 @@ const mixin EfanLibraryCompiler {
 }
 
 internal const class EfanLibraryCompilerImpl : EfanLibraryCompiler {
-	private const static Log log := Utils.getLog(EfanLibraryCompiler#)
+	private const static Log log := EfanLibraryCompiler#.pod.log
 
 	@Inject private	const PlasticCompiler	plasticCompiler
 	@Inject private	const ComponentFinder	componentFinder

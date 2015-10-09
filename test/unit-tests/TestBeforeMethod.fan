@@ -14,8 +14,7 @@ internal class TestBeforeMethod : EfanTest {
 			verifyEq(text, "Hello!")
 			
 		} catch(Err e) {
-			q:=Utils.traceErr(e, 100)
-			Env.cur.err.printLine(q)
+			Env.cur.err.printLine(traceErr(e, 100))
 		}
 	}
 
@@ -31,4 +30,9 @@ internal class TestBeforeMethod : EfanTest {
 		}
 	}
 
+	static Str traceErr(Err err, Int maxDepth := 50) {
+		b := Buf()	// can't trace to a StrBuf
+		err.trace(b.out, ["maxDepth":maxDepth])
+		return b.flip.in.readAllStr
+	}
 }

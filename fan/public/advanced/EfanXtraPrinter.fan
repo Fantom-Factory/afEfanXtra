@@ -3,7 +3,7 @@ using afIoc::Inject
 ** Used by afPillow
 @NoDoc
 const class EfanXtraPrinter {
-	private const static Log log := Utils.getLog(EfanXtraPrinter#)
+	private const static Log log := EfanXtraPrinter#.pod.log
 
 	@Inject private	const EfanLibraries		efanLibs
 	@Inject private	const ComponentFinder	comFinder

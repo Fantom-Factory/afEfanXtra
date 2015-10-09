@@ -14,7 +14,7 @@ using afEfan
 ** 
 @NoDoc
 class ComponentCtx {
-	private [Str:Obj?] stash	:= Utils.makeMap(Str#, Obj?#)
+	private [Str:Obj?] stash	:= Str:Obj?[:] { it.caseInsensitive = true }
 	
 	Void setVariable(Str name, Obj? value) {
 		stash[name] = value
