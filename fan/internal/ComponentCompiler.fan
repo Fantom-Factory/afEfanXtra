@@ -140,6 +140,8 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			libName 	 := efanLibraries.findFor(comType).name
 			myEfanMeta	 := efanMetaData.clone([EfanTemplateMeta#templateId : "${libName}::${comType.name}"])
 			
+			// TODO: cache component instances somewhere else and just return type and meta 
+			// TODO: creating instances and injecting via scopes it's not going to be used in can cause problems 
 			// IoC will attempt to inject all dependencies, even if they're ignored, so we need to use the scope that the component will finally be used with
 			return scope.build(myEfanMeta.type, [myEfanMeta])
 			
