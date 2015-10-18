@@ -26,7 +26,7 @@ const class EfanXtraPrinter {
 		comTypes := comFinder.findComponentTypes(libPod).findAll(filter)
 		
 		maxName	 := (Int) comTypes.reduce(0) |size, component| { ((Int) size).max(component.name.toDisplayName.size) }
-		buf.add("\nefan Library: '${libName}' has ${comTypes.size} components:\n\n")
+		buf.add("\nefan Library '${libName}' has ${comTypes.size} components:\n\n")
 
 		comTypes.each |comType| {
 			line := comType.name.toDisplayName.padl(maxName) + " : " + "${libName}." + comMeta.methodDec(comType, InitRender#)

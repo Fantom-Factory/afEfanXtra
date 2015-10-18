@@ -15,7 +15,7 @@ const class EfanXtraModule {
 	static Void defineServices(RegistryBuilder defs) {
 		defs.addService(ComponentFinder#)		.withRootScope
 		defs.addService(ComponentCompiler#)		.withRootScope
-		defs.addService(ComponentCache#)		.withRootScope	//.withProxy
+		defs.addService(ComponentCache#)		.withRootScope
 		defs.addService(ComponentMeta#)			.withRootScope
 		defs.addService(ComponentCtxMgr#)		.withRootScope
 		defs.addService(ComponentRenderer#)		.withRootScope
@@ -23,7 +23,7 @@ const class EfanXtraModule {
 		defs.addService(EfanLibraries#)			.withRootScope
 		defs.addService(EfanXtraPrinter#)		.withRootScope
 		
-		defs.addService(EfanXtra#)				.withRootScope	//.withProxy
+		defs.addService(EfanXtra#)				.withRootScope
 		defs.addService(TemplateConverters#)	.withRootScope
 		defs.addService(TemplateDirectories#)	.withRootScope
 		defs.addService(TemplateFinders#)		.withRootScope
@@ -32,6 +32,12 @@ const class EfanXtraModule {
 		defs.addService(EfanEngine#)			.withRootScope
 	}
 	
+	internal static Void onRegistryStartup(Configuration config, EfanXtraPrinter efanPrinter) {
+		config.set("afEfanXtra.logLibraries", |->| {
+			efanPrinter.logLibraries
+		}).after("afIoc.logServices")
+	}
+
 	@Contribute { serviceType=TemplateFinders# }
 	internal static Void contributeTemplateFinders(Configuration config) {
 		// put renderTemplate() first, so you may temporarily override / disable templates. 
@@ -60,11 +66,5 @@ const class EfanXtraModule {
 	@Contribute { serviceType=FactoryDefaults# }
 	internal static Void contributeFactoryDefaults(Configuration config, IocEnv env) {
 		config[EfanXtraConfigIds.templateTimeout] = env.isProd ? 2min : 2sec
-	}
-	
-	internal static Void onRegistryStartup(Configuration config, EfanXtraPrinter efanPrinter) {
-		config["afEfanXtra.logLibraries"] = |->| {
-			efanPrinter.logLibraries
-		}
 	}
 }
