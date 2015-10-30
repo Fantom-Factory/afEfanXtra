@@ -24,12 +24,12 @@ class Build : BuildPod {
 			"fandoc 1.0",
 			
 			// ---- Core ------------------------
-			"afBeanUtils  1.0.4  - 1.0",
-			"afConcurrent 1.0.8  - 1.0",
-			"afPlastic    1.0.19 - 1.0",		// FIXME:
-			"afIoc        3.0.0  - 3.0", 
-			"afIocConfig  1.1.0  - 1.1",
-			"afIocEnv     1.1.0  - 1.1",
+			"afBeanUtils  1.0.4 - 1.0",
+			"afConcurrent 1.0.8 - 1.0",
+			"afPlastic    1.1.0 - 1.1",
+			"afIoc        3.0.0 - 3.0", 
+			"afIocConfig  1.1.0 - 1.1",
+			"afIocEnv     1.1.0 - 1.1",
 			
 			// ---- Templating ------------------
 			"afEfan       1.4.2  - 1.4"
