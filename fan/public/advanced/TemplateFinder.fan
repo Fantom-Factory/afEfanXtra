@@ -21,9 +21,18 @@ internal const class FindEfanByTypeNameInPod : TemplateFinder {
 	new make(|This|in) { in(this) }
 	
 	override TemplateSource? findTemplate(Type componentType) {
-		pageName	:= componentType.name.lower
-
-		templateUri := templates(componentType).find |file->Bool| {
+		// pop to remove sys::Obj
+		templateUri := (Uri?) componentType.inheritance.rw { pop }.eachWhile { findTemplateUri(it) }
+		return templateUri == null ? null : scope.build(TemplateSourceFile#, [templateUri.get])
+	}
+	
+	override Uri[] templates(Type componentType) {
+		componentType.pod.files.findAll { templateConverters.canConvert(it) }.map { it.uri }
+	}
+	
+	private Uri? findTemplateUri(Type componentType) {
+		pageName := componentType.name.lower
+		return templates(componentType).find |file->Bool| {
 			fileName	:= baseName(file)
 			if (fileName == pageName)
 				return true
@@ -34,11 +43,6 @@ internal const class FindEfanByTypeNameInPod : TemplateFinder {
 
 			return false
 		}
-		return templateUri == null ? null : scope.build(TemplateSourceFile#, [templateUri.get])
-	}
-	
-	override Uri[] templates(Type componentType) {
-		componentType.pod.files.findAll { templateConverters.canConvert(it) }.map { it.uri }
 	}
 	
 	private Str baseName(Uri file) {
@@ -55,9 +59,22 @@ internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 	new make(|This|in) { in(this) }
 	
 	override TemplateSource? findTemplate(Type componentType) {
-		pageName	:= componentType.name.lower
-		
-		templateFile := templateDirectories.templateDirs.eachWhile |templateDir->File?| {
+		// pop to remove sys::Obj
+		templateFile := (File?) componentType.inheritance.rw { pop }.eachWhile { findTemplateFile(it) }
+		return templateFile == null ? null : scope.build(TemplateSourceFile#, [templateFile])
+	}
+
+	override Uri[] templates(Type componentType) {
+		(templateDirectories.templateDirs.reduce(File[,]) |File[] all, dir -> File[]| { 
+			dir.listFiles.findAll { 
+				templateConverters.canConvert(it)
+			}
+		} as File[]).map { it.uri }
+	}
+
+	private File? findTemplateFile(Type componentType) {
+		pageName := componentType.name.lower
+		return templateDirectories.templateDirs.eachWhile |templateDir->File?| {
 			return templateDir.listFiles.findAll { templateConverters.canConvert(it) }.find |file->Bool| {
 				fileName	:= baseName(file)
 				if (fileName == pageName)
@@ -70,15 +87,6 @@ internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 				return false
 			}
 		}
-		return templateFile == null ? null : scope.build(TemplateSourceFile#, [templateFile])
-	}
-
-	override Uri[] templates(Type componentType) {
-		(templateDirectories.templateDirs.reduce(File[,]) |File[] all, dir -> File[]| { 
-			dir.listFiles.findAll { 
-				templateConverters.canConvert(it)
-			}
-		} as File[]).map { it.uri }
 	}
 
 	private Str baseName(File file) {
