@@ -1,5 +1,5 @@
 
-internal class TestEfanTemplateFromFacet : EfanTest {
+internal class TestTemplateFromFacet : EfanTest {
 
 	Void testTemplateInPod() {
 		text := render(TemplateFromFacetInPod#)
