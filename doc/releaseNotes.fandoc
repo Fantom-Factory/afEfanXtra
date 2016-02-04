@@ -3,7 +3,9 @@ Release Notes
 
 v1.2.0
 ======
+ - New: Fandoc Type comments may also be used as templates.
  - Chg: Updated to work with [IoC v3]`pod:afIoc`. (Breaking Change.)
+ - Chg: Baseclass names are also used to find templates.
 
 v1.1.20
 =======

@@ -76,6 +76,34 @@ const class TemplateSourceFile : TemplateSource {
 }
 
 @NoDoc
+const class TemplateSourceStr : TemplateSource {
+	@Inject	
+	private const TemplateConverters	templateConverters
+	private const Str					rawTemplate
+	private const Type					componentType
+
+	new make(Type componentType, Str template, |This| in) {
+		in(this)
+		this.rawTemplate	= template
+		this.componentType	= componentType
+	}
+	
+	override Str template() {
+//		template := templateConverters.convertTemplate(templateFile)
+//		lastModifiedRef.val = templateFile.modified
+		return rawTemplate
+	}
+
+	override Uri location() {
+		componentType.qname.toUri
+	}
+
+	override const Bool 	isModified		:= false
+	override const DateTime	lastModified	:= DateTime.now
+	override 	   Void 	checked()		{ }
+}
+
+@NoDoc
 const class TemplateSourceNull : TemplateSource {
 
 	override const Uri 		location

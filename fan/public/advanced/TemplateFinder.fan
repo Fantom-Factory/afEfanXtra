@@ -1,6 +1,7 @@
 using afIoc
 using afIocConfig::Config
 using afEfan::EfanErr
+using fandoc
 
 @NoDoc
 const mixin TemplateFinder {
@@ -151,5 +152,53 @@ internal const class FindEfanByRenderTemplateMethod : TemplateFinder {
 
 	override Uri[] templates(Type componentType) {
 		[`${componentType.qname}.renderTemplate`]
+	}
+}
+
+internal const class FindEfanByTypeFandoc : TemplateFinder {	
+	@Inject	private const TemplateConverters	templateConverters
+	@Inject	private const Scope					scope
+
+	new make(|This|in) { in(this) }
+
+	override TemplateSource? findTemplate(Type componentType) {
+		fandocStr := componentType.doc
+		if (fandocStr == null)
+			return null
+		
+		fandocDoc := FandocParser().parseStr(componentType.doc)
+		return  fandocDoc.children.eachWhile |fandocNode->TemplateSource?| {
+			if (fandocNode.id == DocNodeId.pre) {
+				docWriter := SrcDocWriter()
+				((Pre) fandocNode).writeChildren(docWriter)
+				templateSrc := docWriter.buf.toStr
+				newLineIdx	:= templateSrc.index("\n") ?: -1
+				firstLine	:= templateSrc[0..newLineIdx].trim
+				templateUri	:= firstLine.toUri
+				if (templateUri.scheme == "template") {
+					ext := templateUri.pathStr.trim
+					if (templateConverters.extensions.contains(ext)) {
+						templateRaw := newLineIdx == -1 ? "" : docWriter.buf[newLineIdx+1..-1]
+						return scope.build(TemplateSourceStr#, [componentType, templateRaw])
+					}
+				}
+			}
+			return null
+		}
+	}
+	
+	override Uri[] templates(Type componentType) {
+		Uri#.emptyList
+	}
+}
+
+internal class SrcDocWriter : DocWriter {
+	StrBuf	buf := StrBuf()
+	override Void docStart(Doc doc) 		{ }
+	override Void docEnd(Doc doc)			{ }
+	override Void elemStart(DocElem elem)	{ }
+	override Void elemEnd(DocElem elem)		{ }
+	override Void text(DocText text) {
+		buf.add(text.str)
 	}
 }
