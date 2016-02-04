@@ -43,6 +43,7 @@ const class EfanXtraModule {
 		// put renderTemplate() first, so you may temporarily override / disable templates. 
 		config["afEfanXtra.findByRenderTemplateMethod"] = config.build(FindEfanByRenderTemplateMethod#)
 		config["afEfanXtra.findByFacetValue"]			= config.build(FindEfanByFacetValue#)
+		config["afEfanXtra.findByTypeFandoc"]			= config.build(FindEfanByTypeFandoc#)
 		config["afEfanXtra.findByTypeNameOnFileSystem"] = config.build(FindEfanByTypeNameOnFileSystem#)
 		config["afEfanXtra.findByTypeNameInPod"]		= config.build(FindEfanByTypeNameInPod#)
 	}	
