@@ -1,9 +1,14 @@
 
 internal class TestTemplateFromTypeFandoc : EfanTest {
 	
-	Void testTemplateInFandoc() {
-		text := render(TemplateFromTypeFandoc#)
-		verifyEq(text.trim, "Yo Dawg! Check this out!")
+	Void testTemplateInFandocAll() {
+		text := render(TemplateFromTypeFandocAll#)
+		verifyEq(text, "Yo Dawg! Check this out!\n")
+	}
+
+	Void testTemplateInFandocSelective() {
+		text := render(TemplateFromTypeFandocSelective#)
+		verifyEq(text, "Yo Diggy! Check this out!\n")
 	}
 
 	Void testEmptyTemplateInFandoc() {
@@ -13,13 +18,26 @@ internal class TestTemplateFromTypeFandoc : EfanTest {
 }
 
 
-** pre>
 ** template: efan
 ** 
 ** Yo Dawg! Check <%= hello %>
-** <pre
+** 
 @NoDoc
-const mixin TemplateFromTypeFandoc : EfanComponent {
+const mixin TemplateFromTypeFandocAll : EfanComponent {
+	Str hello() { "this out!" }
+}
+
+** This is not rendered.
+** 
+** pre>
+** template: efan
+** 
+** Yo Diggy! Check <%= hello %>
+** <pre
+** 
+** Nor is this
+@NoDoc
+const mixin TemplateFromTypeFandocSelective : EfanComponent {
 	Str hello() { "this out!" }
 }
 

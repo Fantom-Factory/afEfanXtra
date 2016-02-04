@@ -166,29 +166,41 @@ internal const class FindEfanByTypeFandoc : TemplateFinder {
 		if (fandocStr == null)
 			return null
 		
-		fandocDoc := FandocParser().parseStr(componentType.doc)
+		temSrc := extractTemplateSource(componentType, fandocStr)
+		if (temSrc != null)
+			return temSrc
+		
+		fandocDoc := FandocParser().parseStr(fandocStr)
 		return  fandocDoc.children.eachWhile |fandocNode->TemplateSource?| {
-			if (fandocNode.id == DocNodeId.pre) {
-				docWriter := SrcDocWriter()
-				((Pre) fandocNode).writeChildren(docWriter)
-				templateSrc := docWriter.buf.toStr
-				newLineIdx	:= templateSrc.index("\n") ?: -1
-				firstLine	:= templateSrc[0..newLineIdx].trim
-				templateUri	:= firstLine.toUri
-				if (templateUri.scheme == "template") {
-					ext := templateUri.pathStr.trim
-					if (templateConverters.extensions.contains(ext)) {
-						templateRaw := newLineIdx == -1 ? "" : docWriter.buf[newLineIdx+1..-1]
-						return scope.build(TemplateSourceStr#, [componentType, ext, templateRaw])
-					}
-				}
-			}
-			return null
+			if (fandocNode.id != DocNodeId.pre)
+				return null
+
+			docWriter := SrcDocWriter()
+			((Pre) fandocNode).writeChildren(docWriter)
+			templateSrc := docWriter.buf.toStr
+			return extractTemplateSource(componentType, templateSrc)
 		}
 	}
 	
 	override Uri[] templates(Type componentType) {
 		Uri#.emptyList
+	}
+	
+	private TemplateSource? extractTemplateSource(Type componentType, Str templateSrc) {
+		newLineIdx	:= templateSrc.index("\n") ?: -1
+		firstLine	:= templateSrc[0..newLineIdx].trim
+		templateUri	:= firstLine.toUri
+		if (templateUri.scheme == "template") {
+			ext := templateUri.pathStr.trim
+			if (templateConverters.extensions.contains(ext)) {
+				startIdx	:= templateSrc[newLineIdx] == '\n' ? newLineIdx + 2 : newLineIdx + 1
+				templateRaw := newLineIdx == -1 ? "" : templateSrc[newLineIdx+1..-1]
+				if (templateRaw.startsWith("\n"))
+					templateRaw = templateRaw[1..-1]
+				return scope.build(TemplateSourceStr#, [componentType, ext, templateRaw])
+			}
+		}
+		return null
 	}
 }
 

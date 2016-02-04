@@ -1,6 +1,7 @@
 using afEfan::EfanErr
 
-** (Service) - Contribute functions to convert files into efan templates. 
+** (Service - Advanced Use) - 
+** Contribute functions to convert files into efan templates. 
 ** 
 ** Some templates, such as [Slim]`http://fantomfactory.org/pods/afSlim` templates, need to be 
 ** pre-processed / converted to efan notation before they can be compiled. To do this, a conversion 
