@@ -10,17 +10,17 @@ using fandoc::FandocParser
 ** 
 **   @Contribute { serviceType=TemplateConverters# }
 **   internal static Void contributeTemplateConverters(MappedConfig config, MyConverter myConverter) {
-**       config.setOverride("fandoc", "myfandoc") |File file -> Str| { myConverter.convert(file) }
+**       config.setOverride("fandoc", "myfandoc") |Str src -> Str| { myConverter.convert(src) }
 **   }
 @NoDoc
 const mixin FandocToHtmlConverter {
-	abstract Str convert(File fandocFile)
+	abstract Str convert(Str fandocStr)
 }
 
 internal const class FandocToHtmlConverterImpl : FandocToHtmlConverter {
 	
-	override Str convert(File fandocFile) {
-		fandoc	:= FandocParser().parseStr(fandocFile.readAllStr)
+	override Str convert(Str fandocStr) {
+		fandoc	:= FandocParser().parseStr(fandocStr)
 		efan	:= printDoc(fandoc.children).replace("&lt;%", "<%")
 		return efan
 	}

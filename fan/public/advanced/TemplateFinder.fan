@@ -179,7 +179,7 @@ internal const class FindEfanByTypeFandoc : TemplateFinder {
 					ext := templateUri.pathStr.trim
 					if (templateConverters.extensions.contains(ext)) {
 						templateRaw := newLineIdx == -1 ? "" : docWriter.buf[newLineIdx+1..-1]
-						return scope.build(TemplateSourceStr#, [componentType, templateRaw])
+						return scope.build(TemplateSourceStr#, [componentType, ext, templateRaw])
 					}
 				}
 			}
