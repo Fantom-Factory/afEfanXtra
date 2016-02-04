@@ -40,7 +40,8 @@ const class TemplateSourceFile : TemplateSource {
 	}
 	
 	override Str template() {
-		template := templateConverters.convertTemplate(templateFile)
+		templateSrc := templateFile.readAllStr
+		template := templateConverters.convertTemplate(templateFile.ext, templateSrc)
 		lastModifiedRef.val = templateFile.modified
 		return template
 	}
@@ -79,19 +80,19 @@ const class TemplateSourceFile : TemplateSource {
 const class TemplateSourceStr : TemplateSource {
 	@Inject	
 	private const TemplateConverters	templateConverters
-	private const Str					rawTemplate
 	private const Type					componentType
+	private const Str					src
+	private const Str					ext
 
-	new make(Type componentType, Str template, |This| in) {
+	new make(Type componentType, Str ext, Str src, |This| in) {
 		in(this)
-		this.rawTemplate	= template
 		this.componentType	= componentType
+		this.ext			= ext
+		this.src			= src
 	}
 	
 	override Str template() {
-//		template := templateConverters.convertTemplate(templateFile)
-//		lastModifiedRef.val = templateFile.modified
-		return rawTemplate
+		templateConverters.convertTemplate(ext, src)
 	}
 
 	override Uri location() {
@@ -105,7 +106,6 @@ const class TemplateSourceStr : TemplateSource {
 
 @NoDoc
 const class TemplateSourceNull : TemplateSource {
-
 	override const Uri 		location
 	override const Str 		template		:= Str.defVal
 	override const Bool 	isModified		:= false

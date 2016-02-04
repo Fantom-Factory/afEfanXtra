@@ -50,8 +50,8 @@ const class EfanXtraModule {
 
 	@Contribute { serviceType=TemplateConverters# }
 	internal static Void contributeTemplateConverters(Configuration config, FandocToHtmlConverter fandocToHtml) {
-		config["efan"] 	 = |File file -> Str| { file.readAllStr }
-		config["fandoc"] = |File file -> Str| { fandocToHtml.convert(file) }
+		config["efan"] 	 = |Str src -> Str| { src }
+		config["fandoc"] = |Str src -> Str| { fandocToHtml.convert(src) }
 	}
 
 	@Contribute { serviceType=ActorPools# }

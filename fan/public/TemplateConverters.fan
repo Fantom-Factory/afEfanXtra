@@ -4,37 +4,22 @@ using afEfan::EfanErr
 ** 
 ** Some templates, such as [Slim]`http://fantomfactory.org/pods/afSlim` templates, need to be 
 ** pre-processed / converted to efan notation before they can be compiled. To do this, a conversion 
-** function is looked up via the file extension. If no function is found, the file is assumed to be
-** an efan template and read in as a simple string.
+** function is looked up via the file extension. 
 ** 
-** For example, to use [Slim]`http://fantomfactory.org/pods/afSlim` templates add the following to 
-** your 'AppModule':
+** By default, the following extensions are recognised:
 ** 
-** pre>
-** syntax: fantom
+**  - '.efan'
+**  - '.fandoc' (template are also converted to HTML)
+**  - '.slim' (when Slim is added as a project dependency)
 ** 
-** using afIoc
-** using afSlim
-** using afEfanXtra
-** 
-** class AppModule {
-** 
-**     @Contribute { serviceType=TemplateConverters# }
-**     static Void contributeSlimTemplates(Configuration config, Slim slim) {
-**         config["slim"] = |File file -> Str| { slim.parseFromFile(file) }
-**     }
-** }
-** <pre
-** 
-** This will convert all files with a '.slim' extension to an efan template.
-** 
-** By default, a function is supplied that converts all files with a '.fandoc' extension into HTML.
-** 
-** @uses Configuration of 'Str : |File->Str|' - file ext to func that converts the file to an efan template 
+** @uses Configuration of 'Str : |Str src->Str|' - file ext to func that converts the src to an efan template 
+@NoDoc	// advanced use only
 const mixin TemplateConverters {
 
-	** Converts the given 'File' to an efan template Str.
-	abstract Str convertTemplate(File templateFile)
+	** Converts the given source 'Str' to an efan template Str.
+	** 
+	** If no matching extension is found, the given 'templateStr' is returned as is. 
+	abstract Str convertTemplate(Str ext, Str templateStr)
 	
 	** Return a list of (lowercase) file extensions that denote which files can be converted to 
 	** efan templates.
@@ -48,16 +33,16 @@ const mixin TemplateConverters {
 
 internal const class TemplateConvertersImpl : TemplateConverters {
 
-	private const Str:|File->Str| converters
+	private const Str:|Str->Str| converters
 	
-	new make(Str:|File->Str| converters) {
+	new make(Str:|Str->Str| converters) {
 		// afIoc should give us a case-insensitive map
 		this.converters = converters
 	}
 	
-	override Str convertTemplate(File templateFile) {
-		// just read the file by default
-		converters[templateFile.ext]?.call(templateFile) ?: templateFile.readAllStr
+	override Str convertTemplate(Str ext, Str templateStr) {
+		// just return the given Str by default
+		converters[ext]?.call(templateStr) ?: templateStr
 	}
 	
 	override Str[] extensions() {
