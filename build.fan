@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afEfanXtra"
 		summary = "A library for creating reusable Embedded Fantom (efan) components"
-		version = Version("1.2.0")
+		version = Version("2.0.0")
 
 		meta = [
 			"proj.name"		: "efanXtra",
@@ -32,7 +32,7 @@ class Build : BuildPod {
 			"afIocEnv     1.1.0 - 1.1",
 			
 			// ---- Templating ------------------
-			"afEfan       1.5.0  - 1.5"
+			"afEfan       2.0.0  - 2.0"
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/public/`, `fan/public/advanced/`, `test/example/`, `test/unit-tests/`, `test/unit-tests/components/`]
