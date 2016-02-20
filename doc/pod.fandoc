@@ -24,7 +24,7 @@ Quick Start [#quickStart]
 
     Please return them at your convenience.
 
-    <% app.renderSignOff("The Management") %>
+    <%= app.renderSignOff("The Management") %>
 
 2. Create a text file called 'Overdue.fan'
     syntax: fantom
@@ -234,7 +234,7 @@ your templates:
 
 This allows you to render components from within templates by calling '<libName>.render<ComponentName>(...)'. Example:
 
-  <% app.renderSignOff("The Management") %>
+  <%= app.renderSignOff("The Management") %>
 
 > **ALIEN-AID:** Library render methods are logged at registry startup so you don't have to remember the method signatures!
 

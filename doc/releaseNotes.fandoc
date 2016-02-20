@@ -7,6 +7,7 @@ v1.2.0
  - Chg: Updated to work with [IoC v3]`pod:afIoc`. (Breaking Change.)
  - Chg: 'TemplateConverters' now takes contributions of '|Str->Str|'. (Breaking Change.)
  - Chg: Baseclass names are also used to find templates.
+ - Chg: Each component renders into it's own 'StrBuf'. This allows us to render arbitrary, non-nested, components and embed the result in template Strs.
 
 v1.1.20
 =======

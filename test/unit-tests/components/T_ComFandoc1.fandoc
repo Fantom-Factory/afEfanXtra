@@ -1,2 +1,2 @@
-Look ma, Fandoc rendering: <% app.renderT_ComFandoc2() %>
+Look ma, Fandoc rendering: <%= app.renderT_ComFandoc2() %>
 ====
