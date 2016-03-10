@@ -38,7 +38,7 @@ Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fant
         
         Please return them at your convenience.
         
-        <% app.renderSignOff("The Management") %>
+        <%= app.renderSignOff("The Management") %>
 
 
 2. Create a text file called `Overdue.fan`
@@ -120,6 +120,8 @@ const mixin Overdue : EfanComponent {
 }
 ```
 
+Note if you have a type hierarchy, and a template for the subclass isn't found, then templates are searched again but using the base class name.
+
 #### Pod Templates
 
 A template may be a pod resource. For example, if you were to create a component called `Layout`, you may have the following files:
@@ -153,6 +155,47 @@ Note that like Fantom resource directories, template directories are NOT nested;
 
 Also note that the directory URIs must end in a slash.
 
+#### Fandoc Comment Templates
+
+Templates may also be embedded in the fandoc comment of the component! Simply prefix the fandoc comment with `template:` followed by the type. Example:
+
+```
+using afEfanXtra
+
+** template: efan
+**
+** Yo Dawg! Check <%= hello %>
+**
+const mixin TemplateFromFandocComment : EfanComponent {
+    Str hello() { "this out!" }
+}
+```
+
+Will render `Yo Dawg! Check this out!`
+
+Or, if you want to embed the template inside the fandoc comment, use a `<pre>` tag:
+
+```
+using afEfanXtra
+
+** This is not rendered.
+**
+** pre>
+** template: efan
+**
+** Yo Digidy! Check <%= hello %>
+** <pre
+**
+** Nor is this.
+const mixin TemplateFromFandocComment : EfanComponent {
+    Str hello() { "this out!" }
+}
+```
+
+Which will render `Yo Digidy! Check this out!`
+
+This is useful for keeping everything together in small components where you don't want the inconvenience of an external template file.
+
 ## Libraries
 
 Components are organised by libraries. A library encompasses all components within a pod. To use your efan components effectively, you should add your application pod as a library. Do this in your `AppModule`:
@@ -179,7 +222,7 @@ Library classes are automatically injected as fields into your components. Libra
 
 This allows you to render components from within templates by calling `<libName>.render<ComponentName>(...)`. Example:
 
-    <% app.renderSignOff("The Management") %>
+    <%= app.renderSignOff("The Management") %>
 
 > **ALIEN-AID:** Library render methods are logged at registry startup so you don't have to remember the method signatures!
 
