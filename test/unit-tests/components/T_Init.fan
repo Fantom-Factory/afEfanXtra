@@ -14,13 +14,6 @@ const mixin T_InitTrueOkay : EfanComponent {
 }
 
 @NoDoc
-const mixin T_InitReturnsObj : EfanComponent {
-	Obj? initRender() {
-		69
-	}
-}
-
-@NoDoc
 const mixin T_InitParams : EfanComponent {
 	abstract Str? x
 	abstract Int y

@@ -12,12 +12,6 @@ internal class TestInitMethod : EfanTest {
 		verifyEq(text, "Hello!")
 	}
 
-	Void testInitReturnsObjThrowsErr() {
-		verifyEfanErrMsg(ErrMsgs.componentCompilerWrongReturnType(T_InitReturnsObj#initRender, [Void#, Bool#])) {
-			text := render(T_InitReturnsObj#)			
-		}
-	}
-
 	Void testInitParams() {
 		text := render(T_InitParams#, ["Dude", 69])
 		verifyEq(text, "X := Dude; Y := 69;")
