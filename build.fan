@@ -11,7 +11,7 @@ class Build : BuildPod {
 			"proj.name"		: "efanXtra",
 			"afIoc.module"	: "afEfanXtra::EfanXtraModule",
 			"repo.tags"		: "templating",
-			"repo.public"	: "false"
+			"repo.public"	: "true"
 		]
 
 		index = [
@@ -19,17 +19,17 @@ class Build : BuildPod {
 		]
 
 		depends = [	
-			"sys          1.0", 
-			"concurrent   1.0",
-			"fandoc       1.0",
+			"sys          1.0.68 - 1.0", 
+			"concurrent   1.0.68 - 1.0",
+			"fandoc       1.0.68 - 1.0",
 			
 			// ---- Core ------------------------
-			"afBeanUtils  1.0.4 - 1.0",
-			"afConcurrent 1.0.8 - 1.0",
-			"afPlastic    1.1.0 - 1.1",
-			"afIoc        3.0.0 - 3.0", 
-			"afIocConfig  1.1.0 - 1.1",
-			"afIocEnv     1.1.0 - 1.1",
+			"afBeanUtils  1.0.8  - 1.0",
+			"afConcurrent 1.0.12 - 1.0",
+			"afPlastic    1.1.0  - 1.1",
+			"afIoc        3.0.0  - 3.0", 
+			"afIocConfig  1.1.0  - 1.1",
+			"afIocEnv     1.1.0  - 1.1",
 			
 			// ---- Templating ------------------
 			"afEfan       1.5.0  - 1.5"
