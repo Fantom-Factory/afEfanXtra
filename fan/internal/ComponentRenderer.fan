@@ -30,7 +30,7 @@ const class ComponentRenderer {
 	}
 
 	StrBuf doRenderLoop(EfanComponent component) {
-		renderBuf	:= EfanRenderer.peek.efanBuf
+		renderBuf	:= EfanRenderer.peek.renderBuf
 		renderLoop	:= true
 		while (renderLoop) {
 
