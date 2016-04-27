@@ -319,29 +319,3 @@ const mixin Overdue : EfanComponent {
 Note that state is *not* preserved between different renderings of the component.
 
 
-
-Use with Slim
-*************
-'efanXtra' works great with [Slim]`pod:afSlim`! Just add the following to your 'AppModule'
-and 'efanXtra' will automatically pick up component templates with the extension '.slim':
-
-pre>
-syntax: fantom
-
-using afIoc
-using afSlim
-using afEfanXtra
-
-class AppModule {
-
-    static Void bind(ServiceBinder binder) {
-        binder.bindImpl(Slim#)
-    }
-
-    @Contribute { serviceType=TemplateConverters# }
-    internal static Void contributeSlimTemplates(Configuration config, Slim slim) {
-        config["slim"] = |File file -> Str| { slim.parseFromFile(file) }
-    }
-}
-<pre
-
