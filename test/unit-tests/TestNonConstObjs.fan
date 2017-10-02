@@ -6,7 +6,7 @@ using afConcurrent::ConcurrentModule
 internal class TestNonConstObjs : EfanTest {
 
 	Void testNonConstFields() {
-		reg.rootScope.createChildScope("thread") {
+		reg.rootScope.createChild("thread") {
 			text := render(T_NonConstFields#)
 			verifyEq(text, "Non-Const Field!")
 		}
@@ -18,14 +18,14 @@ internal class TestNonConstObjs : EfanTest {
 	}
 
 	Void testNonConstService() {
-		reg.rootScope.createChildScope("thread") {
+		reg.rootScope.createChild("thread") {
 			text := render(T_NonConstService#)
 			verifyEq(text, "Non-Const Service!")
 		}
 	}
 
 	Void testLogFields() {
-		reg.rootScope.createChildScope("thread") {
+		reg.rootScope.createChild("thread") {
 			text := render(T_LogFields#)
 			verifyEq(text, "Wotever")
 		}
