@@ -39,7 +39,7 @@ internal const class ComponentCacheImpl : ComponentCache {
 				
 				templateSrc.checked
 				newComponent := compiler.compile(activeScope, componentType, templateSrc)
-				typeToComponent.map = typeToComponent.map.rw.set(componentType, newComponent).toImmutable
+				typeToComponent.val = typeToComponent.val.rw.set(componentType, newComponent).toImmutable
 				return newComponent
 			} ?: component
 		}
