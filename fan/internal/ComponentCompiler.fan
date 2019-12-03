@@ -1,31 +1,31 @@
-using afPlastic
-using afIoc
-using afEfan
+using afPlastic::PlasticCompiler
+using afPlastic::PlasticClassModel
+using afIoc::Inject
+using afIoc::InjectionCtx
+using afIoc::Registry
+using afIoc::DependencyProviders
+using afEfan::EfanErr
+using afEfan::EfanMeta
+using afEfan::EfanParser
+using afEfan::EfanCompiler
+using afEfan::EfanCompilationErr
 
 ** (Service) -  
 @NoDoc
 const mixin ComponentCompiler {
-	abstract EfanComponent compile(Scope scope, Type comType, TemplateSource templateSource)
+	abstract EfanMeta compile(Type comType, TemplateSource templateSource)
 }
 
 internal const class ComponentCompilerImpl : ComponentCompiler {
-
 	@Inject	private const EfanLibraries					efanLibraries
 	@Inject private const EfanCompiler					efanCompiler
 
 	new make(|This| f) { f(this) }
 
-	override EfanComponent compile(Scope scope, Type comType, TemplateSource templateSrc) {
+	override EfanMeta compile(Type comType, TemplateSource templateSrc) {
 		
 		try {
-
-			efanMeta	:= efanCompiler.compile(templateSrc.location, templateSrc.template, null, [comType])
-			
-			// FIXME we should just be returning efanMeta
-//			// TODO cache component instances somewhere else and just return type and meta 
-//			// TODO creating instances and injecting via scopes it's not going to be used in can cause problems 
-//			// IoC will attempt to inject all dependencies, even if they're ignored, so we need to use the scope that the component will finally be used with
-			return scope.build(efanMeta.type, [efanMeta])
+			return efanCompiler.compile(templateSrc.location, templateSrc.template, null, [comType])
 			
 		} catch (EfanCompilationErr err) {
 			// try to help the user with silly typos and mistakes
@@ -43,18 +43,6 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			throw err.withXtraMsg(ErrMsgs.alienAidComponentTypo(lib.name, actualComType.name))
 		}
 	}
-}
-
-@NoDoc
-class InjectionCtxImpl : InjectionCtx {
-	override Str?		serviceId
-	override Obj?		targetInstance
-	override Type?		targetType
-	override Field?		field
-	override Func?		func
-	override Obj?[]?	funcArgs
-	override Param?		funcParam
-	override Int?		funcParamIndex
 }
 
 internal const class CompilerCallback {
@@ -181,4 +169,16 @@ internal const class CompilerCallback {
 			model.addField(Registry#, "_efan_registry").addFacet(Inject#)
 		}
 	}
+}
+
+@NoDoc
+class InjectionCtxImpl : InjectionCtx {
+	override Str?		serviceId
+	override Obj?		targetInstance
+	override Type?		targetType
+	override Field?		field
+	override Func?		func
+	override Obj?[]?	funcArgs
+	override Param?		funcParam
+	override Int?		funcParamIndex
 }

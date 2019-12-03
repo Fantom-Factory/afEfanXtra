@@ -1,7 +1,7 @@
 using afConcurrent
-using afIoc
-using afPlastic::PlasticClassModel
-using afIocConfig::Config
+using afIoc::Inject
+using afIoc::Scope
+using afEfan::EfanMeta
 
 ** Lazy cache of efan components.
 @NoDoc
@@ -15,36 +15,36 @@ internal const class ComponentCacheImpl : ComponentCache {
 
 	@Inject	private const TemplateFinders		templateFinders
 	@Inject	private const ComponentCompiler		compiler
-	@Inject	private const |->Scope|				scope
-			private const SynchronizedMap		typeToComponent
+	@Inject	private const ObjCache				objCache
+			private const SynchronizedMap		metaCache
 
 	new make(ActorPools actorPools, |This|in) { 
 		in(this) 
-		typeToComponent	= SynchronizedMap(actorPools["afEfanXtra.caches"]) { it.keyType = Type#; it.valType = EfanComponent# }
+		metaCache = SynchronizedMap(actorPools["afEfanXtra.caches"]) { it.keyType = Type#; it.valType = EfanMeta# }
 	}
 
-	override EfanComponent getOrMake(Type componentType) {
-		templateSrc := templateFinders.getOrFindTemplate(componentType)
-		activeScope	:= scope()	// need to pass the active scope into the sync'ed Actors
-		component 	:= typeToComponent.getOrAdd(componentType) {
-			compiler.compile(activeScope, componentType, templateSrc)
-		}		
+	override EfanComponent getOrMake(Type comType) {
+		templateSrc := templateFinders.getOrFindTemplate(comType)
+		efanMeta	:= (EfanMeta?) metaCache.get(comType)
 
-		if (templateSrc.isModified) {
-			component = typeToComponent.lock.synchronized |->Obj?| {
-				if (!templateSrc.isModified) {	// double lock
-					templateSrc.checked			// need to update the last checked timestamp
-					return null					// can't return component, it's that dodgy wrapper again!
-				}
+		if (efanMeta == null || templateSrc.isModified) {
+			oldMeta := efanMeta
+			efanMeta = metaCache.lock.synchronized |->Obj?| {
+				templateSrc.checked				// update the last checked timestamp
+				if (oldMeta != null && templateSrc.isModified == false)
+					return oldMeta
 				
-				templateSrc.checked
-				newComponent := compiler.compile(activeScope, componentType, templateSrc)
-				typeToComponent.val = typeToComponent.val.rw.set(componentType, newComponent).toImmutable
-				return newComponent
-			} ?: component
+				newMeta := compiler.compile(comType, templateSrc)
+				metaCache[comType] = newMeta
+
+				// todo should we delete the old const instance?
+				// we would need to remove it here, but we should be adding the new one first so we don't ever return null
+				// but can't build it here, 'cos we're in the wrong active scope / thread
+				// and we can't build it elsewhere due to race conditions 
+				return newMeta
+			}
 		}
 
-		return component
+		return objCache.get(efanMeta)
 	}
 }
-

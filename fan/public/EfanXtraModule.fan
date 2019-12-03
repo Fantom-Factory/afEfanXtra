@@ -28,10 +28,10 @@ const class EfanXtraModule {
 		defs.addService(TemplateDirectories#)	.withRootScope
 		defs.addService(TemplateFinders#)		.withRootScope
 		defs.addService(FandocToHtmlConverter#)	.withRootScope
+		defs.addService(ObjCache#)				.withRootScope
 
+		// FIXME kill me - defs.addModule(afEfan::EfanModule#)
 		defs.addModule(afEfan::EfanModule#)
-//		defs.addService(EfanCompiler#)			.withRootScope
-//		defs.addService(EfanEngine#)			.withRootScope
 	}
 	
 	internal static Void onRegistryStartup(Configuration config, EfanXtraPrinter efanPrinter) {
