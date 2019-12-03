@@ -60,6 +60,7 @@ class InjectionCtxImpl : InjectionCtx {
 internal const class CompilerCallback {
 	static	private const Type[]						allowedReturnTypes 	:= [Void#, Bool#]
 
+	@Inject	private const EfanParser					efanParser
 	@Inject	private const ComponentMeta					componentMeta
 	@Inject	private const EfanLibraries					efanLibraries
 	@Inject	private const Registry						registry
@@ -68,10 +69,6 @@ internal const class CompilerCallback {
 	new make(|This| f) { f(this) }
 
 	Void callback(Type comType, PlasticClassModel model) {
-		
-//		model := PlasticClassModel("${comType.name}Impl", true)
-//		model.extend(comType)
-
 		init := componentMeta.findMethod(comType, InitRender#)
 		// allow @InitRender to return anything, mainly for Pillow so it can return BedSheet Response Objs
 //		if (!allowedReturnTypes.any {(init?.returns ?: Void#).fits(it)} )
@@ -89,12 +86,10 @@ internal const class CompilerCallback {
 		componentId	 := "${libName}::${comType.name}"
 
 
-		// FIXME
-//		fieldName := efanParser.fieldName
-		fieldName := "_efan_output"
+		fieldName := efanParser.fieldName
 		model.fields.removeAll(model.fields.findAll { it.name.startsWith(fieldName) })
 		model.addMethod(StrBuf#, fieldName + "_val", "", "${EfanRenderer#.qname}.peek.${EfanRendererCtx#renderBuf.name}")
-		model.addField(Obj?#,		fieldName, """((StrBuf) ${fieldName}_val).toStr""", """((StrBuf) ${fieldName}_val).add(it)""")
+		model.addField(Obj?#,	 fieldName, """((StrBuf) ${fieldName}_val).toStr""", """((StrBuf) ${fieldName}_val).add(it)""")
 
 		
 		// use the component's pod - it's expected behaviour as you think of the component as being in the same pod

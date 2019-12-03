@@ -20,10 +20,10 @@ const class EfanRenderer {
 		bodyFunc	:= peek.bodyFunc
 		if (bodyFunc == null)
 			return ""
-		
-		parent  := EfanRenderingStack.peekParent(true, "Could not render body - there is no enclosing template!")
 
+		// need a new clean renderBuf for the body
 		renderBuf	:= null as StrBuf
+		parent  	:= EfanRenderingStack.peekParent(true, "Could not render body - there is no enclosing template!")
 		EfanRenderingStack.withCtx("Body") |EfanRenderingStackElement element| {
 			// copy the ctx down from the parent
 			element.ctx	= parent.ctx.dup

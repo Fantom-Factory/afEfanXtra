@@ -36,8 +36,6 @@ const class ComponentRenderer {
 
 			b4Ret := componentMeta.callMethod(BeforeRender#, component, [renderBuf])
 			
-			// TODO maybe allow BeforeRender to return a Str -> better that allowing a StrBug arg? 
-			
 			if (b4Ret != false) {
 				// render the efan template, or whatever the user returns
 				templateStr := component.renderTemplate()
@@ -50,7 +48,7 @@ const class ComponentRenderer {
 			renderLoop = (aftRet == false)
 		}
 	}
-	
+
 	Str renderBody(EfanComponent component) {
 		EfanRenderer.renderBody
 	}
