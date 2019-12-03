@@ -22,19 +22,10 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			efanMeta	:= efanCompiler.compile(templateSrc.location, templateSrc.template, null, [comType])
 			
 			// FIXME we should just be returning efanMeta
-			return scope.build(efanMeta.type, [efanMeta])
-			
-//			classModel 	 := efanCompiler.parseTemplateIntoModel(templateSrc.location, templateSrc.template, model)
-//			efanMetaData := efanCompiler.compile(templateSrc.location, templateSrc.template, model)
-//			libName 	 := efanLibraries.findFor(comType).name
-			
-//			echo(efanMetaData.typeSrc)
-//			myEfanMeta	 := efanMetaData.clone([EfanMeta#templateId : "${libName}::${comType.name}"])
-//			
 //			// TODO: cache component instances somewhere else and just return type and meta 
 //			// TODO: creating instances and injecting via scopes it's not going to be used in can cause problems 
 //			// IoC will attempt to inject all dependencies, even if they're ignored, so we need to use the scope that the component will finally be used with
-//			return scope.build(myEfanMeta.type, [myEfanMeta])
+			return scope.build(efanMeta.type, [efanMeta])
 			
 		} catch (EfanCompilationErr err) {
 			// try to help the user with silly typos and mistakes
@@ -97,6 +88,15 @@ internal const class CompilerCallback {
 		libName 	 := efanLibraries.findFor(comType).name
 		componentId	 := "${libName}::${comType.name}"
 
+
+		// FIXME
+//		fieldName := efanParser.fieldName
+		fieldName := "_efan_output"
+		model.fields.removeAll(model.fields.findAll { it.name.startsWith(fieldName) })
+		model.addMethod(StrBuf#, fieldName + "_val", "", "${EfanRenderer#.qname}.peek.${EfanRendererCtx#renderBuf.name}")
+		model.addField(Obj?#,		fieldName, """((StrBuf) ${fieldName}_val).toStr""", """((StrBuf) ${fieldName}_val).add(it)""")
+
+		
 		// use the component's pod - it's expected behaviour as you think of the component as being in the same pod
 		// (and not in some plastic generated-on-the-fly pod!)
 		model.usingPod(comType.pod)

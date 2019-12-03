@@ -2,10 +2,11 @@
 internal class TestVarsInBody : EfanTest {
 
 	Void testVariablesAreAvailibleInBody() {
-//		afEfan::EfanTemplate#.pod.log.level = LogLevel.debug
+//		typeof.pod.log.level = LogLevel.debug
+//		afEfan::EfanMeta#.pod.log.level = LogLevel.debug
 		
 		text := render(Page2#).toStr
-//		Env.cur.err.printLine("[${text}]")
+		Env.cur.err.printLine("[${text}]")
 		verify(text.contains("'Judge Dredd'"), text)
 		
 		// now test the body is rendered in the correct place

@@ -13,7 +13,7 @@ class TestOverdue : Test {
 		efanXtra := (EfanXtra) registry.rootScope.serviceByType(EfanXtra#)
 		overdue	 := efanXtra.component(Overdue#).render(["Mr Smith"])
 		
-		echo("[${overdue}]")
+//		echo("[${overdue}]")
 		verifyEq(overdue, `test/example/letter.txt`.toFile.readAllStr)
 		
 		if (Actor.locals["efanXtra.componentCtx"] != null) {

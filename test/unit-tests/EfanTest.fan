@@ -35,6 +35,7 @@ internal class EfanTest : Test {
 	
 	override Void setup() {
 		Pod.find("afIoc")		.log.level = LogLevel.warn
+		Pod.find("afIocEnv")	.log.level = LogLevel.warn
 		Pod.find("afEfanXtra")	.log.level = LogLevel.warn
 
 		try {

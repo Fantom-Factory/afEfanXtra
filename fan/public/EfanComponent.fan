@@ -48,6 +48,8 @@ mixin EfanComponent {
 	** Useful for simple components.  
 	virtual Str renderTemplate() {
 		this -> _efan_render(null)
+		// FIXME !
+		return ""
 	}
 
 	** Returns a unique ID for this component based on the lib and type name.

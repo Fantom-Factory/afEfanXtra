@@ -18,7 +18,7 @@ const class ComponentRenderer {
 	}
 	
 	Str render(EfanComponent component, Obj?[]? initArgs := null, |->|? bodyFunc := null) {
-		EfanRenderer.renderComponent(component, bodyFunc) |->| {
+		return EfanRenderer.renderComponent(component, bodyFunc) |->| {
 			componentCtxMgr.createNew
 			
 			initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
@@ -29,7 +29,7 @@ const class ComponentRenderer {
 		}
 	}
 
-	StrBuf doRenderLoop(EfanComponent component) {
+	Void doRenderLoop(EfanComponent component) {
 		renderBuf	:= EfanRenderer.peek.renderBuf
 		renderLoop	:= true
 		while (renderLoop) {
@@ -49,8 +49,6 @@ const class ComponentRenderer {
 
 			renderLoop = (aftRet == false)
 		}
-		
-		return renderBuf
 	}
 	
 	Str renderBody(EfanComponent component) {
