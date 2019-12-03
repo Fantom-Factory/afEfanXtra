@@ -5,27 +5,82 @@ using afEfan
 ** (Service) -  
 @NoDoc
 const mixin ComponentCompiler {
-	abstract EfanComponent compile(Scope scope, Type componentType, TemplateSource templateSource)
+	abstract EfanComponent compile(Scope scope, Type comType, TemplateSource templateSource)
 }
 
 internal const class ComponentCompilerImpl : ComponentCompiler {
+
+	@Inject	private const EfanLibraries					efanLibraries
+	@Inject private const EfanCompiler					efanCompiler
+
+	new make(|This| f) { f(this) }
+
+	override EfanComponent compile(Scope scope, Type comType, TemplateSource templateSrc) {
+		
+		try {
+
+			efanMeta	:= efanCompiler.compile(templateSrc.location, templateSrc.template, null, [comType])
+			
+			// FIXME we should just be returning efanMeta
+			return scope.build(efanMeta.type, [efanMeta])
+			
+//			classModel 	 := efanCompiler.parseTemplateIntoModel(templateSrc.location, templateSrc.template, model)
+//			efanMetaData := efanCompiler.compile(templateSrc.location, templateSrc.template, model)
+//			libName 	 := efanLibraries.findFor(comType).name
+			
+//			echo(efanMetaData.typeSrc)
+//			myEfanMeta	 := efanMetaData.clone([EfanMeta#templateId : "${libName}::${comType.name}"])
+//			
+//			// TODO: cache component instances somewhere else and just return type and meta 
+//			// TODO: creating instances and injecting via scopes it's not going to be used in can cause problems 
+//			// IoC will attempt to inject all dependencies, even if they're ignored, so we need to use the scope that the component will finally be used with
+//			return scope.build(myEfanMeta.type, [myEfanMeta])
+			
+		} catch (EfanCompilationErr err) {
+			// try to help the user with silly typos and mistakes
+			regex	:= Regex.fromStr("(?i)^Unknown method '.+\\.render(.+)'\$")			
+			matcher := regex.matcher(err.msg)
+			if (!matcher.matches)  
+				throw err
+
+			comName := matcher.group(1)			
+			actualComType := (Type?) efanLibraries.all.eachWhile |lib| {
+				lib.componentTypes.find { it.name.equalsIgnoreCase(comName) }
+			} ?: throw err
+			
+			lib := efanLibraries.findFor(actualComType)
+			throw err.withXtraMsg(ErrMsgs.alienAidComponentTypo(lib.name, actualComType.name))
+		}
+	}
+}
+
+@NoDoc
+class InjectionCtxImpl : InjectionCtx {
+	override Str?		serviceId
+	override Obj?		targetInstance
+	override Type?		targetType
+	override Field?		field
+	override Func?		func
+	override Obj?[]?	funcArgs
+	override Param?		funcParam
+	override Int?		funcParamIndex
+}
+
+internal const class CompilerCallback {
+	static	private const Type[]						allowedReturnTypes 	:= [Void#, Bool#]
 
 	@Inject	private const ComponentMeta					componentMeta
 	@Inject	private const EfanLibraries					efanLibraries
 	@Inject	private const Registry						registry
 	@Inject	private const DependencyProviders			dependencyProviders
-	@Inject private const EfanEngine 					efanEngine
-			private const |Type, PlasticClassModel|[]	compilerCallbacks
-	static	private const Type[]						allowedReturnTypes 	:= [Void#, Bool#]
 
-	new make(|Type, PlasticClassModel|[] compilerCallbacks, |This|in) { 
-		in(this) 
-		this.compilerCallbacks = compilerCallbacks
+	new make(|This| f) { f(this) }
+
+	Void callback(Type comType, PlasticClassModel model) {
 		
-		scopes := [:]
-	}
+//		model := PlasticClassModel("${comType.name}Impl", true)
+//		model.extend(comType)
 
-	override EfanComponent compile(Scope scope, Type comType, TemplateSource templateSrc) {
 		init := componentMeta.findMethod(comType, InitRender#)
 		// allow @InitRender to return anything, mainly for Pillow so it can return BedSheet Response Objs
 //		if (!allowedReturnTypes.any {(init?.returns ?: Void#).fits(it)} )
@@ -39,30 +94,28 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 		if (!allowedReturnTypes.any {(after?.returns ?: Void#).fits(it)} )
 			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(after, allowedReturnTypes))
 
-		model := PlasticClassModel("${comType.name}Impl", true)
-		model.extend(comType)
-		
+		libName 	 := efanLibraries.findFor(comType).name
+		componentId	 := "${libName}::${comType.name}"
+
 		// use the component's pod - it's expected behaviour as you think of the component as being in the same pod
 		// (and not in some plastic generated-on-the-fly pod!)
 		model.usingPod(comType.pod)
 
-		model.addField(EfanTemplateMeta#, "_efan_templateMeta")
-		model.overrideField(EfanComponent#templateMeta, "_efan_templateMeta", """throw Err("templateMeta is read only.")""")
+		model.addField(EfanMeta#,			"_efan_templateMeta")
+		model.addField(Str#,				"_efan_componentId"	).withInitValue(componentId.toCode) { it.isConst = true }
+		model.addField(ComponentRenderer#,	"_efan_renderer"	).addFacet(Inject#)
+		model.addField(ComponentCtxMgr#,	"_efan_comCtxMgr"	).addFacet(Inject#)
 		
 		// create ctor for afIoc to instantiate	
 		// todo: add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
-		model.addCtor("makeWithIoc", "${EfanTemplateMeta#.qname} templateMeta, |This|in", "in(this)\nthis._efan_templateMeta = templateMeta")
-
-		model.addField(ComponentRenderer#,	"_efan_renderer" ).addFacet(Inject#)
-		model.addField(ComponentCtxMgr#,	"_efan_comCtxMgr").addFacet(Inject#)
-
+		model.addCtor("makeWithIoc", "${EfanMeta#.qname} efanMeta, |This|in", "in(this)\nthis._efan_templateMeta = efanMeta")
+		// TODO may need to call def super it-block ctor
+		
 		// inject libraries
 		efanLibraries.all.each |lib| {
-			model.addField(lib.typeof, lib.name).addFacet(Inject#, ["id":lib.name.toCode])			
+			model.addField(lib.typeof, lib.name).addFacet(Inject#, ["id":lib.name.toCode])
 		}
 
-		// give callbacks a chance to add to our model
-		compilerCallbacks.each { it.call(comType, model) }
 		regRequired := false
 		
 		// implement abstract fields
@@ -119,7 +172,6 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 					)
 					return
 				}
-
 			}
 
 			if (!model.hasField(field.name)) {
@@ -133,45 +185,5 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			model.addField(DependencyProviders#, "_efan_dependencyProviders").addFacet(Inject#)
 			model.addField(Registry#, "_efan_registry").addFacet(Inject#)
 		}
-		
-		try {
-			classModel 	 := efanEngine.parseTemplateIntoModel(templateSrc.location, templateSrc.template, model)
-			efanMetaData := efanEngine.compileModel(templateSrc.location, templateSrc.template, model)
-//			echo(efanMetaData.typeSrc)
-			libName 	 := efanLibraries.findFor(comType).name
-			myEfanMeta	 := efanMetaData.clone([EfanTemplateMeta#templateId : "${libName}::${comType.name}"])
-			
-			// TODO: cache component instances somewhere else and just return type and meta 
-			// TODO: creating instances and injecting via scopes it's not going to be used in can cause problems 
-			// IoC will attempt to inject all dependencies, even if they're ignored, so we need to use the scope that the component will finally be used with
-			return scope.build(myEfanMeta.type, [myEfanMeta])
-			
-		} catch (EfanCompilationErr err) {
-			// try to help the user with silly typos and mistakes
-			regex	:= Regex.fromStr("(?i)^Unknown method '.+\\.render(.+)'\$")			
-			matcher := regex.matcher(err.msg)
-			if (!matcher.matches)  
-				throw err
-
-			comName := matcher.group(1)			
-			actualComType := (Type?) efanLibraries.all.eachWhile |lib| {
-				lib.componentTypes.find { it.name.equalsIgnoreCase(comName) }
-			} ?: throw err
-			
-			lib := efanLibraries.findFor(actualComType)
-			throw err.withXtraMsg(ErrMsgs.alienAidComponentTypo(lib.name, actualComType.name))
-		}
 	}
-}
-
-@NoDoc
-class InjectionCtxImpl : InjectionCtx {
-	override Str?		serviceId
-	override Obj?		targetInstance
-	override Type?		targetType
-	override Field?		field
-	override Func?		func
-	override Obj?[]?	funcArgs
-	override Param?		funcParam
-	override Int?		funcParamIndex
 }

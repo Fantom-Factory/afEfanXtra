@@ -1,6 +1,3 @@
-using afConcurrent
-using afIoc
-using afEfan
 
 ** This class stores all the component variables. Note this is trickier than you may first think!
 ** 

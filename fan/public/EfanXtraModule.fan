@@ -1,10 +1,10 @@
-using concurrent
-using afConcurrent
+using concurrent::ActorPool
+using afConcurrent::ActorPools
 using afIoc
-using afIocConfig
-using afIocEnv
-using afEfan::EfanEngine
+using afIocConfig::FactoryDefaults
+using afIocEnv::IocEnv
 using afPlastic::PlasticCompiler
+using afEfan::EfanCompiler
 
 ** The [IoC]`pod:afIoc` module class.
 ** 
@@ -29,7 +29,9 @@ const class EfanXtraModule {
 		defs.addService(TemplateFinders#)		.withRootScope
 		defs.addService(FandocToHtmlConverter#)	.withRootScope
 
-		defs.addService(EfanEngine#)			.withRootScope
+		defs.addModule(afEfan::EfanModule#)
+//		defs.addService(EfanCompiler#)			.withRootScope
+//		defs.addService(EfanEngine#)			.withRootScope
 	}
 	
 	internal static Void onRegistryStartup(Configuration config, EfanXtraPrinter efanPrinter) {
@@ -63,6 +65,12 @@ const class EfanXtraModule {
 	internal static Void contributeDependencyProviders(Configuration config) {
 		config["afEfanXtra.libraryProvider"] = config.build(LibraryProvider#)
 	}	
+
+	@Contribute { serviceType=EfanCompiler# }
+	Void contributeEfanCompilerCallbacks(Configuration config) {
+		instance := (CompilerCallback) config.build(CompilerCallback#)
+		config.add(CompilerCallback#callback.func.bind([instance]))
+	}
 
 	@Contribute { serviceType=FactoryDefaults# }
 	internal static Void contributeFactoryDefaults(Configuration config, IocEnv env) {

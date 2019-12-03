@@ -11,14 +11,14 @@ const class ComponentRenderer {
 	new make(|This|in) { in(this) }
 
 	Str runInCtx(EfanComponent component, |->Obj?| func) {
-		return EfanRenderer.renderTemplate(component.templateMeta, component, null) |->Obj?| {
+		return EfanRenderer.renderComponent(component, null) |->Obj?| {
 			componentCtxMgr.createNew
 			return func.call
 		}
 	}
 	
 	Str render(EfanComponent component, Obj?[]? initArgs := null, |->|? bodyFunc := null) {
-		EfanRenderer.renderTemplate(component.templateMeta, component, bodyFunc) |->| {
+		EfanRenderer.renderComponent(component, bodyFunc) |->| {
 			componentCtxMgr.createNew
 			
 			initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
