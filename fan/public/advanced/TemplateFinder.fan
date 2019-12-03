@@ -38,7 +38,7 @@ internal const class FindEfanByTypeNameInPod : TemplateFinder {
 			if (fileName == pageName)
 				return true
 
-			// TODO: Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
+			// TODO Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
 			if (pageName.endsWith("page") && fileName == pageName[0..<-4])
 				return true
 
@@ -81,7 +81,7 @@ internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 				if (fileName == pageName)
 					return true
 	
-				// TODO: Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
+				// TODO Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
 				if (pageName.endsWith("page") && fileName == pageName[0..<-4])
 					return true
 				

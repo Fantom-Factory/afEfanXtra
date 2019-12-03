@@ -43,7 +43,7 @@ const class EfanRenderer {
 
 	private static Void convertErrs(EfanMeta efanMetaData, |Obj?| func) {
 		try {
-			// TODO: Dodgy Fantom Syntax! See EfanRender.render()
+			// Dodgy Fantom Syntax! See EfanRender.render()
 			// currently, there is no 'it' so we just pass in a number
 			func.call(69)
 			
@@ -51,21 +51,9 @@ const class EfanRenderer {
 			throw err
 
 		} catch (EfanRuntimeErr err) {
-			// TODO: I'm not sure if it's helpful to trace through all templates...? 
 			throw err
 
 		} catch (Err err) {
-			// TODO does this still work for nested renedering
-//			rType	:= peek.rendering.typeof
-//			regex 	:= Regex.fromStr("^\\s*?${rType.qname}\\._efan_render\\s\\(${rType.pod.name}:([0-9]+)\\)\$")
-//			trace	:= err.traceToStr
-//			codeLineNo := trace.splitLines.eachWhile |line -> Int?| {
-//				reggy 	:= regex.matcher(line)
-//				return reggy.find ? reggy.group(1).toInt : null
-//			} ?: throw err
-//
-//			throw efanMetaData.efanRuntimeErr(err, codeLineNo)
-
 			throw efanMetaData.efanRuntimeErr(err)
 		}
 	}

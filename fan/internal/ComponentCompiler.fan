@@ -22,8 +22,8 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			efanMeta	:= efanCompiler.compile(templateSrc.location, templateSrc.template, null, [comType])
 			
 			// FIXME we should just be returning efanMeta
-//			// TODO: cache component instances somewhere else and just return type and meta 
-//			// TODO: creating instances and injecting via scopes it's not going to be used in can cause problems 
+//			// TODO cache component instances somewhere else and just return type and meta 
+//			// TODO creating instances and injecting via scopes it's not going to be used in can cause problems 
 //			// IoC will attempt to inject all dependencies, even if they're ignored, so we need to use the scope that the component will finally be used with
 			return scope.build(efanMeta.type, [efanMeta])
 			
@@ -107,7 +107,7 @@ internal const class CompilerCallback {
 		model.addField(ComponentCtxMgr#,	"_efan_comCtxMgr"	).addFacet(Inject#)
 		
 		// create ctor for afIoc to instantiate	
-		// todo: add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
+		// todo add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
 		model.addCtor("makeWithIoc", "${EfanMeta#.qname} efanMeta, |This|in", "in(this)\nthis._efan_templateMeta = efanMeta")
 		// TODO may need to call def super it-block ctor
 		
