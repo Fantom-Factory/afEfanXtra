@@ -4,15 +4,18 @@ using afEfan::EfanMeta
 
 ** Static methods for rendering efan templates.
 ** All data is saved onto the ThreadLocal rendering stack.
-@NoDoc
+@NoDoc @Deprecated
 const class EfanRenderer {
 	
-	static Str renderComponent(EfanComponent component, |->|? bodyFunc, |Obj?| func) {
+	static Str renderComponent(EfanComponent component, Func? bodyFunc, Func func) {
 		renderBuf := StrBuf(component.efanMeta.templateSrc.size)
-		EfanRenderingStack.withCtx(component.componentId) |EfanRenderingStackElement element| {
-			element.ctx["efan.renderCtx"] = EfanRendererCtx(component, renderBuf, bodyFunc)
-			convertErrs(component.efanMeta, func)
-		}
+		
+//		EfanRenderCtx(component, renderBuf, bodyFunc).runInCtx(func)
+		
+//		EfanRenderingStack.withCtx(component.componentId) |EfanRenderingStackElement element| {
+//			element.ctx["efan.renderCtx"] = EfanRendererCtx(component, renderBuf, bodyFunc)
+//			convertErrs(component.efanMeta, func)
+//		}
 		return renderBuf.toStr
 	}
 
@@ -60,7 +63,8 @@ const class EfanRenderer {
 }
 
 ** Saved on the rendering stack, so we know what's currently being rendered
-@NoDoc	// used by the compiled template to access the renderBuf 
+@NoDoc	// public 'cos it's used by the compiled template (in its own pod) to access the renderBuf 
+@Deprecated
 class EfanRendererCtx {
 	EfanComponent	rendering
 	|->|? 			bodyFunc

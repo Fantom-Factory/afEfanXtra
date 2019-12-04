@@ -10,27 +10,44 @@ const class ComponentRenderer {
 	
 	new make(|This|in) { in(this) }
 
-	Str runInCtx(EfanComponent component, |->Obj?| func) {
-		return EfanRenderer.renderComponent(component, null) |->Obj?| {
-			componentCtxMgr.createNew
-			return func.call
-		}
+	// TODO at some point, I really need to clean up all this rendering stack stuff
+	
+	** Used by Pillow
+	Obj? runInCtx(EfanComponent component, Func func) {
+		EfanRenderCtx(component, null).runInCtx(func)
+		
+//		return EfanRenderer.renderComponent(component, null) |->Obj?| {
+////			componentCtxMgr.createNew
+//			return func.call
+//		}
 	}
 	
 	Str render(EfanComponent component, Obj?[]? initArgs := null, |->|? bodyFunc := null) {
-		return EfanRenderer.renderComponent(component, bodyFunc) |->| {
-			componentCtxMgr.createNew
-			
+		
+		EfanRenderCtx(component, bodyFunc).runInCtx |ctx| {
 			initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
 
 			// if initRender() returns false, cut rendering short
 			if (initRet != false)
 				doRenderLoop(component)
+			
+			return ctx.renderBuf.toStr
 		}
+		
+//		return EfanRenderer.renderComponent(component, bodyFunc) |->| {
+////			componentCtxMgr.createNew
+//			
+//			initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
+//
+//			// if initRender() returns false, cut rendering short
+//			if (initRet != false)
+//				doRenderLoop(component)
+//		}
 	}
 
-	Void doRenderLoop(EfanComponent component) {
-		renderBuf	:= EfanRenderer.peek.renderBuf
+	** Used by Pillow
+	StrBuf doRenderLoop(EfanComponent component) {
+		renderBuf	:= EfanRenderCtx.peek.renderBuf
 		renderLoop	:= true
 		while (renderLoop) {
 
@@ -47,10 +64,19 @@ const class ComponentRenderer {
 
 			renderLoop = (aftRet == false)
 		}
+		
+		// return StrBuf for Pillow
+		return renderBuf
 	}
 
 	Str renderBody(EfanComponent component) {
-		EfanRenderer.renderBody
+		echo(" body of "+component.componentId)
+		dup := EfanRenderCtx.peek.parent.dup
+		dup.bodyFunc = EfanRenderCtx.peek.bodyFunc
+		return dup.runInCtx |ctx| {
+			ctx.bodyFunc?.call(ctx)
+			return ctx.renderBuf.toStr
+		}
 	}
 }
 

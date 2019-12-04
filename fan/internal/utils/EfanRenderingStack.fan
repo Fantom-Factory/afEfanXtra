@@ -3,6 +3,7 @@ using afEfan::EfanErr
 ** Lets us associate data with the efan template currently being rendered.
 ** Required to keep track of stuff when rendering nested templates / components.
 ** Because don't forget we jump back up to render the body, then back down again...
+@Deprecated
 internal class EfanRenderingStack {
 	private static const Str stackId	:= "efan.renderCtx"
 
@@ -20,12 +21,12 @@ internal class EfanRenderingStack {
 		ThreadStack.peekParent(stackId, false) ?: (checked ? throw EfanErr(errMsg ?: "Could not a parent of EfanCtxStackElement") : null)
 	}
 
-	static EfanRenderingStackElement[]? getStack(Bool checked := true) {
-		ThreadStack.elements(stackId, checked)
-	}
-
+//	static EfanRenderingStackElement[]? getStack(Bool checked := true) {
+//		ThreadStack.elements(stackId, checked)
+//	}
 }
 
+@Deprecated
 internal class EfanRenderingStackElement {
 	Str 		simpleId
 	Str 		nestedId

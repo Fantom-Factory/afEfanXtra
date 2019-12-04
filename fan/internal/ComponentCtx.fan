@@ -9,7 +9,7 @@
 ** 
 ** So we invented the EfanCtxStack - a reusable abstraction of nested components!
 ** 
-@NoDoc
+@NoDoc @Deprecated	// move to ctx
 class ComponentCtx {
 	private [Str:Obj?] stash	:= Str:Obj?[:] { it.caseInsensitive = true }
 	
@@ -30,7 +30,7 @@ class ComponentCtx {
 	}
 }
 
-@NoDoc
+@NoDoc @Deprecated
 const class ComponentCtxMgr {
 	ComponentCtx peek() {
 		EfanRenderingStack.peek.ctx["efanXtra.componentCtx"]

@@ -74,10 +74,10 @@ internal const class CompilerCallback {
 		componentId	 := "${libName}::${comType.name}"
 
 
+		renderCtx := EfanRenderCtx#peek.qname
 		fieldName := efanParser.fieldName
 		model.fields.removeAll(model.fields.findAll { it.name.startsWith(fieldName) })
-		model.addMethod(StrBuf#, fieldName + "_val", "", "${EfanRenderer#.qname}.peek.${EfanRendererCtx#renderBuf.name}")
-		model.addField(Obj?#,	 fieldName, """((StrBuf) ${fieldName}_val).toStr""", """((StrBuf) ${fieldName}_val).add(it)""")
+		model.addField(Obj?#,	 fieldName, """${renderCtx}.renderBuf.toStr""", """${renderCtx}.renderBuf.add(it)""")
 
 		
 		// use the component's pod - it's expected behaviour as you think of the component as being in the same pod
@@ -86,6 +86,8 @@ internal const class CompilerCallback {
 
 		model.addField(EfanMeta#,			"_efan_templateMeta")
 		model.addField(Str#,				"_efan_componentId"	).withInitValue(componentId.toCode) { it.isConst = true }
+		
+		// FIXME - none of this is needed!
 		model.addField(ComponentRenderer#,	"_efan_renderer"	).addFacet(Inject#)
 		model.addField(ComponentCtxMgr#,	"_efan_comCtxMgr"	).addFacet(Inject#)
 		
@@ -131,6 +133,7 @@ internal const class CompilerCallback {
 				return
 			}
 			
+			renderCtx := EfanRenderCtx#peek.qname
 			injectCtx := InjectionCtxImpl {
 				it.field			= field
 				it.targetType		= field.parent
@@ -139,7 +142,7 @@ internal const class CompilerCallback {
 				serviceDef := registry.serviceDefs.find { it.matchesType(field.type) }
 
 				// do simplier injection for root services 'cos it looks better and is easier to debug  
-				if (serviceDef?.matchedScopes?.containsAny("builtin root".split) ?: false) {
+				if (serviceDef != null && serviceDef.matchedScopes.containsAny("builtin root".split)) {
 					// Inject all other services into the field. It looks nicer! 
 					injectFieldName := "_ioc_${field.name}"
 					newField := model.addField(field.type, injectFieldName)
@@ -159,13 +162,13 @@ internal const class CompilerCallback {
 					// when the class is built and the field values injected, there's no render ctx on the thread
 					// so we dynamically retrieve the dependency on 'get' - and stash it
 					model.overrideField(field, 
-						"if (_efan_comCtxMgr.peek.hasVariable(${field.qname.toCode})) {
-						 	return _efan_comCtxMgr.peek.getVariable(${field.qname.toCode})
+						"if (${renderCtx}.hasVar(${field.qname.toCode})) {
+						 	return ${renderCtx}.getVar(${field.qname.toCode})
 						 }
 						 field     := Field.findField(${field.qname.toCode})
 						 injectCtx := afEfanXtra::InjectionCtxImpl { it.field = field; it.targetType = field.parent; it.targetInstance = this }
 						 var       := _efan_dependencyProviders.provide(_efan_registry.activeScope, injectCtx, true)
-						 _efan_comCtxMgr.peek.setVariable(${field.qname.toCode}, var)
+						 ${renderCtx}.setVar(${field.qname.toCode}, var)
 						 return var", 
 						// we can't stop IoC from injecting values when the class is built - so just ignore the setter
 						""
@@ -175,7 +178,7 @@ internal const class CompilerCallback {
 			}
 
 			if (!model.hasField(field.name)) {
-				newField := model.overrideField(field, "_efan_comCtxMgr.peek.getVariable(${field.qname.toCode})", "_efan_comCtxMgr.peek.setVariable(${field.qname.toCode}, it)")
+				newField := model.overrideField(field, "${renderCtx}.getVar(${field.qname.toCode})", "${renderCtx}.setVar(${field.qname.toCode}, it)")
 				// need to copy facets to field in subclass - see http://fantom.org/sidewalk/topic/2186#c14112
 				field.facets.each { newField.addFacetClone(it) }
 			}

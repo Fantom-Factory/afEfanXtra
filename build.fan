@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afEfanXtra"
 		summary = "A library for creating reusable Embedded Fantom (efan) components"
-		version = Version("1.2.1")
+		version = Version("2.0.0")
 
 		meta = [
 			"proj.name"		: "efanXtra",
@@ -24,9 +24,9 @@ class Build : BuildPod {
 			"fandoc       1.0.69 - 1.0",
 			
 			// ---- Core ------------------------
-			"afBeanUtils  1.0.8  - 1.0",
-			"afConcurrent 1.0.20 - 1.0",
-			"afPlastic    1.1.0  - 1.1",
+			"afBeanUtils  1.0.10 - 1.0",
+			"afConcurrent 1.0.24 - 1.0",
+			"afPlastic    1.1.6  - 1.1",
 			"afIoc        3.0.6  - 3.0", 
 			"afIocConfig  1.1.0  - 1.1",
 			"afIocEnv     1.1.0  - 1.1",

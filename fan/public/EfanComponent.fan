@@ -24,6 +24,7 @@ mixin EfanComponent {
 	** ...
 	** <pre
 	Str render(Obj?[]? initArgs := null, |->|? bodyFunc := null) {
+		// execute the component lifecycle
 		((ComponentRenderer)(this -> _efan_renderer)).render(this, initArgs, bodyFunc)
 	}
 
@@ -47,6 +48,7 @@ mixin EfanComponent {
 	** Override to bypass template rendering and return your own generated content.
 	** Useful for simple components.  
 	virtual Str renderTemplate() {
+		// call the actual efan compiler render method
 		this -> _efan_render(null)
 		// FIXME !
 		return ""
