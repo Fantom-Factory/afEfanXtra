@@ -10,8 +10,10 @@
 **     config[EfanXtraConfigIds.templateTimeout] = 1min
 ** }
 ** <pre
+@NoDoc @Deprecated
 const mixin EfanXtraConfigIds {
 
+	// FIXME document this and kill me
 	** The time before the file system is checked for template updates.
 	** 
 	** Defaults to '2min' in prod, and '2sec' otherwise.

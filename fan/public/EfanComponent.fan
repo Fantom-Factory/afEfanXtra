@@ -51,7 +51,7 @@ mixin EfanComponent {
 		// call the actual efan compiler render method
 		this -> _efan_render(null)
 		// FIXME !
-		return ""
+//		return ""
 	}
 
 	** Returns a unique ID for this component based on the lib and type name.

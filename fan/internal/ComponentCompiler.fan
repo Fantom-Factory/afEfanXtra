@@ -87,6 +87,10 @@ internal const class CompilerCallback {
 		model.addField(EfanMeta#,			"_efan_templateMeta")
 		model.addField(Str#,				"_efan_componentId"	).withInitValue(componentId.toCode) { it.isConst = true }
 		model.addField(ComponentRenderer#,	"_efan_renderer"	).addFacet(Inject#)
+
+		
+		model.addMethod(Void#, "efan_beforeRender", "", "${renderCtx}.renderBuf.clear")
+
 		
 		// create ctor for afIoc to instantiate	
 		model.ctors.clear	// ours should be the only one that gets called

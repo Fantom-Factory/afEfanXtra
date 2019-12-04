@@ -20,16 +20,17 @@ const class ComponentRenderer {
 
 			// if initRender() returns false, cut rendering short
 			if (initRet != false)
-				doRenderLoop(component)
+				return doRenderLoop(component).toStr
 			
-			return ctx.renderBuf.toStr
+			return ""
+//			return ctx.renderBuf.toStr
 		}
 	}
 
 	** Used by Pillow
 	StrBuf doRenderLoop(EfanComponent component) {
-//		renderBuf	:= StrBuf()
-		renderBuf	:= EfanRenderCtx.peek.renderBuf
+		renderBuf	:= StrBuf()
+//		renderBuf	:= EfanRenderCtx.peek.renderBuf
 //		rendered	:= ""
 		renderLoop	:= true
 		while (renderLoop) {
@@ -39,7 +40,7 @@ const class ComponentRenderer {
 			if (b4Ret != false) {
 				// render the efan template, or whatever the user returns
 				rendered := component.renderTemplate()
-
+//echo("-->"+rendered)
 				renderBuf.add(rendered)
 			}
 
