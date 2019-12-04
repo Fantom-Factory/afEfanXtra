@@ -91,7 +91,10 @@ internal const class CompilerCallback {
 		
 		// create ctor for afIoc to instantiate	
 		model.ctors.clear	// ours should be the only one that gets called
-		model.addCtor("makeWithIoc", "${EfanMeta#.qname} efanMeta, |This|in", "in(this)\nthis._efan_templateMeta = efanMeta")
+		itBlock		:= model.superClass.methods.find { it.isCtor && it.params.size == 1 && it.params.first.type.fits(Func#) }
+		ctorSuper	:= itBlock == null ? null : "super.${itBlock.name}(in)"
+		ctorBody	:= itBlock == null ? "in(this)\n" : ""
+		model.addCtor("makeWithIoc", "${EfanMeta#.qname} efanMeta, |This| in", "${ctorBody}this._efan_templateMeta = efanMeta", ctorSuper)
 		
 		// inject libraries
 		efanLibraries.all.each |lib| {
