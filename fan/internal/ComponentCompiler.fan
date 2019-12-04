@@ -40,7 +40,7 @@ internal const class ComponentCompilerImpl : ComponentCompiler {
 			} ?: throw err
 			
 			lib := efanLibraries.findFor(actualComType)
-			throw err.withXtraMsg(ErrMsgs.alienAidComponentTypo(lib.name, actualComType.name))
+			throw err.withXtraMsg("\n  ALIEN-AID: Did you mean: ${lib.name}.render${actualComType.name}(...) ???")
 		}
 	}
 }
@@ -64,11 +64,11 @@ internal const class CompilerCallback {
 
 		before := componentMeta.findMethod(comType, BeforeRender#)
 		if (!allowedReturnTypes.any {(before?.returns ?: Void#).fits(it)} )
-			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(before, allowedReturnTypes))
+			throw EfanErr(msgWrongReturnType(before, allowedReturnTypes))
 
 		after := componentMeta.findMethod(comType, AfterRender#)
 		if (!allowedReturnTypes.any {(after?.returns ?: Void#).fits(it)} )
-			throw EfanErr(ErrMsgs.componentCompilerWrongReturnType(after, allowedReturnTypes))
+			throw EfanErr(msgWrongReturnType(after, allowedReturnTypes))
 
 		libName 	 := efanLibraries.findFor(comType).name
 		componentId	 := "${libName}::${comType.name}"
@@ -184,6 +184,10 @@ internal const class CompilerCallback {
 			model.addField(DependencyProviders#, "_efan_dependencyProviders").addFacet(Inject#)
 			model.addField(Registry#, "_efan_registry").addFacet(Inject#)
 		}
+	}
+	
+	private static Str msgWrongReturnType(Method method, Type[] allowedReturnTypes) {
+		"Method '${method.returns.name} ${method.qname}' should return one of " + allowedReturnTypes.join(", ") { it.name }.replace("sys::", "")
 	}
 }
 

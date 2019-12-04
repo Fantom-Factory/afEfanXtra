@@ -8,7 +8,7 @@ internal class TestUnknownVariable : EfanTest {
 			fail
 		} catch (EfanCompilationErr err) {
 			msg := (Str) err.msg
-			verifyEq(msg.splitLines[-1], ErrMsgs.alienAidComponentTypo("app", "SignOff").splitLines[-1])
+			verifyEq(msg.splitLines[-1], "  ALIEN-AID: Did you mean: app.renderSignOff(...) ???")
 		}
 	}
 }
