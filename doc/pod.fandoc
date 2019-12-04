@@ -32,14 +32,17 @@ Quick Start [#quickStart]
     using afIoc
     using afEfanXtra
 
-    const mixin Overdue : EfanComponent {
+    class Overdue : EfanComponent {
 
         // use afIoc services!
         @Inject
-        abstract DvdService? dvdService
+        DvdService? dvdService
 
-        // mixin fields can be accessed by the template
-        abstract Str? userName
+        // fields can be accessed by the template
+        Str? userName
+
+        // standard it-block ctor for ioc injection
+        new make(|This| f) { f(this) }
 
         // use lifecycle methods to initialise your components
         @InitRender
@@ -58,14 +61,14 @@ Quick Start [#quickStart]
 
     using afIoc
 
-    class AppModule {
+    const class AppModule {
 
-        static Void bind(ServiceBinder binder) {
-            binder.bindImpl(DvdService#)
+        Void defineServices(RegistryBuilder defs) {
+            defs.addService(DvdService#)
         }
 
         @Contribute { serviceType=EfanLibraries# }
-        static Void contributeEfanLibs(Configuration config) {
+        Void contributeEfanLibs(Configuration config) {
 
             // contribute all components in the pod as a library named 'app'
             config["app"] = AppModule#.pod
@@ -83,17 +86,58 @@ Full example source code available on [BitBucket]`https://bitbucket.org/AlienFac
 
 Components
 **********
-An efan component consists of a Fantom mixin that extends 'EfanComponent' and a corresponding efan template file.
+An efan component consists of a Fantom class (or mixin) that extends 'EfanComponent' and a corresponding efan template file.
 
 efanXtra does away with [efan's]`pod:afEfan` 'ctx' variable and instead lets the template access fields and methods of the component class directly.
 
 
 
+Classes
+=======
+Component classes extend the `EfanComponent` mixin and may or may not be 'const'.
+
+efanXtra caches component instances where it can, so it may be advantageous to use const classes, espically if using a lot of IoC injection. 'const' services may be injected as usual, and 'abstract' render variables may be used for state.
+
+Taking the [Overdue]`#quickStart` component as an example:
+
+pre>
+syntax: fantom
+
+using afEfanXtra
+
+const class Overdue : EfanComponent {
+
+    // standard service injection
+    @Inject
+    const DvdService? dvdService
+
+    // render variables are mutable
+    abstract Str? userName
+
+    // standard it-block ctor for ioc injection
+    new make(|This| f) { f(this) }
+
+    // use lifecycle methods to initialise your components
+    @InitRender
+    Void initRender(Str userName) {
+        this.userName = userName
+    }
+
+    // mixin methods can be called from the template
+    Str[] dvds() {
+        dvdService.findByName(userName)
+    }
+}
+<pre
+
+
+
 Mixins
 ======
-Component mixins must be 'const' and extend the `EfanComponent` mixin.
+Component mixins extend the `EfanComponent` mixin and may or may not be 'const'.
 
-All fields and methods of the mixin are visible and directly accessible in the efan template.
+All fields and methods of the mixin are visible and directly accessible in the efan template. Fields, as per standard mixin contracts, must be 'abstract'.
+
 Components are created by [IoC]`pod:afIoc` so feel free to annotate fields with '@Inject' just as you would with a service class.
 
 See [Lifecycle Methods]`#lifecycle` to see how to initialise and pass data into your components.
@@ -102,7 +146,7 @@ See [Lifecycle Methods]`#lifecycle` to see how to initialise and pass data into 
 
 Templates
 =========
-By default, efan template files have the same name as the mixin, but with an '.efan' extension.
+By default, efan template files have the same name as the class, but with an '.efan' extension.
 If you wish the template to have a different name to the Fantom class, you can set an explicit URL with the
 [@TemplateLocation]`TemplateLocation` facet. Example:
 
@@ -110,7 +154,7 @@ pre>
 syntax: fantom
 
 @TemplateLocation { url=`fan://acmePod/templates/Notice.efan` }
-const mixin Overdue : EfanComponent {
+class Overdue : EfanComponent {
     ...
 }
 <pre
@@ -144,10 +188,10 @@ To do this, contribute to `TemplateDirectories` to tell efanXtra where to look f
 pre>
 syntax: fantom
 
-class AppModule {
+const class AppModule {
 
     @Contribute { serviceType=TemplateDirectories# }
-    static Void contributeTemplateDirs(Configuration config) {
+    Void contributeTemplateDirs(Configuration config) {
         config.add(`etc/components/`)
     }
 }
@@ -156,6 +200,17 @@ class AppModule {
 Note that like Fantom resource directories, template directories are NOT nested; adding 'etc/' will **NOT** add 'etc/components/'.
 
 Also note that the directory URIs must end in a slash.
+
+File system template are checked every 2min in production and every 2sec in development. To change these timings, add the following configuration:
+
+pre>
+syntax: fantom
+
+@Contribute { serviceType=ApplicationDefaults# }
+Void configureAppDefaults(Configuration config) {
+    config["afEfanXtra.templateTimeout"] = 1min
+}
+<pre
 
 
 
@@ -170,7 +225,7 @@ using afEfanXtra
 **
 ** Yo Dawg! Check <%= hello %>
 **
-const mixin TemplateFromFandocComment : EfanComponent {
+class TemplateFromFandocComment : EfanComponent {
     Str hello() { "this out!" }
 }
 <pre
@@ -191,7 +246,7 @@ using afEfanXtra
 ** <pre
 **
 ** Nor is this.
-const mixin TemplateFromFandocComment : EfanComponent {
+class TemplateFromFandocComment : EfanComponent {
     Str hello() { "this out!" }
 }
 <pre
@@ -213,10 +268,10 @@ syntax: fantom
 using afIoc
 using afEfanXtra
 
-class AppModule {
+const class AppModule {
 
     @Contribute { serviceType=EfanLibraries# }
-    static Void contributeEfanLibs(Configuration config) {
+    Void contributeEfanLibs(Configuration config) {
 
         // contribute all components in this pod as a library called 'app'
         config["app"] = AppModule#.pod
@@ -258,10 +313,10 @@ The '@InitRender' method may take any arguments, the signature will be mimicked 
 
 pre>
 syntax: fantom
-const mixin MyComponent : EfanComponent {
+class MyComponent : EfanComponent {
 
     @InitRender
-    Bool? initRender(Int x, Str y) { ... }
+    Void initRender(Int x, Str y) { ... }
 }
 <pre
 
@@ -304,6 +359,10 @@ syntax: fantom
 using afEfanXtra
 
 const mixin Overdue : EfanComponent {
+
+    // render variables may also be injected
+    @Inject
+    abstract DvdService? dvdService
 
     abstract Str? userName
 

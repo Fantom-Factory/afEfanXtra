@@ -73,6 +73,6 @@ const class EfanXtraModule {
 
 	@Contribute { serviceType=FactoryDefaults# }
 	internal static Void contributeFactoryDefaults(Configuration config, IocEnv env) {
-		config[EfanXtraConfigIds.templateTimeout] = env.isProd ? 2min : 2sec
+		config["afEfanXtra.templateTimeout"] = env.isProd ? 2min : 2sec
 	}
 }

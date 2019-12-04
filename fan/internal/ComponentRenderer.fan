@@ -19,12 +19,12 @@ const class ComponentRenderer {
 			initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
 
 			// if initRender() returns false, cut rendering short
-			return initRet == false ? "" : doRenderLoop(component).toStr
+			return initRet == false ? "" : doRenderLoop(component)
 		}
 	}
 
 	** Used by Pillow
-	StrBuf doRenderLoop(EfanComponent component) {
+	Str doRenderLoop(EfanComponent component) {
 		renderBuf	:= StrBuf()
 		renderLoop	:= true
 		while (renderLoop) {
@@ -42,8 +42,7 @@ const class ComponentRenderer {
 			renderLoop = (aftRet == false)
 		}
 		
-		// return StrBuf for Pillow
-		return renderBuf
+		return renderBuf.toStr
 	}
 
 	internal Str renderBody(EfanComponent component) {

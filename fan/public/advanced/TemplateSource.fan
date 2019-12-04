@@ -25,7 +25,7 @@ const class TemplateSourceFile : TemplateSource {
 	@Inject	private const TemplateConverters templateConverters
 
 	@Inject	
-	@Config { id="afEfan.templateTimeout" }
+	@Config { id="afEfanXtra.templateTimeout" }
 	private const Duration? timeout
 	private const File 		templateFile
 	private const AtomicRef	lastCheckedRef	:= AtomicRef()
