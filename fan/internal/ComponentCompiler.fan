@@ -86,10 +86,7 @@ internal const class CompilerCallback {
 
 		model.addField(EfanMeta#,			"_efan_templateMeta")
 		model.addField(Str#,				"_efan_componentId"	).withInitValue(componentId.toCode) { it.isConst = true }
-		
-		// FIXME - none of this is needed!
 		model.addField(ComponentRenderer#,	"_efan_renderer"	).addFacet(Inject#)
-		model.addField(ComponentCtxMgr#,	"_efan_comCtxMgr"	).addFacet(Inject#)
 		
 		// create ctor for afIoc to instantiate	
 		model.ctors.clear	// ours should be the only one that gets called
@@ -143,12 +140,12 @@ internal const class CompilerCallback {
 
 				// do simplier injection for root services 'cos it looks better and is easier to debug  
 				if (serviceDef != null && serviceDef.matchedScopes.containsAny("builtin root".split)) {
-					// Inject all other services into the field. It looks nicer! 
+					// annoyingly, fields *can not* be overridden in const classes with a storage field
+					// but we can override and redirect to another field
+					
 					injectFieldName := "_ioc_${field.name}"
 					newField := model.addField(field.type, injectFieldName)
 					
-					// we can't stop IoC from injecting values when the class is built - and const fields can't be set outside of the ctor
-					// so we create a new field, and inject that instead
 					// copy over @Inject to ensure *this* newField gets injected
 					field.facets.each { newField.addFacetClone(it) }					
 					model.overrideField(field, injectFieldName, "")	// ignore this setter, as it gets called by IoC
@@ -162,9 +159,8 @@ internal const class CompilerCallback {
 					// when the class is built and the field values injected, there's no render ctx on the thread
 					// so we dynamically retrieve the dependency on 'get' - and stash it
 					model.overrideField(field, 
-						"if (${renderCtx}.hasVar(${field.qname.toCode})) {
+						"if (${renderCtx}.hasVar(${field.qname.toCode}))
 						 	return ${renderCtx}.getVar(${field.qname.toCode})
-						 }
 						 field     := Field.findField(${field.qname.toCode})
 						 injectCtx := afEfanXtra::InjectionCtxImpl { it.field = field; it.targetType = field.parent; it.targetInstance = this }
 						 var       := _efan_dependencyProviders.provide(_efan_registry.activeScope, injectCtx, true)

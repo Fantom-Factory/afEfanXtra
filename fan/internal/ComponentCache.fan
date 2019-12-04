@@ -41,6 +41,7 @@ internal const class ComponentCacheImpl : ComponentCache {
 				// we would need to remove it here, but we should be adding the new one first so we don't ever return null
 				// but can't build it here, 'cos we're in the wrong active scope / thread
 				// and we can't build it elsewhere due to race conditions 
+				// meh - it's only a Type, which won't be deleted by the system anyway
 				return newMeta
 			}
 		}

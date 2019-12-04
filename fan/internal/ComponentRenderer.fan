@@ -5,25 +5,16 @@ using afEfan
 @NoDoc
 const class ComponentRenderer {
 	
-	@Inject private const ComponentCtxMgr	componentCtxMgr
 	@Inject private const ComponentMeta		componentMeta
 	
 	new make(|This|in) { in(this) }
 
-	// TODO at some point, I really need to clean up all this rendering stack stuff
-	
 	** Used by Pillow
 	Obj? runInCtx(EfanComponent component, Func func) {
 		EfanRenderCtx(component, null).runInCtx(func)
-		
-//		return EfanRenderer.renderComponent(component, null) |->Obj?| {
-////			componentCtxMgr.createNew
-//			return func.call
-//		}
 	}
 	
-	Str render(EfanComponent component, Obj?[]? initArgs := null, |->|? bodyFunc := null) {
-		
+	Str render(EfanComponent component, Obj?[]? initArgs := null, |->|? bodyFunc := null) {		
 		EfanRenderCtx(component, bodyFunc).runInCtx |ctx| {
 			initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
 
@@ -33,21 +24,13 @@ const class ComponentRenderer {
 			
 			return ctx.renderBuf.toStr
 		}
-		
-//		return EfanRenderer.renderComponent(component, bodyFunc) |->| {
-////			componentCtxMgr.createNew
-//			
-//			initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
-//
-//			// if initRender() returns false, cut rendering short
-//			if (initRet != false)
-//				doRenderLoop(component)
-//		}
 	}
 
 	** Used by Pillow
 	StrBuf doRenderLoop(EfanComponent component) {
+//		renderBuf	:= StrBuf()
 		renderBuf	:= EfanRenderCtx.peek.renderBuf
+//		rendered	:= ""
 		renderLoop	:= true
 		while (renderLoop) {
 
@@ -55,9 +38,9 @@ const class ComponentRenderer {
 			
 			if (b4Ret != false) {
 				// render the efan template, or whatever the user returns
-				templateStr := component.renderTemplate()
+				rendered := component.renderTemplate()
 
-				renderBuf.add(templateStr)
+				renderBuf.add(rendered)
 			}
 
 			aftRet := componentMeta.callMethod(AfterRender#, component, [renderBuf])
@@ -67,16 +50,13 @@ const class ComponentRenderer {
 		
 		// return StrBuf for Pillow
 		return renderBuf
+//		return StrBuf().add(rendered)
 	}
 
-	Str renderBody(EfanComponent component) {
-		echo(" body of "+component.componentId)
-		dup := EfanRenderCtx.peek.parent.dup
-		dup.bodyFunc = EfanRenderCtx.peek.bodyFunc
-		return dup.runInCtx |ctx| {
+	internal Str renderBody(EfanComponent component) {
+		EfanRenderCtx.peek.bodyDup.runInCtx |ctx| {
 			ctx.bodyFunc?.call(ctx)
 			return ctx.renderBuf.toStr
 		}
 	}
 }
-

@@ -17,7 +17,6 @@ const class EfanXtraModule {
 		defs.addService(ComponentCompiler#)		.withRootScope
 		defs.addService(ComponentCache#)		.withRootScope
 		defs.addService(ComponentMeta#)			.withRootScope
-		defs.addService(ComponentCtxMgr#)		.withRootScope
 		defs.addService(ComponentRenderer#)		.withRootScope
 		defs.addService(EfanLibraryCompiler#)	.withRootScope
 		defs.addService(EfanLibraries#)			.withRootScope

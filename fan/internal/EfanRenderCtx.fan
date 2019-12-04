@@ -43,6 +43,14 @@ class EfanRenderCtx {
 		(parent?.path ?: `/`).plusSlash.plusName(renderId)
 	}
 	
+	This bodyDup() {
+		// oddly enough, bodyFunc is set on the inner obj, not the parent  
+		EfanRenderCtx(parent.rendering, bodyFunc) {
+			it._vars	= this.parent._vars
+			it.renderId += "(Body)"
+		}
+	}
+	
 	This dup() {
 		EfanRenderCtx(rendering, bodyFunc) {
 			it._vars	= this._vars
@@ -51,15 +59,13 @@ class EfanRenderCtx {
 	}
 
 	Void setVar(Str name, Obj? value) {
-		echo("setting [$name] on $path")
 		if (_vars == null)
 			if (value == null) return; else _vars = Str:Obj?[:]
 		_vars[name] = value
 	}
 	
 	Obj? getVar(Str name) {
-		echo("getting [$name] fo $path")
-		return _vars?.get(name)
+		_vars?.get(name)
 	}
 
 	Bool hasVar(Str name) {
@@ -67,8 +73,7 @@ class EfanRenderCtx {
 	}
 	
 	static EfanRenderCtx? peek(Bool checked := true) {
-		echo(Actor.locals[localId]?->path)
-		return Actor.locals[localId] ?: (checked ? throw Err("Could not find EfanRenderCtx in Actor.locals()") : null)		
+		Actor.locals[localId] ?: (checked ? throw Err("Could not find EfanRenderCtx in Actor.locals()") : null)		
 	}
 	
 	override Str toStr() { rendering.componentId }

@@ -1,4 +1,5 @@
 
+@Deprecated
 internal const class ErrMsgs {
 
 	static Str componentTemplateNotFound(Type componentType) {
