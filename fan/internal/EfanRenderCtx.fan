@@ -10,7 +10,7 @@ class EfanRenderCtx {
 	EfanComponent		rendering	{ private set }
 	Func? 				bodyFunc	//{ private set }
 	private [Str:Obj?]?	_vars		{ private set }
-	private StrBuf?		_renderBuf
+	private	StrBuf?		_renderBuf
 
 	internal new make(EfanComponent rendering, Func? bodyFunc) {
 		this.renderId	= rendering.componentId

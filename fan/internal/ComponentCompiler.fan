@@ -74,10 +74,12 @@ internal const class CompilerCallback {
 		componentId	 := "${libName}::${comType.name}"
 
 
+		// there may be a way to do away with all this - if it weren't for bodyFuncs
 		renderCtx := EfanRenderCtx#peek.qname
 		fieldName := efanParser.fieldName
 		model.fields.removeAll(model.fields.findAll { it.name.startsWith(fieldName) })
 		model.addField(Obj?#,	 fieldName, """${renderCtx}.renderBuf.toStr""", """${renderCtx}.renderBuf.add(it)""")
+		model.addMethod(Void#, "efan_beforeRender", "", "${renderCtx}.renderBuf.clear")
 
 		
 		// use the component's pod - it's expected behaviour as you think of the component as being in the same pod
@@ -87,9 +89,6 @@ internal const class CompilerCallback {
 		model.addField(EfanMeta#,			"_efan_templateMeta")
 		model.addField(Str#,				"_efan_componentId"	).withInitValue(componentId.toCode) { it.isConst = true }
 		model.addField(ComponentRenderer#,	"_efan_renderer"	).addFacet(Inject#)
-
-		
-		model.addMethod(Void#, "efan_beforeRender", "", "${renderCtx}.renderBuf.clear")
 
 		
 		// create ctor for afIoc to instantiate	
