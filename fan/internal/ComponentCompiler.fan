@@ -90,18 +90,22 @@ internal const class CompilerCallback {
 		model.addField(ComponentCtxMgr#,	"_efan_comCtxMgr"	).addFacet(Inject#)
 		
 		// create ctor for afIoc to instantiate	
-		// todo add @Inject to ctor to ensure afIoc calls it - actually don't. Then other libs can add it to their ctors 
+		model.ctors.clear	// ours should be the only one that gets called
 		model.addCtor("makeWithIoc", "${EfanMeta#.qname} efanMeta, |This|in", "in(this)\nthis._efan_templateMeta = efanMeta")
-		// TODO may need to call def super it-block ctor
 		
 		// inject libraries
 		efanLibraries.all.each |lib| {
 			model.addField(lib.typeof, lib.name).addFacet(Inject#, ["id":lib.name.toCode])
 		}
 
-		regRequired := false
 		
-		// implement abstract fields
+		// implement abstract fields - but don't bother for normal classes
+		if (comType.isConst || comType.isMixin)
+			overrideAbstractFields(comType, model)
+	}
+
+	Void overrideAbstractFields(Type comType, PlasticClassModel model) {
+		regRequired := false
 		comType.fields.each |field| {
 			if (field.isStatic)
 				return
@@ -113,7 +117,17 @@ internal const class CompilerCallback {
 			// ignore fields defined in 'the system' hierarchy
 			if (field.parent == EfanComponent#)
 				return
+			
+			// ignore fields we can't override
+			if (!field.isAbstract && !field.isVirtual)
+				return
 
+			// implement normal fields (from non-const mixins)
+			if (!model.isConst) {
+				model.overrideField(field)
+				return
+			}
+			
 			injectCtx := InjectionCtxImpl {
 				it.field			= field
 				it.targetType		= field.parent

@@ -7,9 +7,6 @@ const mixin ComponentFinder {
 
 internal const class ComponentFinderImpl : ComponentFinder {
 	override Type[] findComponentTypes(Pod pod) {
-		components := pod.types.findAll { it.fits(EfanComponent#) && !it.hasFacet(Abstract#) && it != EfanComponent# }
-		components.each { if (!it.isMixin) { throw Err(ErrMsgs.componentNotMixin(it)) } } 
-		components.each { if (!it.isConst) { throw Err(ErrMsgs.componentNotConst(it)) } }
-		return components
+		pod.types.findAll { it.fits(EfanComponent#) && !it.hasFacet(Abstract#) && it != EfanComponent# }
 	}
 }

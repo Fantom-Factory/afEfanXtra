@@ -4,14 +4,6 @@ internal const class ErrMsgs {
 	static Str componentTemplateNotFound(Type componentType) {
 		"Could not find template file for ${componentType.qname}"
 	}
-	
-	static Str componentNotMixin(Type type) {
-		"EfanXtra component ${type.qname} is NOT a mixin"
-	}
-
-	static Str componentNotConst(Type type) {
-		"EfanXtra component ${type.qname} is NOT const"
-	}
 
 	static Str libraryNameNotValid(Str libName) {
 		"Efan Library name is not valid. It must be a legal Fantom name : ${libName}"

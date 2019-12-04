@@ -32,8 +32,7 @@ class Build : BuildPod {
 			"afIocEnv     1.1.0  - 1.1",
 			
 			// ---- Templating ------------------
-//			"afEfan       1.5.2  - 1.5",
-			"afEfan       2.0.0  - 2.0",
+			"afEfan       2.0.3  - 2.0",
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/utils/`, `fan/public/`, `fan/public/advanced/`, `test/example/`, `test/unit-tests/`, `test/unit-tests/components/`]
