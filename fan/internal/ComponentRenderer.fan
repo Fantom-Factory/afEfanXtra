@@ -46,9 +46,11 @@ const class ComponentRenderer {
 	}
 
 	internal Str renderBody(EfanComponent component) {
-		EfanRenderCtx.peek.bodyDup.runInCtx |ctx| {
-			ctx.bodyFunc?.call(ctx)
-			return ctx.renderBuf.toStr
-		}
+		bodyCtx := EfanRenderCtx.peek.bodyDup
+		return bodyCtx == null ? ""
+			: bodyCtx.runInCtx |ctx| {
+				ctx.bodyFunc?.call(ctx)
+				return ctx.renderBuf.toStr
+			}
 	}
 }

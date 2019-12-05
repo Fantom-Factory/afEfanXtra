@@ -43,12 +43,13 @@ class EfanRenderCtx {
 		(parent?.path ?: `/`).plusSlash.plusName(renderId)
 	}
 	
-	This bodyDup() {
-		// oddly enough, bodyFunc is set on the inner obj, not the parent  
-		EfanRenderCtx(parent.rendering, bodyFunc) {
-			it._vars	= this.parent._vars
-			it.renderId += "(Body)"
-		}
+	EfanRenderCtx? bodyDup() {
+		parent == null ? null
+			// oddly enough, bodyFunc is set on the inner obj, not the parent  
+			: EfanRenderCtx(this.parent.rendering, bodyFunc) {
+				it._vars	= this.parent._vars
+				it.renderId += "(Body)"
+			}
 	}
 	
 	This dup() {
