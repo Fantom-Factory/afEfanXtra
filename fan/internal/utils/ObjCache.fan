@@ -25,9 +25,11 @@ const class ObjCache {
 		if (serviceTypeCache.contains(type))
 			obj = activeScope().serviceByType(type)
 
+		else
 		if (constTypeCache.containsKey(type))
 			obj = constTypeCache[type]
 		
+		else
 		if (autobuildTypeCache.contains(type))
 			obj = activeScope().build(type, [meta])
 		
@@ -43,5 +45,16 @@ const class ObjCache {
 		}
 
 		return obj
+	}
+	
+	Void remove(EfanMeta? meta) {
+		if (meta == null) return
+		type := meta.type
+		
+		if (constTypeCache.containsKey(type))
+			constTypeCache.remove(type)
+		else
+		if (autobuildTypeCache.contains(type))
+			autobuildTypeCache.remove(type)
 	}
 }

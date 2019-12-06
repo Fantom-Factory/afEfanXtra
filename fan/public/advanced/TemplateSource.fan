@@ -5,6 +5,7 @@ using afIocConfig
 @NoDoc
 const mixin TemplateSource {
 	
+	** Returns the efan template.s
 	** Should update any modified timestamps
 	abstract Str template()
 	
@@ -14,10 +15,7 @@ const mixin TemplateSource {
 	** Should not update any internal state
 	abstract Bool isModified()
 
-	abstract DateTime lastModified()	// for sitemap
-	
-	** leaky abstraction - called when last checked should be updated
-	abstract Void checked()
+	abstract DateTime lastModified()	// for sitemap	
 }
 
 @NoDoc
@@ -35,7 +33,7 @@ const class TemplateSourceFile : TemplateSource {
 	new make(File file, |This| in) {
 		in(this)
 		this.templateFile			= file
-		this.lastCheckedRef.val		= DateTime.now
+		this.lastCheckedRef.val		= DateTime.now(1sec)
 		this.lastModifiedRef.val	= templateFile.modified
 	}
 	
@@ -51,28 +49,25 @@ const class TemplateSourceFile : TemplateSource {
 	}
 
 	override Bool isModified() {
-		isTimedOut && isModifyed 
-	}
+		now := DateTime.now(1sec)
+		// cache this response for X secs to avoid hammering the file system
+		if ((now - lastChecked) < timeout)
+			return false
 
-	override Void checked() {
-		this.lastCheckedRef.val	= DateTime.now		
+		// lastModified gets updated when we call template()
+		modified := templateFile.modified > lastModified
+
+		// if modified, then keep returning true until we re-compile the template  
+		if (modified == false) lastCheckedRef.val = now
+		return modified
 	}
 
 	override DateTime lastModified() {
 		lastModifiedRef.val
 	}
+
 	private	DateTime lastChecked() {
 		lastCheckedRef.val
-	}
-	
-	private Bool isTimedOut() {
-		timeout == null
-			? true
-			: (DateTime.now - lastChecked) > timeout
-	}
-	
-	private Bool isModifyed() {
-		templateFile.modified > lastModified
 	}
 }
 
@@ -101,7 +96,6 @@ const class TemplateSourceStr : TemplateSource {
 
 	override const Bool 	isModified		:= false
 	override const DateTime	lastModified	:= DateTime.now
-	override 	   Void 	checked()		{ }
 }
 
 @NoDoc
@@ -110,7 +104,6 @@ const class TemplateSourceNull : TemplateSource {
 	override const Str 		template		:= Str.defVal
 	override const Bool 	isModified		:= false
 	override const DateTime	lastModified 	:= DateTime.now
-	override 	   Void		checked()		{ }
 	
 	new make(Uri location) {
 		this.location = location
