@@ -14,8 +14,9 @@ internal const class ComponentFinderImpl : ComponentFinder {
 				return false
 			if (t.hasFacet(Abstract#))
 				return false
-			if (t.isClass && t.isAbstract)
-				return false
+			// turns out we need "abstract" const classes for render variables
+//			if (t.isClass && t.isAbstract)
+//				return false
 			return true
 		}
 	}

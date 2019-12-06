@@ -3,6 +3,6 @@
 @NoDoc @Abstract
 const mixin T_MyBaseComponent : EfanComponent { }
 
-** Nor this
+** But this should...
 @NoDoc
 abstract const class T_MyBaseComponent2 : EfanComponent { }

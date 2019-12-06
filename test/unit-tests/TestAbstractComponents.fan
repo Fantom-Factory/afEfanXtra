@@ -8,7 +8,9 @@ internal class TestAbstractComponents : EfanTest {
 
 		// Nor this 'cos it is an abstract class
 		// Okay - it *could* be a component, but why should it!?
-		verifyFalse(efanLibs["app"].componentTypes.contains(T_MyBaseComponent2#))
+		
+		// on second thoughts - turns out we need "abstract" const classes for render variables
+//		verifyTrue(efanLibs["app"].componentTypes.contains(T_MyBaseComponent2#))
 	}
 	
 }
