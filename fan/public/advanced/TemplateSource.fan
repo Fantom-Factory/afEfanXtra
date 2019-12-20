@@ -58,7 +58,9 @@ const class TemplateSourceFile : TemplateSource {
 		modified := templateFile.modified > lastModified
 
 		// if modified, then keep returning true until we re-compile the template  
-		if (modified == false) lastCheckedRef.val = now
+		if (modified == true) return modified
+		
+		lastCheckedRef.val = now
 		return modified
 	}
 
