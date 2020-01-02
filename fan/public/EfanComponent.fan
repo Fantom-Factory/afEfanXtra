@@ -1,12 +1,14 @@
-using afEfan
+using afEfan::EfanMeta
 
 ** Implement to define an 'efanXtra' component.
 ** 
 ** Whereas 'efan' has 'EfanRenderer' instances, 'efanXtra' has 'EfanComponent' instances. 
-const mixin EfanComponent {
+mixin EfanComponent {
 
 	** Meta data about the compiled efan templates
-	abstract EfanTemplateMeta templateMeta
+	EfanMeta efanMeta() {
+		this -> _efan_templateMeta
+	}
 
 	** The main render method. 'initArgs' are passed to the '@InitRender' lifecycle method.
 	** 
@@ -16,12 +18,13 @@ const mixin EfanComponent {
 	** 
 	** pre>
 	** ...
-	** <%= app.rednerLayout() { %>
+	** <%= app.renderLayout() { %>
 	**   ... my body content ...
 	** <% } %>
 	** ...
 	** <pre
 	Str render(Obj?[]? initArgs := null, |->|? bodyFunc := null) {
+		// execute the component lifecycle
 		((ComponentRenderer)(this -> _efan_renderer)).render(this, initArgs, bodyFunc)
 	}
 
@@ -45,11 +48,16 @@ const mixin EfanComponent {
 	** Override to bypass template rendering and return your own generated content.
 	** Useful for simple components.  
 	virtual Str renderTemplate() {
-		this -> _efan_render()
-		return Str.defVal
+		// call the actual efan compiler render method
+		this -> _efan_render(null)
 	}
 
-	** Returns 'efanTemplateMeta.templateId()'
+	** Returns a unique ID for this component based on the lib and type name.
+	Str componentId() {
+		this -> _efan_componentId
+	}
+
+	** Returns 'componentId()'
 	@NoDoc
-	override Str toStr() { templateMeta.templateId }
+	override Str toStr() { componentId }
 }

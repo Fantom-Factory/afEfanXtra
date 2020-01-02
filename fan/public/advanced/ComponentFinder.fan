@@ -7,9 +7,17 @@ const mixin ComponentFinder {
 
 internal const class ComponentFinderImpl : ComponentFinder {
 	override Type[] findComponentTypes(Pod pod) {
-		components := pod.types.findAll { it.fits(EfanComponent#) && !it.hasFacet(Abstract#) }
-		components.each { if (!it.isMixin) { throw Err(ErrMsgs.componentNotMixin(it)) } } 
-		components.each { if (!it.isConst) { throw Err(ErrMsgs.componentNotConst(it)) } }
-		return components
+		pod.types.findAll |t| {
+			if (t == EfanComponent#)
+				return false
+			if (!t.fits(EfanComponent#))
+				return false
+			if (t.hasFacet(Abstract#))
+				return false
+			// turns out we need "abstract" const classes for render variables
+//			if (t.isClass && t.isAbstract)
+//				return false
+			return true
+		}
 	}
 }

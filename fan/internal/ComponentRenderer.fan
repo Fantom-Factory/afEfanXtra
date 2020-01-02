@@ -5,44 +5,36 @@ using afEfan
 @NoDoc
 const class ComponentRenderer {
 	
-	@Inject private const ComponentCtxMgr	componentCtxMgr
 	@Inject private const ComponentMeta		componentMeta
 	
 	new make(|This|in) { in(this) }
 
-	Str runInCtx(EfanComponent component, |->Obj?| func) {
-		return EfanRenderer.renderTemplate(component.templateMeta, component, null) |->Obj?| {
-			componentCtxMgr.createNew
-			return func.call
-		}
+	** Used by Pillow
+	Obj? runInCtx(EfanComponent component, Func func) {
+		EfanRenderCtx(component, null).runInCtx(func)
 	}
 	
-	Str render(EfanComponent component, Obj?[]? initArgs := null, |->|? bodyFunc := null) {
-		EfanRenderer.renderTemplate(component.templateMeta, component, bodyFunc) |->| {
-			componentCtxMgr.createNew
-			
+	Str render(EfanComponent component, Obj?[]? initArgs := null, |->|? bodyFunc := null) {		
+		EfanRenderCtx(component, bodyFunc).runInCtx |ctx| {
 			initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
 
 			// if initRender() returns false, cut rendering short
-			if (initRet != false)
-				doRenderLoop(component)
+			return initRet == false ? "" : doRenderLoop(component)
 		}
 	}
 
-	StrBuf doRenderLoop(EfanComponent component) {
-		renderBuf	:= EfanRenderer.peek.renderBuf
+	** Used by Pillow
+	Str doRenderLoop(EfanComponent component) {
+		renderBuf	:= StrBuf()
 		renderLoop	:= true
 		while (renderLoop) {
 
 			b4Ret := componentMeta.callMethod(BeforeRender#, component, [renderBuf])
 			
-			// TODO maybe allow BeforeRender to return a Str -> better that allowing a StrBug arg? 
-			
 			if (b4Ret != false) {
 				// render the efan template, or whatever the user returns
-				templateStr := component.renderTemplate()
-
-				renderBuf.add(templateStr)
+				rendered := component.renderTemplate()
+				renderBuf.add(rendered)
 			}
 
 			aftRet := componentMeta.callMethod(AfterRender#, component, [renderBuf])
@@ -50,11 +42,15 @@ const class ComponentRenderer {
 			renderLoop = (aftRet == false)
 		}
 		
-		return renderBuf
+		return renderBuf.toStr
 	}
-	
-	Str renderBody(EfanComponent component) {
-		EfanRenderer.renderBody
+
+	internal Str renderBody(EfanComponent component) {
+		bodyCtx := EfanRenderCtx.peek.bodyDup
+		return bodyCtx == null ? ""
+			: bodyCtx.runInCtx |ctx| {
+				ctx.bodyFunc?.call(ctx)
+				return ctx.renderBuf.toStr
+			}
 	}
 }
-

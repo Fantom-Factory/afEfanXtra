@@ -2,7 +2,8 @@
 internal class TestVarsInBody : EfanTest {
 
 	Void testVariablesAreAvailibleInBody() {
-//		afEfan::EfanTemplate#.pod.log.level = LogLevel.debug
+//		typeof.pod.log.level = LogLevel.debug
+//		afEfan::EfanMeta#.pod.log.level = LogLevel.debug
 		
 		text := render(Page2#).toStr
 //		Env.cur.err.printLine("[${text}]")
@@ -44,5 +45,12 @@ s := """page-start
 		verify(i2 > i1)
 		
 //		afEfan::EfanRenderer#.pod.log.level = LogLevel.info
+	}
+	
+	Void testStrIntern() {
+		// nothing to do with efanXtra - but I needed to try this somewhere!
+		s1 := "foobar"
+		s2 := StrBuf().add("foo").add("bar").toStr.intern
+		verify(s1 === s2)
 	}
 }

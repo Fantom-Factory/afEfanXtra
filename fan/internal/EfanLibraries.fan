@@ -41,7 +41,7 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	}
 	
 	override Pod pod(Str libraryName) {
-		pods[libraryName] ?: throw ArgNotFoundErr(ErrMsgs.libraryNameNotFound(libraryName), pods.keys)
+		pods[libraryName] ?: throw ArgNotFoundErr("Could not find efan library with name '${libraryName}'", pods.keys)
 	}
 
 	override EfanLibrary get(Str libraryName) {
@@ -62,13 +62,13 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 
 	private EfanLibrary getByPod(Pod pod) {
 		libsByName.getOrAdd(pod) |key->EfanLibrary| {
-			name := pods.eachWhile |p, name->Str?| { p == pod ? name : null } ?: throw ArgNotFoundErr(ErrMsgs.libraryPodNotFound(pod), pods.vals)
+			name := pods.eachWhile |p, name->Str?| { p == pod ? name : null } ?: throw ArgNotFoundErr("Could not find efan library for pod '${pod.name}'", pods.vals)
 			type := libraryCompiler.compileLibrary(name, pod)
 			return scope.build(type)
 		}
 	}	
 	internal static Str[] verifyLibNames(Str:Pod libraries) {
-		libraries.keys.each |libName| { if (!isFieldName(libName)) throw EfanErr(ErrMsgs.libraryNameNotValid(libName)) }
+		libraries.keys.each |libName| { if (!isFieldName(libName)) throw EfanErr("Efan Library name is not valid. It must be a legal Fantom name : ${libName}") }
 		return libraries.keys
 	}
 

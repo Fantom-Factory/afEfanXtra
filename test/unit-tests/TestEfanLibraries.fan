@@ -5,12 +5,12 @@ internal class TestEfanLibraries : EfanTest {
 	
 	Void testLibNamesMustBeValid() {
 
-		verifyEfanErrMsg(ErrMsgs.libraryNameNotValid("Wot Ever")) {
+		verifyEfanErrMsg("Efan Library name is not valid. It must be a legal Fantom name : Wot Ever") {
 			libs := ["Wot Ever":Pod.of(this)]
 			EfanLibrariesImpl.verifyLibNames(libs)
 		}
 
-		verifyEfanErrMsg(ErrMsgs.libraryNameNotValid("69Dude")) {
+		verifyEfanErrMsg("Efan Library name is not valid. It must be a legal Fantom name : 69Dude") {
 			libs := ["69Dude":Pod.of(this)]
 			EfanLibrariesImpl.verifyLibNames(libs)
 		}

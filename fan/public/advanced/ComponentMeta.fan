@@ -9,7 +9,7 @@ const class ComponentMeta {
 		methods := comType.methods.findAll { it.hasFacet(facetType) }
 
 		if (methods.size > 1)
-			throw ArgNotFoundErr(ErrMsgs.componentMetaTooManyMethods(comType, facetType), methods.map { it.name })
+			throw ArgNotFoundErr(componentMetaTooManyMethods(comType, facetType), methods.map { it.name })
 
 		if (methods.size == 1)
 			return methods.first
@@ -29,7 +29,7 @@ const class ComponentMeta {
 		// Wot no type inference from List.map? - see http://fantom.org/sidewalk/topic/2217
 		types := (Type?[]) args.map { it?.typeof }
 		if (!ReflectUtils.argTypesFitMethod(types, method))
-			throw EfanErr(ErrMsgs.metaTypesDoNotFitMethod(facetType, method, types))
+			throw EfanErr(metaTypesDoNotFitMethod(facetType, method, types))
 
 		return method.callOn(instance, args)
 	}
@@ -44,4 +44,23 @@ const class ComponentMeta {
 	Str methodDec(Type comType, Type facetType) {
 		"render${comType.name.capitalize}(${methodSig(comType, facetType)})"
 	}
+	
+	private static Str componentMetaTooManyMethods(Type comType, Type facetType) {
+		"${comType.qname} should only have ONE method annotated with @${facetType.name}"
+	}
+
+	private static Str metaTypesDoNotFitMethod(Type? facetType, Method initMethod, Type?[] types) {
+		t := types.join(", ") { it?.signature ?: "" }
+		f := facetType != null ? "@${facetType.name} " : ""
+		return stripSys("${f}${initMethod.parent.qname} ${initMethod.signature} can not be called with param types [${t}]")
+	}
+	
+	private static Str stripSys(Str str) {
+		str.replace("sys::", "")
+	}
+
+//	static Str componentMetaParamsDontFitMethod(Type[] types, Method method) {
+//		stripSys("Param types [" + types.map { it.qname } + "] does not fit method signature: ${method.signature}")
+//	}
+
 }

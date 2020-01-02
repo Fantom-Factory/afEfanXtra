@@ -19,13 +19,13 @@ internal class TestBeforeMethod : EfanTest {
 	}
 
 	Void testBeforeNonBool() {
-		verifyErrTypeMsg(EfanErr#, ErrMsgs.componentCompilerWrongReturnType(T_BeforeNonBool#beforeRender, [Void#, Bool#])) {
+		verifyErrTypeMsg(EfanErr#, "Method 'Int afEfanXtra::T_BeforeNonBool.beforeRender' should return one of Void, Bool") {
 			render(T_BeforeNonBool#)
 		}
 	}
 
 	Void testAfterNonBool() {
-		verifyErrTypeMsg(EfanErr#, ErrMsgs.componentCompilerWrongReturnType(T_AfterNonBool#afterRender, [Void#, Bool#])) {
+		verifyErrTypeMsg(EfanErr#, "Method 'Int afEfanXtra::T_AfterNonBool.afterRender' should return one of Void, Bool") {
 			render(T_AfterNonBool#)
 		}
 	}

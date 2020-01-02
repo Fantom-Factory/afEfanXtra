@@ -12,7 +12,7 @@ internal class TestIocConfig : EfanTest {
 
 @NoDoc
 const mixin T_IocConfig : EfanComponent {
-	@Inject @Config { id="afEfan.templateTimeout" }
+	@Inject @Config { id="afEfanXtra.templateTimeout" }
 	abstract Duration timeout
 	
 	override Str renderTemplate() { timeout.toStr }

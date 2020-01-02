@@ -29,7 +29,7 @@ internal const class TemplateFindersImpl : TemplateFinders {
 				return templateSrc
 			
 			templates := finders.reduce(Uri[,]) |Uri[] all, finder -> Uri[]| { all.addAll(finder.templates(componentType)) }
-			throw ArgNotFoundErr(ErrMsgs.componentTemplateNotFound(componentType), templates)
+			throw ArgNotFoundErr("Could not find template file for ${componentType.qname}", templates)
 		}
 	}
 }

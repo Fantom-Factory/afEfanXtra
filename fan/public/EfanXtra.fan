@@ -32,7 +32,6 @@ internal const class EfanXtraImpl : EfanXtra {
 	@Inject	private const ComponentCache	componentCache
 	@Inject private const ComponentMeta		componentMeta
 	@Inject	private const EfanLibraries 	efanLibraries
-	@Inject	private const ComponentCtxMgr	comCtxMgr
 	
 	new make(|This|in) { in(this) }
 

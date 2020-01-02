@@ -46,7 +46,7 @@ internal const class TemplateDirectoriesImpl : TemplateDirectories {
 	new make(File[] templateDirs) {
 		templateDirs.each {  
 			if (!it.isDir) // also called when file does not exist
-				throw EfanErr(ErrMsgs.templateDirIsNotDir(it))
+				throw EfanErr("Template Dir `${it.normalize.osPath}` is not a directory!")
 		}
 		this.templateDirs = templateDirs.toImmutable
 	}

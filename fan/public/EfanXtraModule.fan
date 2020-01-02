@@ -1,10 +1,10 @@
-using concurrent
-using afConcurrent
+using concurrent::ActorPool
+using afConcurrent::ActorPools
 using afIoc
-using afIocConfig
-using afIocEnv
-using afEfan::EfanEngine
+using afIocConfig::FactoryDefaults
+using afIocEnv::IocEnv
 using afPlastic::PlasticCompiler
+using afEfan::EfanCompiler
 
 ** The [IoC]`pod:afIoc` module class.
 ** 
@@ -17,7 +17,6 @@ const class EfanXtraModule {
 		defs.addService(ComponentCompiler#)		.withRootScope
 		defs.addService(ComponentCache#)		.withRootScope
 		defs.addService(ComponentMeta#)			.withRootScope
-		defs.addService(ComponentCtxMgr#)		.withRootScope
 		defs.addService(ComponentRenderer#)		.withRootScope
 		defs.addService(EfanLibraryCompiler#)	.withRootScope
 		defs.addService(EfanLibraries#)			.withRootScope
@@ -28,8 +27,10 @@ const class EfanXtraModule {
 		defs.addService(TemplateDirectories#)	.withRootScope
 		defs.addService(TemplateFinders#)		.withRootScope
 		defs.addService(FandocToHtmlConverter#)	.withRootScope
+		defs.addService(ObjCache#)				.withRootScope
 
-		defs.addService(EfanEngine#)			.withRootScope
+		// FIXME kill me - defs.addModule(afEfan::EfanModule#)
+		defs.addModule(afEfan::EfanModule#)
 	}
 	
 	internal static Void onRegistryStartup(Configuration config, EfanXtraPrinter efanPrinter) {
@@ -64,8 +65,14 @@ const class EfanXtraModule {
 		config["afEfanXtra.libraryProvider"] = config.build(LibraryProvider#)
 	}	
 
+	@Contribute { serviceType=EfanCompiler# }
+	Void contributeEfanCompilerCallbacks(Configuration config) {
+		instance := (CompilerCallback) config.build(CompilerCallback#)
+		config.add(CompilerCallback#callback.func.bind([instance]))
+	}
+
 	@Contribute { serviceType=FactoryDefaults# }
 	internal static Void contributeFactoryDefaults(Configuration config, IocEnv env) {
-		config[EfanXtraConfigIds.templateTimeout] = env.isProd ? 2min : 2sec
+		config["afEfanXtra.templateTimeout"] = env.isProd ? 2min : 2sec
 	}
 }

@@ -2,7 +2,6 @@
 internal class TestNestedBodyRendering : EfanTest {
 
 	Void testNestedBodyRendering() {
-		Log.get("afEfan").level = LogLevel.debug
 		text := render(T_MultiNest_Page#)
 		echo(text)
 		verifyEq(text, 

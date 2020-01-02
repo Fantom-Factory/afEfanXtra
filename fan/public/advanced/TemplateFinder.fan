@@ -38,7 +38,7 @@ internal const class FindEfanByTypeNameInPod : TemplateFinder {
 			if (fileName == pageName)
 				return true
 
-			// TODO: Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
+			// TODO Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
 			if (pageName.endsWith("page") && fileName == pageName[0..<-4])
 				return true
 
@@ -81,7 +81,7 @@ internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 				if (fileName == pageName)
 					return true
 	
-				// TODO: Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
+				// TODO Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
 				if (pageName.endsWith("page") && fileName == pageName[0..<-4])
 					return true
 				
@@ -119,7 +119,7 @@ const class FindEfanByFacetValue : TemplateFinder {
 		if (efanUri.isAbs) {
 			obj := efanUri.get
 			if (!obj.typeof.fits(File#))
-				throw EfanErr(ErrMsgs.templateNotFile(efanUri, componentType, obj.typeof))
+				throw EfanErr("Template Uri `${efanUri}` for ${componentType.qname} does not resolve to a file : ${obj.typeof.qname}")
 			return obj
 		}
 		
@@ -133,9 +133,9 @@ const class FindEfanByFacetValue : TemplateFinder {
 			efanUri = efanUri.toStr[1..-1].toUri
 		obj := `fan://${componentType.pod}/${efanUri}`.get(null, false)
 		if (obj == null)
-			throw EfanErr(ErrMsgs.templateNotFound(efanUri, componentType))
+			throw EfanErr("Template Uri `${efanUri}` for ${componentType.qname} could not be resolved!")
 		if (!obj.typeof.fits(File#))
-			throw EfanErr(ErrMsgs.templateNotFile(efanUri, componentType, obj.typeof))
+			throw EfanErr("Template Uri `${efanUri}` for ${componentType.qname} does not resolve to a file : ${obj.typeof.qname}")
 		return obj		
 	}
 	
