@@ -8,7 +8,7 @@ class Build : BuildPod {
 		version = Version("2.0.0")
 
 		meta = [
-			"proj.name"		: "efanXtra",
+			"pod.dis"		: "efanXtra",
 			"afIoc.module"	: "afEfanXtra::EfanXtraModule",
 			"repo.tags"		: "templating",
 			"repo.public"	: "true"
@@ -32,7 +32,7 @@ class Build : BuildPod {
 			"afIocEnv     1.1.0  - 1.1",
 			
 			// ---- Templating ------------------
-			"afEfan       2.0.3  - 2.0",
+			"afEfan       2.0.4  - 2.0",
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/utils/`, `fan/public/`, `fan/public/advanced/`, `test/example/`, `test/unit-tests/`, `test/unit-tests/components/`]
