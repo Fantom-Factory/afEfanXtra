@@ -18,7 +18,8 @@ const mixin ComponentCompiler {
 
 internal const class ComponentCompilerImpl : ComponentCompiler {
 	@Inject	private const EfanLibraries					efanLibraries
-	@Inject private const EfanCompiler					efanCompiler
+	@Inject { id="afEfan::EfanCompiler" }
+			private const EfanCompiler					efanCompiler
 
 	new make(|This| f) { f(this) }
 

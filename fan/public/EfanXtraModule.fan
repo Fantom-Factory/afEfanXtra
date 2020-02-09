@@ -65,7 +65,7 @@ const class EfanXtraModule {
 		config["afEfanXtra.libraryProvider"] = config.build(LibraryProvider#)
 	}	
 
-	@Contribute { serviceType=EfanCompiler# }
+	@Contribute { serviceId="afEfan::EfanCompiler" }
 	Void contributeEfanCompilerCallbacks(Configuration config) {
 		instance := (CompilerCallback) config.build(CompilerCallback#)
 		config.add(CompilerCallback#callback.func.bind([instance]))

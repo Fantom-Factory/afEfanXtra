@@ -2,6 +2,10 @@ v2.0
 ****
 Core parts re-written to allow standard classes and const classes to be used as components (they're no longer just for mixins!). This allows a much more natural style of Fantom programming with efan components. The rendering process has also been significanly simplified for a speedier result.
 
+v2.0.2
+======
+ - Chg: efanXtra now references 'EfanCompiler' by ID so other non-efanXtra IoC instances may be created.
+
 v2.0.0
 ======
  - New: Re-written for efan 2.0.

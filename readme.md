@@ -1,8 +1,8 @@
-# efanXtra v2.0.0
+# efanXtra v2.0.2
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](https://fantom-lang.org/)
-[![pod: v2.0.0](http://img.shields.io/badge/pod-v2.0.0-yellow.svg)](http://eggbox.fantomfactory.org/pods/afEfanXtra)
+[![pod: v2.0.2](http://img.shields.io/badge/pod-v2.0.2-yellow.svg)](http://eggbox.fantomfactory.org/pods/afEfanXtra)
 [![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## Overview
