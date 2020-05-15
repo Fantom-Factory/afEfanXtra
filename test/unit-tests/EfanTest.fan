@@ -2,6 +2,7 @@ using afIoc
 using afIocConfig::IocConfigModule
 using afIocEnv
 using afEfan::EfanErr
+using afEfan::EfanModule
 using afPlastic::PlasticModule
 using afPlastic::PlasticCompilationErr
 using afConcurrent::ConcurrentModule
@@ -39,7 +40,7 @@ internal class EfanTest : Test {
 		Pod.find("afEfanXtra")	.log.level = LogLevel.warn
 
 		try {
-			reg = RegistryBuilder().addModules([EfanAppModule#, IocConfigModule#, IocEnvModule#, ConcurrentModule#, PlasticModule#]).build
+			reg = RegistryBuilder().addModulesFromPod("afEfanXtra").addModule(EfanAppModule#).build
 			reg.rootScope.inject(this)
 			
 		} catch (PlasticCompilationErr pce) {

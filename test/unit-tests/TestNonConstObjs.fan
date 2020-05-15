@@ -36,7 +36,8 @@ internal class TestNonConstObjs : EfanTest {
 		Pod.find("afEfanXtra")	.log.level = LogLevel.warn
 
 		reg	= RegistryBuilder() {
-			addModules([EfanAppModule#, IocConfigModule#, IocConfigModule#, ConcurrentModule#, PlasticModule#])
+			addModulesFromPod("afEfanXtra")
+			addModule(EfanAppModule#)
 			addService(MyConstService#).withScope("root")
 			addService(MyNonConstService#).withScope("thread")
 			addScope("thread")
