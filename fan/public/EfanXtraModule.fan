@@ -6,6 +6,8 @@ using afIocEnv::IocEnv
 using afPlastic::PlasticCompiler
 using afEfan::EfanCompiler
 
+using afPlastic
+
 ** The [IoC]`pod:afIoc` module class.
 ** 
 ** This class is public so it may be referenced explicitly in test code.
@@ -34,6 +36,13 @@ const class EfanXtraModule {
 		config.set("afEfanXtra.logLibraries", |->| {
 			efanPrinter.logLibraries
 		}).after("afIoc.logServices")
+	}
+
+	@Override { serviceId="afEfan::EfanCompiler" }
+	EfanCompiler buildCompiler(|Type, PlasticClassModel|[] compilerCallbacks, Scope scope) {
+		// the default name of 'ctx' can sometimes (e.g. Eggbox) clash with component field names
+		// as 'ctx' isn't used in efanXtra, just name it to something else 
+		scope.build(EfanCompiler#, [compilerCallbacks], [EfanCompiler#ctxName : "_ctx_"])
 	}
 
 	@Contribute { serviceType=TemplateFinders# }
