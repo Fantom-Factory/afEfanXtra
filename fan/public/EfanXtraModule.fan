@@ -41,8 +41,12 @@ const class EfanXtraModule {
 	@Override { serviceId="afEfan::EfanCompiler" }
 	EfanCompiler buildCompiler(|Type, PlasticClassModel|[] compilerCallbacks, Scope scope) {
 		// the default name of 'ctx' can sometimes (e.g. Eggbox) clash with component field names
-		// as 'ctx' isn't used in efanXtra, just name it to something else 
-		scope.build(EfanCompiler#, [compilerCallbacks], [EfanCompiler#ctxName : "_ctx_"])
+		// as 'ctx' isn't used in efanXtra, just name it to something else
+		log			:= Pod.find("afIoc").log
+		logLev		:= log.level
+		log.level	= LogLevel.err	// prevent warnings about building the EfanCompiler service
+		try 	return scope.build(EfanCompiler#, [compilerCallbacks], [EfanCompiler#ctxName : "_ctx_"])
+		finally	log.level	= logLev
 	}
 
 	@Contribute { serviceType=TemplateFinders# }
