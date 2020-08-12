@@ -55,10 +55,17 @@ internal const class FindEfanByTypeNameInPod : TemplateFinder {
 			files := Str:File[:]
 			pod.files.each {
 				if (templateConverters.canConvert(it))
-					files[it.basename] = it
+					files[baseName(it)] = it
 			}
 			return files
 		}
+	}
+	
+	** Needed because we take the basename of the basename,
+	** .i.e. the basename of double extensions
+	private static Str baseName(File file) {
+		i := file.name.index(".")
+		return file.name[0..<i]
 	}
 }
 
@@ -74,7 +81,7 @@ internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 		templateDirectories.templateDirs.each |templateDir| {
 			templateDir.listFiles.each {
 				if (templateConverters.canConvert(it))
-					allFiles[it.basename] = it
+					allFiles[baseName(it)] = it
 			}
 		}
 		this.allFiles = allFiles
@@ -100,6 +107,13 @@ internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 			podFile	 = allFiles[pageName]
 		}
 		return podFile		
+	}
+	
+	** Needed because we take the basename of the basename,
+	** .i.e. the basename of double extensions
+	private static Str baseName(File file) {
+		i := file.name.index(".")
+		return file.name[0..<i]
 	}
 }
 
