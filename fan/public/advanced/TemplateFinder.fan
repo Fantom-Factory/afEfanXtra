@@ -1,6 +1,8 @@
-using afIoc
+using afIoc::Inject
+using afIoc::Scope
 using afIocConfig::Config
 using afEfan::EfanErr
+using afConcurrent::AtomicMap
 using fandoc
 
 @NoDoc
@@ -9,46 +11,54 @@ const mixin TemplateFinder {
 	** Return a TemplateSource for the given component type.
 	abstract TemplateSource? findTemplate(Type componentType)
 
-	** Return the Uri of all the templates this Finder can find. 
+	** Return the Uris of all the templates this Finder can find. 
 	** Used to construct a verbose Err msg of alternative locations when a template could not be found. 
 	abstract Uri[] templates(Type componentType)
-
 }
 
 internal const class FindEfanByTypeNameInPod : TemplateFinder {	
 	@Inject	private const TemplateConverters	templateConverters
 	@Inject	private const Scope					scope
+			private const AtomicMap				podFiles
 
-	new make(|This|in) { in(this) }
+	new make(|This|in) {
+		in(this)
+		podFiles = AtomicMap { it.keyType = Str#; it.valType = Str:File# } 
+	}
 	
 	override TemplateSource? findTemplate(Type componentType) {
 		// pop to remove sys::Obj
-		templateUri := (Uri?) componentType.inheritance.rw { pop }.eachWhile { findTemplateUri(it) }
-		return templateUri == null ? null : scope.build(TemplateSourceFile#, [templateUri.get])
+		templateFile := componentType.inheritance.rw { pop }.eachWhile { findTemplateFile(it) }
+		return templateFile == null ? null : scope.build(TemplateSourceFile#, [templateFile])
 	}
 	
 	override Uri[] templates(Type componentType) {
-		componentType.pod.files.findAll { templateConverters.canConvert(it) }.map { it.uri }
+		getPodFiles(componentType.pod).vals.map { it.uri }
 	}
 	
-	private Uri? findTemplateUri(Type componentType) {
-		pageName := componentType.name.lower
-		return templates(componentType).find |file->Bool| {
-			fileName	:= baseName(file)
-			if (fileName == pageName)
-				return true
+	private File? findTemplateFile(Type componentType) {
+		podFiles := getPodFiles(componentType.pod)
+		pageName := componentType.name
+		podFile	 := podFiles[pageName]
 
-			// TODO Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
-			if (pageName.endsWith("page") && fileName == pageName[0..<-4])
-				return true
-
-			return false
+		// TODO Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
+		if (podFile == null && pageName.endsWith("Page")) {
+			pageName = pageName[0..<-4]
+			podFile	 = podFiles[pageName]
 		}
+		return podFile
 	}
 	
-	private Str baseName(Uri file) {
-		i := file.name.index(".")
-		return file.name[0..<i].lower		
+	** Files are keyed off their basename
+	private Str:File getPodFiles(Pod pod) {
+		podFiles.getOrAdd(pod.name) |->Str:File| {
+			files := Str:File[:]
+			pod.files.each {
+				if (templateConverters.canConvert(it))
+					files[it.basename] = it
+			}
+			return files
+		}
 	}
 }
 
@@ -56,8 +66,19 @@ internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 	@Inject	private const TemplateConverters	templateConverters
 	@Inject	private const TemplateDirectories	templateDirectories
 	@Inject	private const Scope					scope
+			private const Str:File				allFiles	// files are keyed off their basename
 
-	new make(|This|in) { in(this) }
+	new make(|This|in) {
+		in(this)
+		allFiles  := Str:File[:]
+		templateDirectories.templateDirs.each |templateDir| {
+			templateDir.listFiles.each {
+				if (templateConverters.canConvert(it))
+					allFiles[it.basename] = it
+			}
+		}
+		this.allFiles = allFiles
+	}
 	
 	override TemplateSource? findTemplate(Type componentType) {
 		// pop to remove sys::Obj
@@ -66,33 +87,19 @@ internal const class FindEfanByTypeNameOnFileSystem : TemplateFinder {
 	}
 
 	override Uri[] templates(Type componentType) {
-		(templateDirectories.templateDirs.reduce(File[,]) |File[] all, dir -> File[]| { 
-			dir.listFiles.findAll { 
-				templateConverters.canConvert(it)
-			}
-		} as File[]).map { it.uri }
+		allFiles.vals.map { it.uri }
 	}
 
 	private File? findTemplateFile(Type componentType) {
-		pageName := componentType.name.lower
-		return templateDirectories.templateDirs.eachWhile |templateDir->File?| {
-			return templateDir.listFiles.findAll { templateConverters.canConvert(it) }.find |file->Bool| {
-				fileName	:= baseName(file)
-				if (fileName == pageName)
-					return true
-	
-				// TODO Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
-				if (pageName.endsWith("page") && fileName == pageName[0..<-4])
-					return true
-				
-				return false
-			}
-		}
-	}
+		pageName := componentType.name
+		podFile	 := allFiles[pageName]
 
-	private Str baseName(File file) {
-		i := file.name.index(".")
-		return file.name[0..<i].lower		
+		// TODO Maybe have a TemplateSuffixes service - EfanTamplateMatcher.matches(Type, File)
+		if (podFile == null && pageName.endsWith("Page")) {
+			pageName = pageName[0..<-4]
+			podFile	 = allFiles[pageName]
+		}
+		return podFile		
 	}
 }
 

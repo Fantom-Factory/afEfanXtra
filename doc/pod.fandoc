@@ -177,6 +177,8 @@ For efanXtra to find the template file, be sure to add '/res/components/' as a '
 
 > **ALIEN-AID:** Note resource directories in 'build.fan' are NOT nested. Adding 'res/' will **NOT** add 'res/components/'.
 
+Note that template files may appear *anywhere* in the pod, the internal directory structure does not mattter.
+
 
 
 File System Templates
