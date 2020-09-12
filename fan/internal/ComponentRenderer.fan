@@ -14,7 +14,7 @@ const class ComponentRenderer {
 		EfanRenderCtx(component, null).runInCtx(func)
 	}
 	
-	Str render(EfanComponent component, Obj?[]? initArgs := null, |->|? bodyFunc := null) {		
+	Str render(EfanComponent component, Obj?[]? initArgs := null, |->|? bodyFunc := null) {
 		EfanRenderCtx(component, bodyFunc).runInCtx |ctx| {
 			initRet := componentMeta.callMethod(InitRender#, component, initArgs ?: Obj#.emptyList)
 
@@ -46,10 +46,12 @@ const class ComponentRenderer {
 	}
 
 	internal Str renderBody(EfanComponent component) {
-		bodyCtx := EfanRenderCtx.peek.bodyDup
+		peek	:= EfanRenderCtx.peek
+		bodyCtx := peek.bodyDup
+		
 		return bodyCtx == null ? ""
 			: bodyCtx.runInCtx |ctx| {
-				ctx.bodyFunc?.call(ctx)
+				peek.bodyFunc?.call(ctx)
 				return ctx.renderBuf.toStr
 			}
 	}

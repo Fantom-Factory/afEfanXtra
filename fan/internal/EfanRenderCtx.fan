@@ -4,14 +4,23 @@ using afEfan::EfanErr
 @NoDoc	// needs to be called from compiled pods
 class EfanRenderCtx {
 	private static const Str		localId		:= "efan.renderCtx"
-	
+
 	Str					renderId
 	EfanRenderCtx?		parent		{ private set }
 	EfanComponent		rendering	{ private set }
-	Func? 				bodyFunc	//{ private set }
+	Func? 				bodyFunc	{ private set }
 	private [Str:Obj?]?	_vars		{ private set }
 	private	StrBuf?		_renderBuf
 
+	private new _makeDup(EfanRenderCtx dup) {
+		this.renderId	= dup.renderId
+		this.parent		= null	// parent should only be set by runInCtx()
+		this.rendering	= dup.rendering
+		this.bodyFunc	= dup.bodyFunc
+		this._vars		= dup._vars
+		this._renderBuf	= null
+	}
+	
 	internal new make(EfanComponent rendering, Func? bodyFunc) {
 		this.renderId	= rendering.componentId
 		this.rendering	= rendering
@@ -19,6 +28,9 @@ class EfanRenderCtx {
 	}
 
 	Obj? runInCtx(|EfanRenderCtx -> Obj?| func) {
+		if (this.parent != null)
+			throw Err("Component RenderCtx already parented: $renderId -> $parent.renderId")
+		
 		this.parent = peek(false)	// false 'cos we may be the first!
 		Actor.locals[localId] = this
 		try	  				return func.call(this)
@@ -44,19 +56,16 @@ class EfanRenderCtx {
 	}
 	
 	EfanRenderCtx? bodyDup() {
-		parent == null ? null
+		daddy := this.parent
+		return daddy == null ? null
 			// oddly enough, bodyFunc is set on the inner obj, not the parent  
-			: EfanRenderCtx(this.parent.rendering, bodyFunc) {
-				it._vars	= this.parent._vars
+			: daddy.dup {
 				it.renderId += "(Body)"
 			}
 	}
 	
-	This dup() {
-		EfanRenderCtx(rendering, bodyFunc) {
-			it._vars	= this._vars
-			it.renderId += "(Body)" 
-		}
+	private EfanRenderCtx dup() {
+		EfanRenderCtx(this)
 	}
 
 	Void setVar(Str name, Obj? value) {

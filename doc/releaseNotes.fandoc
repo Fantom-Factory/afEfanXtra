@@ -6,6 +6,7 @@ v2.0.6
 ======
  - Chg: Optimised the common Template finders.
  - Bug: Pods could not be contributed as EfanLibraries more than once.
+ - Bug: Nested components, each with a body fn, could cause a 'StackOverflowErr'.
 
 v2.0.4
 ======
