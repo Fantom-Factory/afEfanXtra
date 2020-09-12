@@ -5,6 +5,7 @@ Core parts re-written to allow standard classes and const classes to be used as 
 v2.0.6
 ======
  - Chg: Optimised the common Template finders.
+ - Bug: Pods could not be contributed as EfanLibraries more than once.
 
 v2.0.4
 ======

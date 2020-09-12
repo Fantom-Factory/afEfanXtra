@@ -17,6 +17,9 @@ const mixin EfanLibraries {
 	abstract EfanLibrary[] all()
 
 	** Returns the library that contains the given *component* type.
+	** 
+	** If the same pod has been contributed more than once, under different names, 
+	** the actual 'EfanLibrary' returned is indeterminate. 
 	abstract EfanLibrary findFor(Type componentType)
 
 	** Returns the names of all the libraries.
@@ -37,7 +40,7 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	new make(Str:Pod libraries, ActorPools actorPools, |This|in) {
 		in(this)
 		pods 		= libraries		
-		libsByName	= SynchronizedMap(actorPools["afEfanXtra.caches"]) { it.keyType = Pod#; it.valType = EfanLibrary# }
+		libsByName	= SynchronizedMap(actorPools["afEfanXtra.caches"]) { it.keyType = Str#; it.valType = EfanLibrary# }
 	}
 	
 	override Pod pod(Str libraryName) {
@@ -45,28 +48,29 @@ internal const class EfanLibrariesImpl : EfanLibraries {
 	}
 
 	override EfanLibrary get(Str libraryName) {
-		getByPod(pod(libraryName))
+		getByName(libraryName)
 	}
 
 	override EfanLibrary[] all() {
-		pods.vals.map { getByPod(it) }
+		pods.keys.map |name -> EfanLibrary| { getByName(name) }
 	}
 
 	override EfanLibrary findFor(Type componentType) {
-		getByPod(componentType.pod)
+		libName := pods.keys.find { pods[it] == componentType.pod }
+		return getByName(libName)
 	}
 	
 	override Str[] names() {
 		pods.keys
 	}
 
-	private EfanLibrary getByPod(Pod pod) {
-		libsByName.getOrAdd(pod) |key->EfanLibrary| {
-			name := pods.eachWhile |p, name->Str?| { p == pod ? name : null } ?: throw ArgNotFoundErr("Could not find efan library for pod '${pod.name}'", pods.vals)
-			type := libraryCompiler.compileLibrary(name, pod)
+	private EfanLibrary getByName(Str libName) {
+		libsByName.getOrAdd(libName) |key->EfanLibrary| {
+			type := libraryCompiler.compileLibrary(libName, pods[libName])
 			return scope.build(type)
 		}
-	}	
+	}
+	
 	internal static Str[] verifyLibNames(Str:Pod libraries) {
 		libraries.keys.each |libName| { if (!isFieldName(libName)) throw EfanErr("Efan Library name is not valid. It must be a legal Fantom name : ${libName}") }
 		return libraries.keys
