@@ -2,9 +2,9 @@
 @NoDoc
 const mixin SignOff : EfanComponent {
 
-  abstract Str? who
+	abstract Str? who
 
-  Void initRender(Str who) {
-     this.who = who
-   }
+	Void initRender(Str who) {
+		this.who = who
+	}
 }

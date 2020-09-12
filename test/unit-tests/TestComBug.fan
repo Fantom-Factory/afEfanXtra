@@ -1,7 +1,7 @@
 
 internal class TestComBug : EfanTest {
 
-	// this bug is a Fantom one - see  - see http://fantom.org/sidewalk/topic/2216
+	// this bug is a Fantom one - see  - see https://fantom.org/forum/topic/2216
 	// and was actually fixed in afPlastic
 	Void testComBug() {
 //		Pod.find("afEfan").log.level = LogLevel.debug
