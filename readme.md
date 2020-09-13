@@ -1,8 +1,8 @@
-# efanXtra v2.0.4
+# efanXtra v2.0.6
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](https://fantom-lang.org/)
-[![pod: v2.0.4](http://img.shields.io/badge/pod-v2.0.4-yellow.svg)](http://eggbox.fantomfactory.org/pods/afEfanXtra)
+[![pod: v2.0.6](http://img.shields.io/badge/pod-v2.0.6-yellow.svg)](http://eggbox.fantomfactory.org/pods/afEfanXtra)
 [![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## Overview
@@ -172,6 +172,8 @@ For efanXtra to find the template file, be sure to add `/res/components/` as a `
 
 > **ALIEN-AID:** Note resource directories in `build.fan` are NOT nested. Adding `res/` will **NOT** add `res/components/`.
 
+
+Note that template files may appear *anywhere* in the pod, the internal directory structure does not mattter.
 
 #### File System Templates
 
